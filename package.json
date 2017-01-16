@@ -11,7 +11,7 @@
   "license": "Apache-2",
   "scripts": {
     "test": "npm run tsc && nyc ./node_modules/.bin/mocha --check-leaks --bail build/test/**/*.js",
-    "coverall": "nyc report --reporter=text-lcov | coverall",
+    "coverall": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "",
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
