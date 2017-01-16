@@ -10,10 +10,10 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "test": "npm run tsc && nyc ./node_modules/.bin/mocha --check-leaks --bail build/test/**/*.js",
+    "test": "npm run tsc && npm run lint && nyc ./node_modules/.bin/mocha --check-leaks --bail build/test/**/*.js",
     "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
     "tsc": "./node_modules/.bin/tsc",
-    "lint": "",
+    "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
