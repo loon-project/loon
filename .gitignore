@@ -39,3 +39,4 @@ jspm_packages
 .idea
 build
 lib
+.nyc_output
