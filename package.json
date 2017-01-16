@@ -1,0 +1,37 @@
+{
+  "name": "typed-framework",
+  "version": "0.0.1",
+  "description": "typed web framework based on koajs and typescript",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/typed-project/typed-framework",
+    "type": "git"
+  },
+  "author": "vincent178 <vincent.007.cn@gmail.com>",
+  "license": "Apache-2",
+  "scripts": {
+    "test": "npm run tsc && ./node_modules/.bin/mocha --reporter spec --check-leaks --bail build/test/**/*.js",
+    "tsc": "./node_modules/.bin/tsc",
+    "lint": "",
+
+    "dev:tsc": "./node_modules/.bin/tsc -w -p ."
+  },
+  "dependencies": {
+    "@types/koa": "^2.0.37",
+    "koa": "2",
+    "koa-router": "^7.1.0",
+    "reflect-metadata": "^0.1.9"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.37",
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.8.0",
+    "source-map-support": "^0.4.8",
+    "tslint": "^4.3.1",
+    "typescript": "^2.1.5"
+  }
+}
