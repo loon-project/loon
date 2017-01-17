@@ -39,7 +39,7 @@ export class Container {
             throw new SignatureDupError();
         }
 
-        if (typeof nameOrType === 'string') {
+        if (typeof nameOrType === "string") {
 
             this.instances.push({
                 name: nameOrType,

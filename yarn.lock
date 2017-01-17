@@ -4,31 +4,9 @@
   version "3.4.34"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-3.4.34.tgz#d5335792823bb09cddd5e38c3d211b709183854d"
 
-"@types/cookies@*":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@types/cookies/-/cookies-0.6.0.tgz#f5e8df2357502a895d5627e2fb8b174b3b269461"
-  dependencies:
-    "@types/keygrip" "*"
-    "@types/node" "*"
-
-"@types/keygrip@*":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/keygrip/-/keygrip-1.0.0.tgz#20bcf84e8962aeca5d1789802b93644262870d28"
-
-"@types/koa":
-  version "2.0.37"
-  resolved "https://registry.yarnpkg.com/@types/koa/-/koa-2.0.37.tgz#7c34661ca98082f9828cf54c393c3c3e6d357aac"
-  dependencies:
-    "@types/cookies" "*"
-    "@types/node" "*"
-
 "@types/mocha":
   version "2.2.37"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.37.tgz#8e0d5327ffa0734999c1010967853de917f3a38e"
-
-"@types/node@*":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.0.tgz#c081147b109da5f9c57af70571771be97ce9c0ba"
 
 abbrev@1, abbrev@1.0.x:
   version "1.0.9"
@@ -272,6 +250,10 @@ builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
 
+bytes@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/bytes/-/bytes-2.4.0.tgz#7d97196f9d5baf7f6935e25985549edd2a6c2339"
+
 caching-transform@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/caching-transform/-/caching-transform-1.0.1.tgz#6dbdb2f20f8d8fbce79f3e94e9d1742dcdf5c0a1"
@@ -345,6 +327,15 @@ cliui@^3.2.0:
     strip-ansi "^3.0.1"
     wrap-ansi "^2.0.0"
 
+co-body@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/co-body/-/co-body-4.2.0.tgz#74df20fa73262125dc45482af04e342ea8db3515"
+  dependencies:
+    inflation "~2.0.0"
+    qs "~4.0.0"
+    raw-body "~2.1.2"
+    type-is "~1.6.6"
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -409,6 +400,10 @@ cookies@~0.6.1:
   dependencies:
     depd "~1.1.0"
     keygrip "~1.0.1"
+
+copy-to@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/copy-to/-/copy-to-2.0.1.tgz#2680fbb8068a48d08656b6098092bdafc906f4a5"
 
 core-js@^2.4.0:
   version "2.4.1"
@@ -879,9 +874,17 @@ http-signature@~1.1.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+iconv-lite@0.4.13:
+  version "0.4.13"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
+
 imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
+
+inflation@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/inflation/-/inflation-2.0.0.tgz#8b417e47c28f925a45133d914ca1fd389107f30f"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -1179,6 +1182,13 @@ kind-of@^3.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.1.0.tgz#475d698a5e49ff5e53d14e3e732429dc8bf4cf47"
   dependencies:
     is-buffer "^1.0.2"
+
+koa-bodyparser:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/koa-bodyparser/-/koa-bodyparser-2.3.0.tgz#236ed90a16f562e79cade2b958f67c848824e818"
+  dependencies:
+    co-body "^4.2.0"
+    copy-to "^2.0.1"
 
 koa-compose@^3.0.0:
   version "3.2.1"
@@ -1704,6 +1714,10 @@ punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
+qs@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-4.0.0.tgz#c31d9b74ec27df75e543a86c78728ed8d4623607"
+
 qs@~6.2.0:
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.2.1.tgz#ce03c5ff0935bc1d9d69a9f14cbd18e568d67625"
@@ -1714,6 +1728,14 @@ randomatic@^1.1.3:
   dependencies:
     is-number "^2.0.2"
     kind-of "^3.0.2"
+
+raw-body@~2.1.2:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.1.7.tgz#adfeace2e4fb3098058014d08c072dcc59758774"
+  dependencies:
+    bytes "2.4.0"
+    iconv-lite "0.4.13"
+    unpipe "1.0.0"
 
 rc@^1.0.1, rc@^1.1.6:
   version "1.1.6"
@@ -2103,7 +2125,7 @@ type-detect@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-0.1.1.tgz#0ba5ec2a885640e470ea4e8505971900dac58822"
 
-type-is@^1.5.5:
+type-is@^1.5.5, type-is@~1.6.6:
   version "1.6.14"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.14.tgz#e219639c17ded1ca0789092dd54a03826b817cb2"
   dependencies:
@@ -2133,6 +2155,10 @@ underscore.string@^3.3.4:
   dependencies:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
+
+unpipe@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
 
 unzip-response@^1.0.2:
   version "1.0.2"

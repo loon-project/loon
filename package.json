@@ -14,11 +14,14 @@
     "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
+    "release:major": "npm version major && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor && npm publish && git push --follow-tags",
+    "release:patch": "npm version patch && npm publish && git push --follow-tags",
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
-    "@types/koa": "^2.0.37",
     "koa": "2",
+    "koa-bodyparser": "^2.3.0",
     "koa-router": "^7.1.0",
     "reflect-metadata": "^0.1.9"
   },
