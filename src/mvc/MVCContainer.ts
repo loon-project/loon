@@ -9,6 +9,8 @@ import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {ParamType} from "./enum/ParamType";
 import {Container} from "../di/Container";
 import {Response} from "./interface/Response";
+import {Request} from "./interface/Request";
+import {Next} from "./interface/Next";
 
 export class MVCContainer {
 
@@ -22,7 +24,7 @@ export class MVCContainer {
     }
 
     public static registerController(type: Function, baseRoute?: string) {
-        this.controllersMetadata.push({baseRoute: baseRoute ? baseRoute : "", type});
+        this.controllersMetadata.push({baseRoute: baseRoute ? baseRoute : "/", type});
     }
 
     public static registerMiddlewares(type: Function, middlewareLevel: MiddlewareLevel, middlewareType: MiddlewareType) {
@@ -39,7 +41,6 @@ export class MVCContainer {
 
             const router = Express.Router();
             const type = controllerMetadata.type;
-            const prefixedRouter = router.route(controllerMetadata.baseRoute);
             const controller = Container.get(controllerMetadata.type);
 
             this.actionsMetadata
@@ -53,10 +54,10 @@ export class MVCContainer {
 
                     const actions = _.concat([], beforeActions, action, afterActions, renderAction);
 
-                    prefixedRouter[actionMetadata.httpMethod](actions);
+                    router[actionMetadata.httpMethod](actionMetadata.route, actions);
                 });
 
-            return prefixedRouter;
+            return {baseRoute: controllerMetadata.baseRoute, router};
         });
     }
 
@@ -64,7 +65,7 @@ export class MVCContainer {
                                          controller: any,
                                          actionMetadata: ActionMetadata): (request, response, next) => void {
 
-        return (request: Express.Request, response: Response, next: Express.NextFunction) => {
+        return (request: Request, response: Response, next: Next) => {
 
             return new Promise((resolve, reject) => {
 
@@ -78,7 +79,7 @@ export class MVCContainer {
 
             })
                 .then(data => {
-                    response._data = data;
+                    response.data = data;
                     next();
                 })
                 .catch(err => next(err));
@@ -88,9 +89,9 @@ export class MVCContainer {
     public static invokeAction(type: Function,
                                controller: any,
                                actionMetadata: ActionMetadata,
-                               request: Express.Request,
-                               response: Express.Response,
-                               next: Express.NextFunction) {
+                               request: Request,
+                               response: Response,
+                               next: Next) {
 
         const params = actionMetadata.params;
         const actionName = actionMetadata.actionName;
@@ -128,24 +129,24 @@ export class MVCContainer {
 
     public static renderAction() {
 
-        return (_, response: Response, next: Express.NextFunction) => {
+        return (request: Request, response: Response, next: Next) => {
 
             if (!response.headersSent) {
 
-                switch (typeof response._data) {
+                console.log(response.data);
+
+                switch (typeof response.data) {
                     case "number":
                     case "boolean":
                     case "string":
                     case "undefined":
-                        response.send(response._data);
+                        response.send(response.data);
                         break;
                     default:
-                        response.json(response._data);
+                        response.json(response.data);
                 }
 
             }
-
-            next();
         };
     }
 }

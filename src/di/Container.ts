@@ -25,6 +25,10 @@ export class Container {
         });
     }
 
+    public static unregisterComponent(name: string|undefined, type: Function) {
+        this.components = this.components.filter(item => item.name !== name && item.type !== type);
+    }
+
     public static registerParamHandler(handler: ParamHandler) {
         this.paramHandlers.push(handler);
     }
