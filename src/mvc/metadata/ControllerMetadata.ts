@@ -1,4 +1,8 @@
 
-export class ControllerMetadata {
+export interface ControllerMetadata {
+
+    type: Function;
+
+    baseRoute: string;
 
 }

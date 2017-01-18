@@ -1,38 +1,40 @@
-import {HttpContainer} from "../HttpContainer";
+import {MVCContainer} from "../MVCContainer";
+import {Metadata} from "../../metadata/Metadata";
 
 export function Get(route: string|RegExp) {
-    return (target: any, key: string) => {
-        console.log(`Get: ${key} ${route}`);
-        HttpContainer.registerAction("get", route, target, key);
+    return (target: any, actionName: string) => {
+        registerHelper(target, "get", route, actionName);
     };
 }
 
 export function Post(route: string|RegExp) {
-    return (target: any, key: string) => {
-        console.log(`Get: ${key} ${route}`);
-        HttpContainer.registerAction("post", route, target, key);
+    return (target: any, actionName: string) => {
+        registerHelper(target, "post", route, actionName);
     };
 }
 
 export function Put(route: string|RegExp) {
-    return (target: any, key: string) => {
-        console.log(`Get: ${key} ${route}`);
-        HttpContainer.registerAction("put", route, target, key);
+    return (target: any, actionName: string) => {
+        registerHelper(target, "put", route, actionName);
     };
 }
 
 export function Patch(route: string|RegExp) {
-    return (target: any, key: string) => {
-        console.log(`Get: ${key} ${route}`);
-        HttpContainer.registerAction("patch", route, target, key);
+    return (target: any, actionName: string) => {
+        registerHelper(target, "patch", route, actionName);
     };
 }
 
 export function Delete(route: string|RegExp) {
-    return (target: any, key: string) => {
-        console.log(`Get: ${key} ${route}`);
-        HttpContainer.registerAction("delete", route, target, key);
+    return (target: any, actionName: string) => {
+        registerHelper(target, "delete", route, actionName);
     };
+}
+
+function registerHelper(target, method, route, actionName) {
+    console.log(`${method}: ${actionName} ${route}`);
+    const params = Metadata.getParams(target, actionName);
+    MVCContainer.registerAction(target.constructor, method, route, actionName, params);
 }
 
 

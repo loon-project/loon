@@ -1,14 +1,12 @@
+import {MiddlewareLevel} from "../enum/MiddlewareLevel";
+import {MiddlewareType} from "../enum/MiddlewareType";
 
-import {MiddlewareMetadataArgs} from "./MiddlewareMetadataArgs";
-export class MiddlewareMetadata {
+export interface MiddlewareMetadata {
 
-    public target: Function;
+    type: Function;
 
-    public beforeAction: boolean;
+    middlewareLevel: MiddlewareLevel;
 
-    public afterAction: boolean;
+    middlewareType: MiddlewareType;
 
-    constructor(args: MiddlewareMetadataArgs) {
-
-    }
 }

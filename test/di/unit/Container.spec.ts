@@ -26,7 +26,7 @@ describe('Container', () => {
     }
 
     beforeEach(() => {
-        Container.clear();
+        // Container.clear();
     });
 
     it('should get Class instance', () => {
@@ -73,7 +73,7 @@ describe('Container', () => {
             getValue: () => Container.get(AComponent)
         });
 
-        // Container.get(AClass).a.name().should.be.equal("A Component");
+        // Container.get(AClass).a.expression().should.be.equal("A Component");
         // Container.get(AClass).num.should.be.equal(777);
     });
 });

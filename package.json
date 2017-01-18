@@ -20,9 +20,10 @@
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
-    "koa": "2",
-    "koa-bodyparser": "^2.3.0",
-    "koa-router": "^7.1.0",
+    "@types/express": "^4.0.34",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "lodash": "^4.17.4",
     "reflect-metadata": "^0.1.9"
   },
   "devDependencies": {

@@ -68,7 +68,7 @@ export class Container {
         const component = this.findComponentByNameOrType(nameOrType);
 
         if (!component) {
-            if (typeof nameOrType === 'string') {
+            if (typeof nameOrType === "string") {
                 throw new DINotFoundError(`[Typed] can not find component by name: ${nameOrType}`);
             } else {
                 throw new DINotFoundError(`[Typed] can not find component by type: ${nameOrType.name}`);
@@ -169,7 +169,7 @@ export class Container {
     }
 
     private static findComponentByNameOrType(nameOrType: string|Function) {
-        if (typeof nameOrType === 'string') {
+        if (typeof nameOrType === "string") {
             return this.findComponentByName(nameOrType);
         } else {
             return this.findComponentByType(nameOrType);

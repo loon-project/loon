@@ -1,6 +1,14 @@
-import {ControllerMetadata} from "./ControllerMetadata";
 
-export class ActionMetadata {
+export interface ActionMetadata {
 
-    public controllerMetaData: ControllerMetadata;
+    type: Function;
+
+    httpMethod: string;
+
+    route: string | RegExp;
+
+    actionName: string;
+
+    params: Function[];
+
 }
