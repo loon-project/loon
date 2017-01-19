@@ -1,0 +1,4 @@
+build/test
+--recursive
+--reporter nyan
+--check-leaks
