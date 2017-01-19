@@ -1,4 +1,3 @@
-build/test
---recursive
+build/test/**/*.js
 --reporter nyan
 --check-leaks
