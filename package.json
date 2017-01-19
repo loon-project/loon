@@ -10,18 +10,15 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "test": "npm run tsc && npm run lint && ./node_modules/.bin/_mocha --check-leaks --bail build/test/",
+
+    "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha -R nyan --check-leaks --recursive build/test/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
 
     "release:major": "npm version major && npm publish && git push --follow-tags",
     "release:minor": "npm version minor && npm publish && git push --follow-tags",
     "release:patch": "npm version patch && npm publish && git push --follow-tags",
-
-    "test:cov": "npm run tsc && istanbul cover -x \"examples/**\" node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks build/test/ && npm run test:remap",
-    "test:remap": "./node_modules/.bin/remap-istanbul -i coverage/coverage.json -o coverage/lcov-report -t html",
-    "test:travis": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks build/test/",
-    "test:coverage": "./node_modules/.bin/remap-istanbul -i ./coverage/coverage.json -t lcovonly | ./node_modules/.bin/coveralls",
 
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },

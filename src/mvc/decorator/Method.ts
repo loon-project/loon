@@ -32,7 +32,6 @@ export function Delete(route: string|RegExp) {
 }
 
 function registerHelper(target, method, route, actionName) {
-    console.log(`${method}: ${actionName} ${route}`);
     const params = Metadata.getParams(target, actionName);
     MVCContainer.registerAction(target.constructor, method, route, actionName, params);
 }

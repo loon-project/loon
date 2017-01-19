@@ -137,8 +137,6 @@ export class MVCContainer {
 
             if (!response.headersSent) {
 
-                console.log(response.data);
-
                 if (request.method === 'POST') {
                     response.status(201);
                 }

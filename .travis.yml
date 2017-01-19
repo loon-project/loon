@@ -6,8 +6,4 @@ node_js:
 
 cache: yarn
 
-script:
-  - "npm test"
-  - "npm run test:travis"
-
-after_success: npm run test:coverage
+after_success: npm run coverage
