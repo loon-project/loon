@@ -13,6 +13,7 @@
   "extension": [
     ".ts"
   ],
+  "lines": "70",
   "all": true,
   "check-coverage": true
 }
