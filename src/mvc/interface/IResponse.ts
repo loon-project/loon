@@ -1,5 +1,5 @@
 import * as Express from "express";
 
-export interface Response extends Express.Response {
+export interface IResponse extends Express.Response {
     data: any;
 }

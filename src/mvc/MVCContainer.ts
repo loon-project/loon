@@ -8,9 +8,9 @@ import {ParamMetadata} from "./metadata/ParamMetadata";
 import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {ParamType} from "./enum/ParamType";
 import {Container} from "../di/Container";
-import {Response} from "./interface/Response";
-import {Request} from "./interface/Request";
-import {Next} from "./interface/Next";
+import {IResponse} from "./interface/IResponse";
+import {IRequest} from "./interface/IRequest";
+import {INext} from "./interface/INext";
 
 export class MVCContainer {
 
@@ -65,7 +65,9 @@ export class MVCContainer {
                                          controller: any,
                                          actionMetadata: ActionMetadata): (request, response, next) => void {
 
-        return (request: Request, response: Response, next: Next) => {
+        return (request: IRequest, response: IResponse, next: INext) => {
+
+            response.setHeader('X-Powered-By', 'Typed Framework');
 
             return new Promise((resolve, reject) => {
 
@@ -89,9 +91,9 @@ export class MVCContainer {
     public static invokeAction(type: Function,
                                controller: any,
                                actionMetadata: ActionMetadata,
-                               request: Request,
-                               response: Response,
-                               next: Next) {
+                               request: IRequest,
+                               response: IResponse,
+                               next: INext) {
 
         const params = actionMetadata.params;
         const actionName = actionMetadata.actionName;
@@ -110,6 +112,8 @@ export class MVCContainer {
                         return _.get(request.params, paramMetadata.expression);
                     case ParamType.Query:
                         return _.get(request.query, paramMetadata.expression);
+                    case ParamType.Header:
+                        return request.header(paramMetadata.expression ? paramMetadata.expression : "");
                     case ParamType.Request:
                         return request;
                     case ParamType.Response:
@@ -129,14 +133,20 @@ export class MVCContainer {
 
     public static renderAction() {
 
-        return (request: Request, response: Response, next: Next) => {
+        return (request: IRequest, response: IResponse, next: INext) => {
 
             if (!response.headersSent) {
 
                 console.log(response.data);
 
+                if (request.method === 'POST') {
+                    response.status(201);
+                }
+
                 switch (typeof response.data) {
                     case "number":
+                        response.send(response.data.toString());
+                        break;
                     case "boolean":
                     case "string":
                     case "undefined":
