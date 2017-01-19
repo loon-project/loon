@@ -1,14 +1,9 @@
 import "../../TestHelper";
 import * as Express from "express";
-import * as Chakram from "chakram";
 import {Controller} from "../../../src/mvc/decorator/Controller";
 import {Get, Post, Patch, Put, Delete} from "../../../src/mvc/decorator/Method";
 import {MVCContainer} from "../../../src/mvc/MVCContainer";
 import {HttpHelper} from "../../helper/HttpHelper";
-
-const expect = Chakram.expect;
-
-
 
 describe("Controller integration", () => {
 
@@ -33,25 +28,10 @@ describe("Controller integration", () => {
             return "update user";
         }
 
-        @Delete("users/1")
+        @Delete("/users/1")
         public destroyAction() {
             return "delete user";
         }
-
-        // @Get("/users/db")
-        // public async indexDBAction(): Promise<any> {
-        //     function query() {
-        //         return new Promise((resolve, reject) => {
-        //             setTimeout(() => {
-        //                 resolve([{username: "aaa"}]);
-        //             }, 500);
-        //         });
-        //     }
-        //
-        //
-        //     return await query();
-        // }
-
     }
 
     before(done => {
@@ -64,16 +44,37 @@ describe("Controller integration", () => {
     });
 
     it("should response get request", () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", (response) => {
+        return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
             response.statusCode.should.be.equal(200);
             response.body.should.be.equal("all users");
         });
     });
 
     it('should response post request', () => {
-        return HttpHelper.sendRequest("post", "http://localhost:4444/users", (response) => {
+        return HttpHelper.sendRequest("post", "http://localhost:4444/users", undefined, (response) => {
             response.statusCode.should.be.equal(200);
             response.body.should.be.equal("create user");
+        });
+    });
+
+    it('should response put request', () => {
+        return HttpHelper.sendRequest("put", "http://localhost:4444/users/1", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("update user");
+        });
+    });
+
+    it('should response patch request', () => {
+        return HttpHelper.sendRequest("patch", "http://localhost:4444/users/1", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("update user");
+        });
+    });
+
+    it('should response delete request', () => {
+        return HttpHelper.sendRequest("delete", "http://localhost:4444/users/1", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("delete user");
         });
     });
 });

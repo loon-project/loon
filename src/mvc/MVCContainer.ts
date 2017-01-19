@@ -24,7 +24,7 @@ export class MVCContainer {
     }
 
     public static registerController(type: Function, baseRoute?: string) {
-        this.controllersMetadata.push({baseRoute: baseRoute ? baseRoute : "/", type});
+        this.controllersMetadata.push({baseRoute: baseRoute ? baseRoute : "", type});
     }
 
     public static registerMiddlewares(type: Function, middlewareLevel: MiddlewareLevel, middlewareType: MiddlewareType) {
