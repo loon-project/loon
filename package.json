@@ -10,16 +10,13 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-
-    "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha -R nyan --check-leaks --recursive build/test/",
+    "test": "npm run tsc & nyc --reporter=html --reporter=text _mocha -R nyan --check-leaks build/test/**/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
-
     "release:major": "npm version major && npm publish && git push --follow-tags",
     "release:minor": "npm version minor && npm publish && git push --follow-tags",
     "release:patch": "npm version patch && npm publish && git push --follow-tags",
-
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
@@ -35,10 +32,8 @@
     "chai": "^3.5.0",
     "chakram": "^1.5.0",
     "coveralls": "^2.11.15",
-    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nyc": "^10.0.0",
-    "remap-istanbul": "^0.8.4",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
     "source-map-support": "^0.4.8",

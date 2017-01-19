@@ -39,5 +39,6 @@ jspm_packages
 .idea
 build
 lib
-.nyc_output
 coverage
+.nyc_output
+.yarnclean
