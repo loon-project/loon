@@ -10,13 +10,19 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "test": "npm run tsc && npm run lint && nyc ./node_modules/.bin/mocha --check-leaks --bail build/test/**/*.js",
-    "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
+    "test": "npm run tsc && npm run lint && ./node_modules/.bin/_mocha --check-leaks --bail build/test/",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
+
     "release:major": "npm version major && npm publish && git push --follow-tags",
     "release:minor": "npm version minor && npm publish && git push --follow-tags",
     "release:patch": "npm version patch && npm publish && git push --follow-tags",
+
+    "test:cov": "npm run tsc && istanbul cover -x \"examples/**\" node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks build/test/ && npm run test:remap",
+    "test:remap": "./node_modules/.bin/remap-istanbul -i coverage/coverage.json -o coverage/lcov-report -t html",
+    "test:travis": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks build/test/",
+    "test:coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls",
+
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
@@ -35,6 +41,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nyc": "^10.0.0",
+    "remap-istanbul": "^0.8.4",
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
     "source-map-support": "^0.4.8",
