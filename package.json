@@ -10,7 +10,6 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "postinstall": "npm run tsc:release",
     "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha --recursive",
     "tsc": "./node_modules/.bin/tsc",
     "tsc:release": "./node_modules/.bin/tsc --project tsconfig.compile.json",
