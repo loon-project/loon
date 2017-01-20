@@ -4,4 +4,9 @@ node_js:
   - "5"
   - "6"
 
+script:
+  - npm run tsc
+  - npm run lint
+  - npm run mocha
+
 after_success: npm run coverage
