@@ -1,6 +1,6 @@
 {
   "name": "typed-framework",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "typed web framework based on koajs and typescript",
   "main": "./src/index.ts",
   "repository": {
