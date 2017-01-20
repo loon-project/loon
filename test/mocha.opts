@@ -1,2 +1,3 @@
---reporter nyan
+--reporter spec
 --check-leaks
+--bail
