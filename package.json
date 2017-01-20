@@ -10,8 +10,8 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "test": "npm run tsc & npm run lint & ./node_modules/.bin/_mocha --check-leaks --bail test/",
-    "mocha": "mocha",
+    "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha --recursive",
+    "mocha": "mocha --recursive ",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
