@@ -10,7 +10,7 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
-    "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text ./node_modules/.bin/mocha",
+    "test": "npm run tsc & npm run lint & mocha",
     "mocha": "mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "tsc": "./node_modules/.bin/tsc",
