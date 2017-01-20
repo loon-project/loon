@@ -7,7 +7,7 @@ import {MiddlewareType} from "./enum/MiddlewareType";
 import {ParamMetadata} from "./metadata/ParamMetadata";
 import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {ParamType} from "./enum/ParamType";
-import {Container} from "../di/Container";
+import {DIContainer} from "../di/DIContainer";
 import {IResponse} from "./interface/IResponse";
 import {IRequest} from "./interface/IRequest";
 import {INext} from "./interface/INext";
@@ -41,7 +41,7 @@ export class MVCContainer {
 
             const router = Express.Router();
             const type = controllerMetadata.type;
-            const controller = Container.get(controllerMetadata.type);
+            const controller = DIContainer.get(controllerMetadata.type);
 
             this.actionsMetadata
                 .filter(item => item.type === type)

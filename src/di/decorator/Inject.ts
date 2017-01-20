@@ -1,4 +1,4 @@
-import {Container} from "../Container";
+import {DIContainer} from "../DIContainer";
 import {isTypeSimple} from "../../util/Util";
 
 export function Inject(nameOrValue?: any) {
@@ -10,7 +10,7 @@ export function Inject(nameOrValue?: any) {
             const params = (<any> Reflect).getMetadata("design:paramtypes", target, key);
             const type = params[index];
 
-            Container.registerParamHandler({
+            DIContainer.registerParamHandler({
                 type: target,
                 index,
                 getValue: getValue(type, nameOrValue)
@@ -20,7 +20,7 @@ export function Inject(nameOrValue?: any) {
 
             const type = (<any> Reflect).getMetadata("design:type", target, key);
 
-            Container.registerPropertyHandler({
+            DIContainer.registerPropertyHandler({
                 type: target.constructor,
                 key,
                 getValue: getValue(type, nameOrValue)
@@ -33,6 +33,6 @@ function getValue(type: Function, nameOrValue?: any): () => any {
     if (isTypeSimple(type)) {
         return () => nameOrValue;
     } else {
-        return () => nameOrValue ? Container.get(nameOrValue) : Container.get(type);
+        return () => nameOrValue ? DIContainer.get(nameOrValue) : DIContainer.get(type);
     }
 }

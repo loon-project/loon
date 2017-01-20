@@ -1,7 +1,7 @@
 import "../../TestHelper";
 import {Component} from "../../../src/di/decorator/Component";
 import {Inject} from "../../../src/di/decorator/Inject";
-import {Container} from "../../../src/di/Container";
+import {DIContainer} from "../../../src/di/DIContainer";
 
 
 describe('Dependency Injection', () => {
@@ -28,13 +28,13 @@ describe('Dependency Injection', () => {
     }
 
     it('should have injected params', () => {
-        const aClass = Container.get(AClass);
+        const aClass = DIContainer.get(AClass);
         aClass.aParamComponent.name().should.be.equal('name');
         aClass.str.should.be.equal('aaa');
     });
 
     it('should have injected properties', () => {
-        const aClass = Container.get(AClass);
+        const aClass = DIContainer.get(AClass);
         aClass.aParamComponent.name().should.be.equal('name');
         aClass.num.should.be.equal(777);
     });

@@ -1,0 +1,13 @@
+{
+  "development": {
+    "db": "mysql"
+  },
+
+  "test": {
+    "db": "redis"
+  },
+
+  "production": {
+    "db": "postgres"
+  }
+}

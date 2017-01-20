@@ -1,16 +1,9 @@
 import {PropertyHandler, ParamHandler} from "./Handler";
 import {SignatureDupError} from "./error/SignatureDupError";
 import {DINotFoundError} from "./error/DINotFoundError";
+import {Component} from "./Component";
 
-export type ConstuctorFunction<T> = { new (...args: any[]): T };
-
-export interface Component {
-    name: string|undefined;
-    type: Function;
-    params: any[];
-}
-
-export class Container {
+export class DIContainer {
 
     private static instances: { name: string|undefined, type: Function|undefined, instance: any }[] = [];
     private static components: Component[] = [];
@@ -109,7 +102,7 @@ export class Container {
             }
 
             if (typeof param === 'function') {
-                return Container.get(param);
+                return DIContainer.get(param);
             }
 
             return undefined;
