@@ -9,5 +9,7 @@
 
   "production": {
     "db": "postgres"
-  }
+  },
+
+  "db": "redis"
 }
