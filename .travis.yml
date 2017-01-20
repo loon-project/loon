@@ -4,9 +4,9 @@ node_js:
   - "5"
   - "6"
 
-scripts:
-  npm run tsc
-  npm run mocha
-  npm test
+script:
+  - npm run tsc
+  - npm run mocha
+  - npm test
 
 after_success: npm run coverage
