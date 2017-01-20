@@ -1,4 +1,3 @@
+import {Component} from "../../di/decorator/Component";
 
-export function Service() {
-    return;
-}
+export const Service = Component;

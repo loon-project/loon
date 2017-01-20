@@ -35,7 +35,7 @@ export class MVCContainer {
         this.paramsMetadata.push({type, paramType, actionName, index, expression});
     }
 
-    public static getRoutes() {
+    public static getRoutes(): {baseRoute: string, router: Express.Router}[] {
 
         return this.controllersMetadata.map(controllerMetadata => {
 

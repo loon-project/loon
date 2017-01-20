@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 
 export class ServerHelper {
 
-    public static simpleServer() {
+    public static simpleServer(): Express.Application {
 
         const app = Express();
 

@@ -43,6 +43,8 @@ export abstract class TypedApplication {
     }
 
     public start() {
-        console.log("Hello world");
+        this.server.listen(8080, () => {
+            console.log("TypedApplication listen on port 8080");
+        });
     }
 }

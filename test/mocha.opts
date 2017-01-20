@@ -1,3 +1,2 @@
-build/test/**/*.js
 --reporter nyan
 --check-leaks

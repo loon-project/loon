@@ -42,3 +42,8 @@ lib
 coverage
 .nyc_output
 .yarnclean
+src/**/*.js
+src/**/*.js.map
+test/**/*.js
+test/**/*.js.map
+
