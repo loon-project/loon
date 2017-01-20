@@ -11,6 +11,7 @@
     "pretty": true,
     "strictNullChecks": true,
     "declaration": true,
+    "declarationDir": "dts",
     "types":[
       "node",
       "express",

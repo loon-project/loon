@@ -2,7 +2,8 @@
   "name": "typed-framework",
   "version": "0.0.9",
   "description": "typed web framework based on koajs and typescript",
-  "main": "./src/index.ts",
+  "main": "./lib/index.js",
+  "types": "./dts/index.d.ts",
   "repository": {
     "url": "https://github.com/typed-project/typed-framework",
     "type": "git"
@@ -10,6 +11,7 @@
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2",
   "scripts": {
+    "prepublish": "npm run tsc:release",
     "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha --recursive",
     "tsc": "./node_modules/.bin/tsc",
     "tsc:release": "./node_modules/.bin/tsc --project tsconfig.compile.json",
