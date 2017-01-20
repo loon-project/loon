@@ -11,6 +11,7 @@
   "license": "Apache-2",
   "scripts": {
     "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha",
+    "mocha": "mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "tsc": "./node_modules/.bin/tsc",
     "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@types/express": "^4.0.34",
     "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "lodash": "^4.17.4",
     "reflect-metadata": "^0.1.9"
