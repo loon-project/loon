@@ -20,3 +20,4 @@ tslint.json
 .publishrc
 type_definitions
 .idea
+.nyc_output
