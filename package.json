@@ -1,7 +1,7 @@
 {
   "name": "typed-framework",
   "version": "0.0.12",
-  "description": "typed web framework based on koajs and typescript",
+  "description": "typed web framework based on express and typescript",
   "main": "lib/index.js",
   "types": "dts/index.d.ts",
   "repository": {
@@ -12,10 +12,10 @@
   "license": "Apache-2.0",
   "scripts": {
     "prepublish": "npm run tsc:release",
-    "test": "npm run tsc & npm run lint & nyc --reporter=html --reporter=text _mocha --recursive",
-    "tsc": "./node_modules/.bin/tsc",
-    "tsc:release": "./node_modules/.bin/tsc --project tsconfig.compile.json",
-    "lint": "./node_modules/.bin/tslint ./src/*.ts ./test/*.ts",
+    "test": "npm run tsc && npm run lint && nyc --reporter=html --reporter=text _mocha --recursive",
+    "tsc": "tsc",
+    "tsc:release": "tsc --project tsconfig.compile.json",
+    "lint": "tslint ./src/*.ts ./test/*.ts",
     "mocha": "nyc --reporter=html --reporter=text _mocha --recursive ",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "release:major": "npm version major && npm publish && git push --follow-tags",
