@@ -2,6 +2,7 @@ import {ConfigContainer} from "../ConfigContainer";
 import {Metadata} from "../../metadata/Metadata";
 import {DIContainer} from "../../di/DIContainer";
 import * as Path from "path";
+import {ConfigException} from "../error/ConfigException";
 
 /**
  * Config decorator expect a file name under process.cwd() + "config"
@@ -23,7 +24,7 @@ export function Config(fileNameOrPath: string) {
     return (target: Function) => {
 
         if (Path.extname(fileNameOrPath) !== '.json') {
-            throw new Error('[Typed framework] only support json config file');
+            throw new ConfigException(`[TYPED] only support json config file`);
         }
 
         const params = Metadata.getParams(target);

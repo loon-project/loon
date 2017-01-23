@@ -43,4 +43,13 @@ describe("Config", () => {
             }
         }).should.throw(ConfigException);
     });
+
+    it('should throw ConfigException when Config receive a non-json file', () => {
+        (() => {
+            @Config("a.txt")
+            class AError2Config {
+            }
+        }).should.throw(ConfigException);
+
+    });
 });
