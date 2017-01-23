@@ -14,11 +14,22 @@ describe('Dependency Injection', () => {
         }
     }
 
+    @Component("a-named-component")
+    class ATestNamedComponent {
+
+        public name() {
+            return "a named component";
+        }
+    }
+
     @Component()
     class AClass {
 
         @Inject()
         public aPropertyComponent: AComponent;
+
+        @Inject("a-named-component")
+        public aTestNamedPropertyComponent: ATestNamedComponent;
 
         @Inject(777)
         public num: number;
@@ -40,6 +51,16 @@ describe('Dependency Injection', () => {
         const aClass = DIContainer.get(AClass);
         aClass.aParamComponent.name().should.be.equal('name');
         aClass.num.should.be.equal(777);
+    });
+
+    it('should have injected named component properties', () => {
+        const aClass = DIContainer.get(AClass);
+        aClass.aTestNamedPropertyComponent.name().should.be.equal('a named component');
+    });
+
+    it('should have injected type component properties', () => {
+        const aClass = DIContainer.get(AClass);
+        aClass.aPropertyComponent.name().should.be.equal('name');
     });
 
     it("should throw DIException error when there's no such component", () => {
