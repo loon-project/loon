@@ -53,6 +53,11 @@ export class DIContainer {
     //     }
     // }
 
+    // public static clear() {
+    //     this.instances = [];
+    //     this.components = [];
+    // }
+
     public static get(nameOrType: string|Function): any {
 
         let instance = this.findInstanceByNameOrType(nameOrType);
@@ -77,11 +82,6 @@ export class DIContainer {
         this.instances.push({name, type, instance});
         this.applyProperties(type);
         return instance;
-    }
-
-    public static clear() {
-        this.instances = [];
-        this.components = [];
     }
 
     private static initParams(type: Function, params: any): any[] {
