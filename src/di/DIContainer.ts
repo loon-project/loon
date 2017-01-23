@@ -92,16 +92,8 @@ export class DIContainer {
                 return handler.getValue();
             }
 
-            if (typeof param === 'function') {
-                return DIContainer.get(param);
-            }
-
-            return undefined;
+            return DIContainer.get(param);
         });
-    }
-
-    public static isTypeSimple(param: string): boolean {
-        return ["string", "boolean", "number", "object"].indexOf(param.toLowerCase()) !== -1;
     }
 
     private static applyProperties(type: Function) {

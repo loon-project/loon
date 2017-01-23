@@ -38,6 +38,13 @@ describe('Dependency Injection', () => {
         }
     }
 
+    @Component()
+    class NoSuchParamInjectComponent {
+        constructor(public unInjectedNum: number) {
+        }
+    }
+
+
     class NoSuchComponent {
     }
 
@@ -61,6 +68,10 @@ describe('Dependency Injection', () => {
     it('should have injected type component properties', () => {
         const aClass = DIContainer.get(AClass);
         aClass.aPropertyComponent.name().should.be.equal('name');
+    });
+
+    it('should throw DIException error when constructor param non-injected', () => {
+        (() => DIContainer.get(NoSuchParamInjectComponent)).should.throw(DIException);
     });
 
     it("should throw DIException error when there's no such component", () => {

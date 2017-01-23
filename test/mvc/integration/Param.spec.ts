@@ -58,8 +58,6 @@ describe("Action integration", () => {
     };
 
     it('should get HeaderParam in the action', () => {
-
-
         return HttpHelper.sendRequest("get", "http://localhost:4444/2/users", options, (response) => {
             response.statusCode.should.be.equal(200);
             response.body.should.be.equal(123);
@@ -74,7 +72,6 @@ describe("Action integration", () => {
     });
 
     it('should get BodyParam in the action', () => {
-
         return HttpHelper.sendRequest("post", "http://localhost:4444/2/users", options, (response) => {
             response.statusCode.should.be.equal(201);
             response.body.should.be.equal(1);
@@ -82,11 +79,13 @@ describe("Action integration", () => {
     });
 
     it('should get QueryParam in the action', () => {
-
         return HttpHelper.sendRequest("get", "http://localhost:4444/2/users/active", options, (response) => {
             response.statusCode.should.be.equal(200);
             response.body.should.be.equal('abc');
         });
     });
 
+    it('should get CookieParam in the action', () => {
+
+    });
 });
