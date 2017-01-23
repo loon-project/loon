@@ -1,13 +1,19 @@
 import * as Express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as Winston from 'winston';
 import {MVCContainer} from "../mvc/MVCContainer";
+import {Log} from "../logger/index";
 
 export abstract class TypedApplication {
 
     public server: Express.Application;
 
-    protected port: number;
+    protected port: number = 8080;
+
+    protected logLevel: string;
+
+    protected logTransports: Winston.TransportInstance[];
 
     constructor() {
         this
@@ -19,6 +25,22 @@ export abstract class TypedApplication {
 
     protected $onInitServer() {
         this.server = Express();
+
+        if (this.logLevel) {
+
+            Log.logger.configure({
+                level: this.logLevel
+            });
+        }
+
+        if (this.logTransports) {
+
+            Log.logger.configure({
+                transports: this.logTransports
+            });
+
+        }
+
         return this;
     }
 
@@ -46,10 +68,8 @@ export abstract class TypedApplication {
 
     public start() {
 
-        const port = this.port | process.env.PORT | 8080;
-
-        this.server.listen(port, () => {
-            console.log(`TypedApplication listen on port ${port}`);
+        this.server.listen(this.port, () => {
+            Log.logger.info(`Application is listening on port ${this.port}`);
         });
     }
 }
