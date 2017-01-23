@@ -11,6 +11,7 @@ import {DIContainer} from "../di/DIContainer";
 import {IResponse} from "./interface/IResponse";
 import {IRequest} from "./interface/IRequest";
 import {INext} from "./interface/INext";
+import {Middleware} from "./interface/Middleware";
 
 export class MVCContainer {
 
@@ -23,12 +24,21 @@ export class MVCContainer {
         this.actionsMetadata.push({type, httpMethod, route, actionName, params});
     }
 
-    public static registerController(type: Function, baseRoute?: string) {
-        this.controllersMetadata.push({baseRoute: baseRoute ? baseRoute : "", type});
+    public static registerController(type: Function, baseRoute: string, isRest: boolean) {
+        this.controllersMetadata.push({
+            baseRoute,
+            type,
+            isRest
+        });
     }
 
-    public static registerMiddlewares(type: Function, middlewareLevel: MiddlewareLevel, middlewareType: MiddlewareType) {
-        this.middlewaresMetadata.push({type, middlewareLevel, middlewareType});
+    public static registerMiddlewares(type: Function,
+                                      middleware: new (...args) => Middleware,
+                                      middlewareLevel: MiddlewareLevel,
+                                      middlewareType: MiddlewareType,
+                                      actionName?: string) {
+
+        this.middlewaresMetadata.push({type, middleware, middlewareLevel, middlewareType, actionName});
     }
 
     public static registerParams(type: Function, paramType: ParamType, actionName: string, index: number, expression: string|undefined) {
@@ -48,11 +58,32 @@ export class MVCContainer {
                 .map(actionMetadata => {
 
                     const action = this.actionMetadataToAction(type, controller, actionMetadata);
-                    const beforeActions = [];
-                    const afterActions = [];
-                    const renderAction = this.renderAction();
 
-                    const actions = _.concat([], beforeActions, action, afterActions, renderAction);
+                    const controllerBeforeActions = this.middlewaresMetadata
+                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Controller && item.middlewareType === MiddlewareType.BeforeAction)
+                        .map(item => DIContainer.get(item.middleware).use);
+
+                    const actionBeforeActions = this.middlewaresMetadata
+                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Action && item.middlewareType === MiddlewareType.BeforeAction)
+                        .map(item => DIContainer.get(item.middleware).use);
+
+                    const controllerAfterActions = this.middlewaresMetadata
+                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Controller && item.middlewareType === MiddlewareType.AfterAction)
+                        .map(item => DIContainer.get(item.middleware).use);
+
+                    const actionAfterActions = this.middlewaresMetadata
+                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Action && item.middlewareType === MiddlewareType.AfterAction)
+                        .map(item => DIContainer.get(item.middleware).use);
+
+                   let renderAction;
+
+                    if (controllerMetadata.isRest) {
+                        renderAction = this.renderRestAction();
+                    } else {
+                        renderAction = this.renderPageAction();
+                    }
+
+                    const actions = _.concat([], controllerBeforeActions, actionBeforeActions, action,  controllerAfterActions, actionAfterActions, renderAction);
 
                     router[actionMetadata.httpMethod](actionMetadata.route, actions);
                 });
@@ -131,7 +162,7 @@ export class MVCContainer {
         return controller[actionName].apply(controller, args);
     }
 
-    public static renderAction() {
+    public static renderRestAction() {
 
         return (request: IRequest, response: IResponse, next: INext) => {
 
@@ -154,6 +185,21 @@ export class MVCContainer {
                         response.json(response.data);
                 }
 
+            }
+        };
+    }
+
+    public static renderPageAction() {
+
+         return (request: IRequest, response: IResponse, next: INext) => {
+
+            if (!response.headersSent) {
+
+                if (request.method === 'POST') {
+                    response.status(201);
+                }
+
+                response.render(response.data);
             }
         };
     }

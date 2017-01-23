@@ -1,15 +1,36 @@
+import {Middleware} from "../interface/Middleware";
+import {MVCContainer} from "../MVCContainer";
+import {MiddlewareLevel} from "../enum/MiddlewareLevel";
+import {MiddlewareType} from "../enum/MiddlewareType";
 
+export function BeforeAction(MiddlewareClass: new (...args) => Middleware): Function {
 
-export function BeforeAction(): Function {
-    return () => {
-        return
-    }
+    return (target: any, actionName?: string) => {
+
+        if (actionName) {
+
+            MVCContainer.registerMiddlewares(target.constructor, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction, actionName);
+
+        } else {
+
+            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction);
+        }
+
+    };
 }
 
-export function AfterAction(): Function {
-    return () => {
-        return
-    }
+export function AfterAction(MiddlewareClass: new (...args) => Middleware): Function {
+    return (target: any, actionName?: string) => {
+
+        if (actionName) {
+
+            MVCContainer.registerMiddlewares(target.constructor, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction, actionName);
+
+        } else {
+
+            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction);
+        }
+    };
 }
 
 

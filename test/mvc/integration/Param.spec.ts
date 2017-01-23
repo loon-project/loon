@@ -1,6 +1,6 @@
 import "../../TestHelper";
 import {Get, Post} from "../../../src/mvc/decorator/Method";
-import {Controller} from "../../../src/mvc/decorator/Controller";
+import {Controller, RestController} from "../../../src/mvc/decorator/Controller";
 import {PathParam, BodyParam, HeaderParam, QueryParam} from "../../../src/mvc/decorator/Params";
 import {MVCContainer} from "../../../src/mvc/MVCContainer";
 import {HttpHelper} from "../../helper/HttpHelper";
@@ -9,7 +9,7 @@ import {ServerHelper} from "../../helper/ServerHelper";
 
 describe("Action integration", () => {
 
-    @Controller("/2")
+    @RestController("/2")
     class User2Controller {
 
         @Get("/users")

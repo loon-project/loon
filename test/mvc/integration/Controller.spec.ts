@@ -1,13 +1,13 @@
 import "../../TestHelper";
 import * as Express from "express";
-import {Controller} from "../../../src/mvc/decorator/Controller";
+import {RestController} from "../../../src/mvc/decorator/Controller";
 import {Get, Post, Patch, Put, Delete} from "../../../src/mvc/decorator/Method";
 import {MVCContainer} from "../../../src/mvc/MVCContainer";
 import {HttpHelper} from "../../helper/HttpHelper";
 
 describe("Controller integration", () => {
 
-    @Controller("/1")
+    @RestController("/1")
     class User1Controller {
 
         @Get("/users")

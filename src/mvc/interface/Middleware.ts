@@ -1,6 +1,7 @@
+import * as Express from 'express';
 
 export interface Middleware {
 
-    use?(context: any, next: (err?: any) => Promise<any>): Promise<any>;
+    use(request: Express.Request, response: Express.Response, next: Express.NextFunction): any;
 
 }

@@ -7,6 +7,8 @@ export abstract class TypedApplication {
 
     public server: Express.Application;
 
+    protected port: number;
+
     constructor() {
         this
             .$onInitServer()
@@ -43,8 +45,11 @@ export abstract class TypedApplication {
     }
 
     public start() {
-        this.server.listen(8080, () => {
-            console.log("TypedApplication listen on port 8080");
+
+        const port = this.port | process.env.PORT | 8080;
+
+        this.server.listen(port, () => {
+            console.log(`TypedApplication listen on port ${port}`);
         });
     }
 }

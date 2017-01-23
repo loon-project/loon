@@ -5,4 +5,6 @@ export interface ControllerMetadata {
 
     baseRoute: string;
 
+    isRest: boolean;
+
 }
