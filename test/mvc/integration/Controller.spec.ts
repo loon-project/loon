@@ -1,7 +1,6 @@
 import "../../TestHelper";
 import * as Express from "express";
-import {RestController} from "../../../src/mvc/decorator/Controller";
-import {Get, Post, Patch, Put, Delete} from "../../../src/mvc/decorator/Method";
+import {RestController, Get, Post, Patch, Put, Delete} from '../../../src/index';
 import {MVCContainer} from "../../../src/mvc/MVCContainer";
 import {HttpHelper} from "../../helper/HttpHelper";
 

@@ -1,10 +1,8 @@
 import "../../TestHelper";
-import {Get, Post} from "../../../src/mvc/decorator/Method";
-import {Controller, RestController} from "../../../src/mvc/decorator/Controller";
-import {PathParam, BodyParam, HeaderParam, QueryParam} from "../../../src/mvc/decorator/Params";
+import {Get, Post, RestController, PathParam, BodyParam, HeaderParam, QueryParam} from "../../../src/index";
 import {MVCContainer} from "../../../src/mvc/MVCContainer";
-import {HttpHelper} from "../../helper/HttpHelper";
 import {ServerHelper} from "../../helper/ServerHelper";
+import {HttpHelper} from "../../helper/HttpHelper";
 
 
 describe("Action integration", () => {

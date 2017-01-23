@@ -1,7 +1,6 @@
 import "../../TestHelper";
 import * as Path from "path";
-import {Config} from "../../../src/config/decorator/Config";
-import {Value} from "../../../src/config/decorator/Value";
+import {Config, Value} from '../../../src/index';
 import {DIContainer} from "../../../src/di/DIContainer";
 
 

@@ -1,5 +1,5 @@
 import "../../TestHelper";
-import {TypedApplication} from "../../../src/server/TypedApplication";
+import {TypedApplication} from "../../../src/index";
 
 describe("Server", () => {
 

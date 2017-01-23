@@ -1,6 +1,5 @@
 import "../../TestHelper";
-import {Component} from "../../../src/di/decorator/Component";
-import {Inject} from "../../../src/di/decorator/Inject";
+import {Component, Inject} from "../../../src/index";
 import {DIContainer} from "../../../src/di/DIContainer";
 
 
