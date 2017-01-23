@@ -1,6 +1,7 @@
 import "../../TestHelper";
 import {Component, Inject} from "../../../src/index";
 import {DIContainer} from "../../../src/di/DIContainer";
+import {DIException} from "../../../src/di/error/DIException";
 
 
 describe('Dependency Injection', () => {
@@ -26,6 +27,9 @@ describe('Dependency Injection', () => {
         }
     }
 
+    class NoSuchComponent {
+    }
+
     it('should have injected params', () => {
         const aClass = DIContainer.get(AClass);
         aClass.aParamComponent.name().should.be.equal('name');
@@ -38,4 +42,11 @@ describe('Dependency Injection', () => {
         aClass.num.should.be.equal(777);
     });
 
+    it("should throw DIException error when there's no such component", () => {
+        (() => DIContainer.get(NoSuchComponent)).should.throw(DIException);
+    });
+
+    it("should throw DIException error when there's no such component name", () => {
+        (() => DIContainer.get("no-such-component")).should.throw(DIException);
+    });
 });

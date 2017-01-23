@@ -4,6 +4,4 @@ export class Log {
     public static logger = Winston;
 }
 
-Winston.transports.Console
-
 

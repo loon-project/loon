@@ -1,7 +1,6 @@
 import {PropertyHandler, ParamHandler} from "./Handler";
-import {SignatureDupError} from "./error/SignatureDupError";
-import {DINotFoundError} from "./error/DINotFoundError";
 import {Component} from "./Component";
+import {DIException} from "./error/DIException";
 
 export class DIContainer {
 
@@ -18,10 +17,6 @@ export class DIContainer {
         });
     }
 
-    public static unregisterComponent(name: string|undefined, type: Function) {
-        this.components = this.components.filter(item => item.name !== name && item.type !== type);
-    }
-
     public static registerParamHandler(handler: ParamHandler) {
         this.paramHandlers.push(handler);
     }
@@ -30,29 +25,33 @@ export class DIContainer {
         this.propertyHandlers.push(handler);
     }
 
-    public static set(nameOrType: Function|string, value: any) {
-
-        if (this.findInstanceByNameOrType(nameOrType)) {
-            throw new SignatureDupError();
-        }
-
-        if (typeof nameOrType === "string") {
-
-            this.instances.push({
-                name: nameOrType,
-                type: undefined,
-                instance: value
-            });
-
-        } else {
-
-            this.instances.push({
-                name: undefined,
-                type: nameOrType,
-                instance: value
-            });
-        }
-    }
+    // public static unregisterComponent(name: string|undefined, type: Function) {
+    //     this.components = this.components.filter(item => item.name !== name && item.type !== type);
+    // }
+    //
+    // public static set(nameOrType: Function|string, value: any) {
+    //
+    //     if (this.findInstanceByNameOrType(nameOrType)) {
+    //         throw new DIException('[Typed] can not find instance');
+    //     }
+    //
+    //     if (typeof nameOrType === "string") {
+    //
+    //         this.instances.push({
+    //             name: nameOrType,
+    //             type: undefined,
+    //             instance: value
+    //         });
+    //
+    //     } else {
+    //
+    //         this.instances.push({
+    //             name: undefined,
+    //             type: nameOrType,
+    //             instance: value
+    //         });
+    //     }
+    // }
 
     public static get(nameOrType: string|Function): any {
 
@@ -63,14 +62,6 @@ export class DIContainer {
         }
 
         const component = this.findComponentByNameOrType(nameOrType);
-
-        if (!component) {
-            if (typeof nameOrType === "string") {
-                throw new DINotFoundError(`[Typed] can not find component by name: ${nameOrType}`);
-            } else {
-                throw new DINotFoundError(`[Typed] can not find component by type: ${nameOrType.name}`);
-            }
-        }
 
         const name = component.name;
         const type = component.type;
@@ -155,6 +146,8 @@ export class DIContainer {
         const component = this.components.find(item => item.name === name);
         if (component) {
             return component;
+        } else {
+            throw new DIException(`[TYPED] can not find component by name ${name}`);
         }
     }
 
@@ -162,6 +155,8 @@ export class DIContainer {
         const component = this.components.find(item => item.type === type);
         if (component) {
             return component;
+        } else {
+            throw new DIException(`[TYPED] can not find component by type ${type}`);
         }
     }
 
