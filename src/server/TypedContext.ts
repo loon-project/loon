@@ -9,29 +9,28 @@ export class TypedContext {
     private static connection: Knex;
 
     public static init() {
-        console.log("[TYPED] => booting application");
 
-        console.log("[TYPED] initialize configuration");
+        console.log("[TYPED] => initialize configuration");
         const databaseConfig = Path.join(process.cwd(), 'config', 'database.json');
         const applicationConfig = Path.join(process.cwd(), 'config', 'application.json');
 
         ConfigContainer.registerConfig(databaseConfig);
         ConfigContainer.registerConfig(applicationConfig);
 
-        console.log("[TYPED] initialize database");
+        console.log("[TYPED] => initialize database");
         TypedContext.connection = Knex({
 
         });
 
 
-        console.log("[TYPED] initialize beans");
+        console.log("[TYPED] => initialize beans");
         require('require-all')({
             dirname     :  process.cwd() + '/app',
             excludeDirs :  /^\.(git|svn|node_modules)$/,
             recursive   : true
         });
 
-        console.log("[TYPED] initialize logger");
+        console.log("[TYPED] => initialize logger");
         let env;
         if (process.env.NODE_ENV) {
             env = process.env.NODE_ENV;

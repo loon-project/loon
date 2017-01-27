@@ -4,6 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as Winston from 'winston';
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
+import {TypedContext} from "./TypedContext";
 
 export abstract class TypedApplication {
 
@@ -16,6 +17,11 @@ export abstract class TypedApplication {
     protected logTransports: Winston.TransportInstance[];
 
     constructor() {
+
+        console.log("[TYPED] => booting application");
+
+        TypedContext.init();
+
         this
             .$onInitServer()
             .$onInitMiddlewares()
@@ -26,21 +32,6 @@ export abstract class TypedApplication {
     protected $onInitServer() {
 
         this.server = Express();
-
-        if (this.logLevel) {
-
-            Log.logger.configure({
-                level: this.logLevel
-            });
-        }
-
-        if (this.logTransports) {
-
-            Log.logger.configure({
-                transports: this.logTransports
-            });
-
-        }
 
         return this;
     }
