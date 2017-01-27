@@ -24,13 +24,17 @@
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
+    "@types/bookshelf": "^0.8.34",
     "@types/express": "^4.0.34",
+    "@types/knex": "0.0.39",
     "@types/winston": "^2.2.0",
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
+    "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "reflect-metadata": "^0.1.9",
+    "require-all": "^2.1.0",
     "winston": "^2.3.0"
   },
   "devDependencies": {

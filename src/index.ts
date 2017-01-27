@@ -7,5 +7,5 @@ export * from './di';
 export * from './logger';
 export * from './mvc';
 export * from './server';
-
+export * from './data';
 

@@ -13,7 +13,7 @@ export class ConfigContainer {
             const config = require(path);
             this.config = _.merge({}, this.config, config);
         } catch (err) {
-            console.log('[Typed framework] load config file error');
+            console.log('[TYPED] load config file error');
         }
     }
 

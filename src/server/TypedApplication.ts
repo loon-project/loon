@@ -24,6 +24,7 @@ export abstract class TypedApplication {
     }
 
     protected $onInitServer() {
+
         this.server = Express();
 
         if (this.logLevel) {
