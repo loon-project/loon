@@ -10,5 +10,5 @@ export interface ParamMetadata {
 
     index: number;
 
-    expression: string|undefined;
+    expression: string;
 }

@@ -41,7 +41,7 @@ export class MVCContainer {
         this.middlewaresMetadata.push({type, middleware, middlewareLevel, middlewareType, actionName});
     }
 
-    public static registerParams(type: Function, paramType: ParamType, actionName: string, index: number, expression: string|undefined) {
+    public static registerParams(type: Function, paramType: ParamType, actionName: string, index: number, expression: string) {
         this.paramsMetadata.push({type, paramType, actionName, index, expression});
     }
 

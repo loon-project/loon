@@ -39,19 +39,19 @@ export function SessionParam(expression: string) {
 
 export function Request() {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Request, actionName, index, undefined);
+        registerHelper(target.constructor, ParamType.Request, actionName, index, "");
     };
 }
 
 export function Response() {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Response, actionName, index, undefined);
+        registerHelper(target.constructor, ParamType.Response, actionName, index, "");
     };
 }
 
 export function Next() {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Next, actionName, index, undefined);
+        registerHelper(target.constructor, ParamType.Next, actionName, index, "");
     };
 }
 
@@ -59,7 +59,7 @@ function registerHelper(type: Function,
                         paramType: ParamType,
                         actionName: string,
                         index: number,
-                        expression: string|undefined) {
+                        expression: string) {
 
     MVCContainer.registerParams(type, paramType, actionName, index, expression);
 }
