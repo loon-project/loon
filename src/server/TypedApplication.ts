@@ -1,7 +1,7 @@
-import * as Express from 'express';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
-import * as Winston from 'winston';
+import * as Express from "express";
+import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
+import * as methodOverride from "method-override";
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
@@ -12,21 +12,16 @@ export abstract class TypedApplication {
 
     protected port: number = 8080;
 
-    protected logLevel: string;
-
-    protected logTransports: Winston.TransportInstance[];
-
-    constructor() {
+    constructor(srcDir: string, configDir: string) {
 
         console.log("[TYPED] => booting application");
 
-        TypedContext.init();
+        TypedContext.init(srcDir, configDir);
 
         this
             .$onInitServer()
             .$onInitMiddlewares()
-            .$onInitRoutes()
-            .$onReady();
+            .$onInitRoutes();
     }
 
     protected $onInitServer() {
@@ -37,9 +32,14 @@ export abstract class TypedApplication {
     }
 
     protected $onInitMiddlewares() {
-        this.server.use(bodyParser.json());
-        this.server.use(bodyParser.urlencoded({ extended: true }));
-        this.server.use(cookieParser());
+
+        this.use(bodyParser.json());
+        this.use(bodyParser.urlencoded({ extended: true }));
+        this.use(cookieParser());
+        this.use(methodOverride('X-HTTP-Method'));
+        this.use(methodOverride('X-HTTP-Method-Override'));
+        this.use(methodOverride('X-Method-Override'));
+
         return this;
     }
 
@@ -51,11 +51,14 @@ export abstract class TypedApplication {
         return this;
     }
 
-    protected $onReady() {
-        return this;
+    protected $onError() {
     }
 
-    protected $onError() {
+
+    public use(middleware: any) {
+
+        this.server.use(middleware);
+        return this;
     }
 
     public start() {

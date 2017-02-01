@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import * as Path from 'path';
 
 export class ConfigContainer {
 
@@ -10,11 +11,15 @@ export class ConfigContainer {
         this.configFiles.push(path);
 
         try {
+            const name = Path.parse(path).name;
             const config = require(path);
-            this.config = _.merge({}, this.config, config);
+            this.config = _.merge({}, this.config, {[name]: config});
         } catch (err) {
             console.log('[TYPED] load config file error');
         }
+    }
+
+    public static registerApplicationConfig(path: string) {
     }
 
     public static get(expression: string) {

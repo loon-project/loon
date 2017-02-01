@@ -33,6 +33,7 @@
     "express": "^4.14.0",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
+    "method-override": "^2.3.7",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",
     "winston": "^2.3.0"

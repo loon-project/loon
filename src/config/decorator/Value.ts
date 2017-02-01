@@ -4,14 +4,9 @@ import {ConfigContainer} from "../ConfigContainer";
 import {ConfigOption} from "../interface/ConfigOption";
 import {ConfigException} from "../error/ConfigException";
 
-export function Value(expression: string, options?: ConfigOption) {
+export function Value(expression: string) {
 
     return (target: any, key: string, index?: number) => {
-
-        if (!(options && options.env === false)) {
-            const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : "development";
-            expression = `${NODE_ENV}.${expression}`;
-        }
 
         if (typeof index !== 'undefined') {
 

@@ -12,21 +12,21 @@ describe("Config", () => {
     @Config(path)
     class BaseConfig {
 
-        @Value("db")
-        public db: string;
+        @Value("application.db")
+        public propertyDb: string;
 
-        @Value("db", {env: false})
-        public testDb: string;
+        constructor(@Value("application.db") public paramDb: string) {
+        }
     }
 
-    it('should load value from config file to config class with env', () => {
+    it('should load value from config file to config class property', () => {
         const baseConfig = DIContainer.get(BaseConfig);
-        baseConfig.db.should.be.equal("mysql");
+        baseConfig.propertyDb.should.be.equal("redis");
     });
 
-    it('should load value from config file to config class without env', () => {
+    it('should load value from config file to config class parameter', () => {
         const baseConfig = DIContainer.get(BaseConfig);
-        baseConfig.testDb.should.be.equal("redis");
+        baseConfig.paramDb.should.be.equal("redis");
     });
 
     it('should throw ConfigException when property should return a non-basic type', () => {
@@ -38,7 +38,7 @@ describe("Config", () => {
             @Config(path)
             class AErrorConfig {
 
-                @Value("db")
+                @Value("propertyDb")
                 public newType: ATypeClass;
             }
         }).should.throw(ConfigException);

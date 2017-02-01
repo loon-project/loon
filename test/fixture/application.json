@@ -11,5 +11,9 @@
     "db": "postgres"
   },
 
-  "db": "redis"
+  "db": "redis",
+
+  "winston": {
+
+  }
 }
