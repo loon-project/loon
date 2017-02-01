@@ -4,16 +4,13 @@ import {ConfigContainer} from "../config/ConfigContainer";
 import {Log} from "../logger/index";
 import * as Winston from 'winston';
 import {DIContainer} from "../di/DIContainer";
+import {TypedApplicationOption} from "./TypedApplicationOption";
 
 export class TypedContext {
 
     private static connection: Knex;
 
-    public static init(srcDir: string, configDir: string) {
-
-        console.log("[TYPED] => initialize configuration");
-        const databaseConfig = Path.join(configDir, 'config', 'database.json');
-        const applicationConfig = Path.join(configDir, 'config', 'application.json');
+    public static init(rootDir: string, options: TypedApplicationOption) {
 
         let env = "development";
 
@@ -21,16 +18,18 @@ export class TypedContext {
             env = process.env.NODE_ENV;
         }
 
+        const srcDir = options.srcDir ? options.srcDir : Path.resolve(rootDir, 'app');
+        const logDir = options.logDir ? options.logDir : Path.resolve(rootDir, 'log');
+        const configDir = options.configDir ? options.configDir : Path.resolve(rootDir, 'config');
+
+        console.log("[TYPED] => initialize configuration");
+        const databaseConfig = Path.join(configDir, 'config', 'database.json');
+        const applicationConfig = Path.join(configDir, 'config', 'application.json');
         ConfigContainer.registerConfig(databaseConfig);
         ConfigContainer.registerConfig(applicationConfig);
 
-        const rootDir = this.getConfig('rootDir') ? this.getConfig('rootDir') : 'app';
-        const cache = this.getConfig('cache') ? this.getConfig('cache') : false;
-        const cacheStore = this.getConfig('cacheStore') ? this.getConfig('cacheStore') : 'redis';
-        const logLevel = this.getConfig('logLevel') ? this.getConfig('logLevel') : 'debug';
 
         if (this.getConfig("database")) {
-
             console.log("[TYPED] => initialize database");
             TypedContext.connection = Knex(this.getConfig(`database.${env}`));
         }
@@ -44,16 +43,24 @@ export class TypedContext {
 
         console.log("[TYPED] => initialize logger");
 
+        const defaultLogLevel = env === 'production' ? 'info' : 'debug';
+        const defaultTransports = [
+            new (Winston.transports.Console)({
+                colorize: true,
+                prettyPrint: true,
+                timestamp: true,
+                showLevel: true
+            }),
+            new (Winston.transports.DailyRotateFile)({
+                filename: `${env}.log`,
+                dirname: logDir,
+                maxFiles: 30
+            })
+        ];
+
         Log.logger.configure({
-            level: "debug",
-            transports: [
-                new (Winston.transports.Console)({
-                    colorize: true,
-                    prettyPrint: true,
-                    timestamp: true,
-                    showLevel: true
-                })
-            ]
+            level: defaultLogLevel,
+            transports: defaultTransports
         });
     }
 

@@ -5,6 +5,7 @@ import * as methodOverride from "method-override";
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
+import {TypedApplicationOption} from "./TypedApplicationOption";
 
 export abstract class TypedApplication {
 
@@ -12,11 +13,11 @@ export abstract class TypedApplication {
 
     protected port: number = 8080;
 
-    constructor(srcDir: string, configDir: string) {
+    constructor(rootDir: string, options: TypedApplicationOption) {
 
         console.log("[TYPED] => booting application");
 
-        TypedContext.init(srcDir, configDir);
+        TypedContext.init(rootDir, options);
 
         this
             .$onInitServer()
