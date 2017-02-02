@@ -43,20 +43,26 @@ export class TypedContext {
 
         console.log("[TYPED] => initialize logger");
 
-        const defaultLogLevel = env === 'production' ? 'info' : 'debug';
-        const defaultTransports = [
-            new (Winston.transports.Console)({
-                colorize: true,
-                prettyPrint: true,
-                timestamp: true,
-                showLevel: true
-            }),
-            new (Winston.transports.DailyRotateFile)({
-                filename: `${env}.log`,
-                dirname: logDir,
-                maxFiles: 30
-            })
-        ];
+        let defaultLogLevel = 'debug';
+        const consoleTransport = <Winston.TransportInstance>new (Winston.transports.Console)({
+            colorize: true,
+            prettyPrint: true,
+            timestamp: true,
+            showLevel: true
+        });
+
+        const fileTransports = <Winston.TransportInstance>new (Winston.transports.DailyRotateFile)({
+            filename: `${env}.log`,
+            dirname: logDir,
+            maxFiles: 30
+        });
+
+        let defaultTransports = [consoleTransport];
+
+        if (env === 'production') {
+            defaultLogLevel = 'info';
+            defaultTransports = [consoleTransport, fileTransports];
+        }
 
         Log.logger.configure({
             level: defaultLogLevel,
