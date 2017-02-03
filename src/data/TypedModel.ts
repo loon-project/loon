@@ -11,7 +11,7 @@ export class TypedModel {
     }
 
     public static columns(): string[] {
-        return this.modelColumns().map(item => `${this.table()}.${item.columnName}`);
+        return this.modelColumns().map(item => `${this.table()}.${item.columnName} AS ${this.table()}_${item.columnName}`);
     }
 
     public static column(property: string): string|undefined {
@@ -28,7 +28,7 @@ export class TypedModel {
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
                 const value = data[column];
-                const columnName = column.split(`${this.table()}.`)[1];
+                const columnName = column.split(`${this.table()}_`)[1];
                 const modelColumn = this.modelColumns().find(item => item.columnName === columnName);
                 instance[modelColumn.property] = value;
             }
