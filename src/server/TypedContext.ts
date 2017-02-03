@@ -86,4 +86,8 @@ export class TypedContext {
     public static getLogger() {
         return Log.logger;
     }
+
+    public static getConnection() {
+        return this.connection;
+    }
 }
