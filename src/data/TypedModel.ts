@@ -17,7 +17,7 @@ export class TypedModel {
     public static column(property: string): string|undefined {
         const modelColumn = this.modelColumns().find(item => item.propertyName === property);
         if (typeof modelColumn !== 'undefined') {
-            return `${this.table()}.${modelColumn.columnName}`;
+            return `${this.table()}_${modelColumn.columnName}`;
         }
     }
 
