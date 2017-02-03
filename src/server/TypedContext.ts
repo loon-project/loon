@@ -21,8 +21,8 @@ export class TypedContext {
             env = process.env.NODE_ENV;
         }
 
-        const srcDir = options.srcDir ? options.srcDir : Path.resolve(rootDir, 'app');
-        const logDir = options.logDir ? options.logDir : Path.resolve(rootDir, 'log');
+        const srcDir = options.srcDir ? options.srcDir : Path.resolve(rootDir, 'src');
+        const logDir = options.logDir ? options.logDir : Path.resolve(rootDir, 'logs');
         const configDir = options.configDir ? options.configDir : Path.resolve(rootDir, 'config');
 
         console.log("[TYPED] => initialize configuration");
