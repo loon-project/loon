@@ -2,6 +2,7 @@ import * as Express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
+import * as morgan from 'morgan';
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
@@ -40,6 +41,11 @@ export abstract class TypedApplication {
         this.use(methodOverride('X-HTTP-Method'));
         this.use(methodOverride('X-HTTP-Method-Override'));
         this.use(methodOverride('X-Method-Override'));
+        this.use(morgan("combined", {
+            stream: {
+                write: message => Log.logger.info(message)
+            }
+        }));
 
         return this;
     }

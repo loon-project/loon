@@ -15,11 +15,8 @@ export class ConfigContainer {
             const config = require(path);
             this.config = _.merge({}, this.config, {[name]: config});
         } catch (err) {
-            console.log('[TYPED] load config file error');
+            console.log(`[TYPED][ERR] ${path} load error`);
         }
-    }
-
-    public static registerApplicationConfig(path: string) {
     }
 
     public static get(expression: string) {

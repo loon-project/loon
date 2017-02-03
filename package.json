@@ -34,9 +34,11 @@
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
+    "morgan": "^1.7.0",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",
-    "winston": "^2.3.0"
+    "winston": "^2.3.0",
+    "winston-daily-rotate-file": "^1.4.4"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
