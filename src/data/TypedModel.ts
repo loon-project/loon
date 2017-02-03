@@ -30,7 +30,7 @@ export class TypedModel {
                 const value = data[column];
                 const columnName = column.split(`${this.table()}_`)[1];
                 const modelColumn = this.modelColumns().find(item => item.columnName === columnName);
-                instance[modelColumn.property] = value;
+                instance[modelColumn.propertyName] = value;
             }
         }
 
