@@ -63,23 +63,23 @@ export class MVCContainer {
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Controller
                                         && item.middlewareType === MiddlewareType.BeforeAction)
-                        .map(item => DIContainer.get(item.middleware).use);
+                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
 
                     const actionBeforeActions = this.middlewaresMetadata
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Action
                                         && item.middlewareType === MiddlewareType.BeforeAction)
-                        .map(item => DIContainer.get(item.middleware).use);
+                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
 
                     const controllerAfterActions = this.middlewaresMetadata
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Controller
                                         && item.middlewareType === MiddlewareType.AfterAction)
-                        .map(item => DIContainer.get(item.middleware).use);
+                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
 
                     const actionAfterActions = this.middlewaresMetadata
                         .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Action && item.middlewareType === MiddlewareType.AfterAction)
-                        .map(item => DIContainer.get(item.middleware).use);
+                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
 
                    let renderAction;
 
@@ -122,6 +122,17 @@ export class MVCContainer {
                     next();
                 })
                 .catch(err => next(err));
+        };
+    }
+
+    public static wrapMiddleware(middleware: Function) {
+        return (req: TypedRequest, res: TypedResponse, next: TypedNext) => {
+            try {
+                return middleware(req, res, next);
+            } catch (err) {
+                return next(err);
+            }
+
         };
     }
 

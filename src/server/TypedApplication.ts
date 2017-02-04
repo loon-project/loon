@@ -39,17 +39,18 @@ export abstract class TypedApplication {
 
     protected $onInitMiddlewares() {
 
+        this.use(morgan("combined", {
+            stream: {
+                write: message => Log.logger.info(message)
+            }
+        }));
+
         this.use(bodyParser.json());
         this.use(bodyParser.urlencoded({ extended: true }));
         this.use(cookieParser());
         this.use(methodOverride('X-HTTP-Method'));
         this.use(methodOverride('X-HTTP-Method-Override'));
         this.use(methodOverride('X-Method-Override'));
-        this.use(morgan("combined", {
-            stream: {
-                write: message => Log.logger.info(message)
-            }
-        }));
 
         return this;
     }
@@ -82,13 +83,19 @@ export abstract class TypedApplication {
 
     protected $onError() {
 
-        this.server.use((err, req: Express.Request, res: Express.Response) => {
+        this.server.use((err, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
 
             console.log(err);
 
-            if (err instanceof HttpException) {
+            if (res.headersSent) {
+                next(err);
+            } else if (err instanceof HttpException) {
                 res.status(err.code).send(err.message);
+            } else {
+                next(err);
             }
+
+            return;
 
         });
     }
