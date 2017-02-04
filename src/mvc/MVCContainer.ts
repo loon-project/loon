@@ -90,7 +90,7 @@ export class MVCContainer {
                         renderAction = this.renderPageAction();
                     }
 
-                    const actions = _.concat([], controllerBeforeActions, actionBeforeActions, action,  controllerAfterActions, actionAfterActions, renderAction);
+                    const actions = _.concat([], controllerBeforeActions, actionBeforeActions, <any>action,  controllerAfterActions, actionAfterActions, renderAction);
 
                     router[actionMetadata.httpMethod](actionMetadata.route, actions);
                 });
