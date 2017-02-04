@@ -14,3 +14,9 @@ export * from './interface/Middleware';
 export * from './interface/TypedRequest';
 export * from './interface/TypedResponse';
 export * from './interface/TypedNext';
+
+export * from './error/BadRequest';
+export * from './error/HttpException';
+export * from './error/InternalServerError';
+export * from './error/NotFound';
+export * from './error/Unauthorized';
