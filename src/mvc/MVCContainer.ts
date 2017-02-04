@@ -13,6 +13,7 @@ import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
 
+
 export class MVCContainer {
 
     private static controllersMetadata: ControllerMetadata[] = [];
@@ -63,23 +64,23 @@ export class MVCContainer {
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Controller
                                         && item.middlewareType === MiddlewareType.BeforeAction)
-                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
+                        .map(item => this.wrapMiddleware(item.middleware));
 
                     const actionBeforeActions = this.middlewaresMetadata
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Action
                                         && item.middlewareType === MiddlewareType.BeforeAction)
-                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
+                        .map(item => this.wrapMiddleware(item.middleware));
 
                     const controllerAfterActions = this.middlewaresMetadata
                         .filter(item => item.type === type
                                         && item.middlewareLevel === MiddlewareLevel.Controller
                                         && item.middlewareType === MiddlewareType.AfterAction)
-                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
+                        .map(item => this.wrapMiddleware(item.middleware));
 
                     const actionAfterActions = this.middlewaresMetadata
                         .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Action && item.middlewareType === MiddlewareType.AfterAction)
-                        .map(item => this.wrapMiddleware(DIContainer.get(item.middleware).use));
+                        .map(item => this.wrapMiddleware(item.middleware));
 
                    let renderAction;
 
@@ -108,15 +109,15 @@ export class MVCContainer {
 
             return new Promise((resolve, reject) => {
 
-                const result = this.invokeAction(type, controller, actionMetadata, request, response, next);
+                    const result = this.invokeAction(type, controller, actionMetadata, request, response, next);
 
-                if (result && result.then) {
-                    result.then(resolve, reject);
-                } else {
-                    resolve(result);
-                }
+                    if (result && result.then) {
+                        result.then(resolve, reject);
+                    } else {
+                        resolve(result);
+                    }
 
-            })
+                })
                 .then(data => {
                     response.data = data;
                     next();
@@ -125,13 +126,15 @@ export class MVCContainer {
         };
     }
 
-    public static wrapMiddleware(middleware: Function) {
-        return (req: TypedRequest, res: TypedResponse, next: TypedNext) => {
-            try {
-                return middleware(req, res, next);
-            } catch (err) {
-                return next(err);
-            }
+    public static wrapMiddleware(middleware) {
+
+        return (req: TypedResponse, res: TypedResponse, next: TypedNext) => {
+
+            return new Promise((resolve, reject) => {
+                    const instance = DIContainer.get(middleware);
+                    instance.use.apply(instance, req, res, next);
+                })
+                .catch(err => next(err));
 
         };
     }

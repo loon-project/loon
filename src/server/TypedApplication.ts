@@ -85,8 +85,6 @@ export abstract class TypedApplication {
 
         this.server.use((err, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
 
-            console.log(err);
-
             if (res.headersSent) {
                 next(err);
             } else if (err instanceof HttpException) {
