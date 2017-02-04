@@ -132,7 +132,7 @@ export class MVCContainer {
 
             return new Promise((resolve, reject) => {
                     const instance = DIContainer.get(middleware);
-                    instance.use.apply(instance, req, res, next);
+                    instance.use.apply(instance, [req, res, next]);
                 })
                 .catch(err => next(err));
 
