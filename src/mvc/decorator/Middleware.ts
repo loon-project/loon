@@ -13,7 +13,7 @@ export function BeforeAction(MiddlewareClass: new (...args) => Middleware): Func
 
         } else {
 
-            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction);
+            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.BeforeAction);
         }
 
     };
@@ -28,7 +28,7 @@ export function AfterAction(MiddlewareClass: new (...args) => Middleware): Funct
 
         } else {
 
-            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction);
+            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.AfterAction);
         }
     };
 }
