@@ -3,10 +3,12 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
 import * as morgan from 'morgan';
+import * as Path from 'path';
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
 import {TypedApplicationOption} from "./TypedApplicationOption";
+import {HttpException} from "../mvc/error/HttpException";
 
 export abstract class TypedApplication {
 
@@ -23,7 +25,9 @@ export abstract class TypedApplication {
         this
             .$onInitServer()
             .$onInitMiddlewares()
-            .$onInitRoutes();
+            .$onInitViews()
+            .$onInitRoutes()
+            .$onError();
     }
 
     protected $onInitServer() {
@@ -50,6 +54,24 @@ export abstract class TypedApplication {
         return this;
     }
 
+    protected $onInitViews() {
+
+        const viewFolder = Path.resolve(TypedContext.srcDir, 'views');
+
+        const hbs = require('express-handlebars').create({
+            defaultLayout: 'main',
+            extname: '.hbs',
+            layoutsDir: viewFolder + "/layouts",
+            partialsDir: viewFolder + "/partials"
+        });
+
+        this.server.engine('.hbs', hbs.engine);
+        this.server.set('view engine', '.hbs');
+        this.server.set('views', viewFolder);
+
+        return this;
+    }
+
     protected $onInitRoutes() {
         MVCContainer
             .getRoutes()
@@ -59,6 +81,13 @@ export abstract class TypedApplication {
     }
 
     protected $onError() {
+        this.server.use((err, req: Express.Request, res: Express.Response) => {
+            if (err instanceof HttpException) {
+                Log.logger.error(err.stack);
+                res.status(err.code).send(err.message);
+            }
+
+        });
     }
 
 

@@ -10,7 +10,7 @@ export * from './enum/MiddlewareLevel';
 export * from './enum/MiddlewareType';
 export * from './enum/ParamType';
 
-export * from './interface/INext';
-export * from './interface/IRequest';
-export * from './interface/IResponse';
 export * from './interface/Middleware';
+export * from './interface/TypedRequest';
+export * from './interface/TypedResponse';
+export * from './interface/TypedNext';

@@ -8,10 +8,10 @@ import {ParamMetadata} from "./metadata/ParamMetadata";
 import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {ParamType} from "./enum/ParamType";
 import {DIContainer} from "../di/DIContainer";
-import {IResponse} from "./interface/IResponse";
-import {IRequest} from "./interface/IRequest";
-import {INext} from "./interface/INext";
 import {Middleware} from "./interface/Middleware";
+import {TypedResponse} from "./interface/TypedResponse";
+import {TypedNext} from "./interface/TypedNext";
+import {TypedRequest} from "./interface/TypedRequest";
 
 export class MVCContainer {
 
@@ -60,15 +60,21 @@ export class MVCContainer {
                     const action = this.actionMetadataToAction(type, controller, actionMetadata);
 
                     const controllerBeforeActions = this.middlewaresMetadata
-                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Controller && item.middlewareType === MiddlewareType.BeforeAction)
+                        .filter(item => item.type === type
+                                        && item.middlewareLevel === MiddlewareLevel.Controller
+                                        && item.middlewareType === MiddlewareType.BeforeAction)
                         .map(item => DIContainer.get(item.middleware).use);
 
                     const actionBeforeActions = this.middlewaresMetadata
-                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Action && item.middlewareType === MiddlewareType.BeforeAction)
+                        .filter(item => item.type === type
+                                        && item.middlewareLevel === MiddlewareLevel.Action
+                                        && item.middlewareType === MiddlewareType.BeforeAction)
                         .map(item => DIContainer.get(item.middleware).use);
 
                     const controllerAfterActions = this.middlewaresMetadata
-                        .filter(item => item.type === type && item.middlewareLevel === MiddlewareLevel.Controller && item.middlewareType === MiddlewareType.AfterAction)
+                        .filter(item => item.type === type
+                                        && item.middlewareLevel === MiddlewareLevel.Controller
+                                        && item.middlewareType === MiddlewareType.AfterAction)
                         .map(item => DIContainer.get(item.middleware).use);
 
                     const actionAfterActions = this.middlewaresMetadata
@@ -96,7 +102,7 @@ export class MVCContainer {
                                          controller: any,
                                          actionMetadata: ActionMetadata): (request, response, next) => void {
 
-        return (request: IRequest, response: IResponse, next: INext) => {
+        return (request: TypedRequest, response: TypedResponse, next: TypedNext) => {
 
             response.setHeader('X-Powered-By', 'Typed Framework');
 
@@ -122,9 +128,9 @@ export class MVCContainer {
     public static invokeAction(type: Function,
                                controller: any,
                                actionMetadata: ActionMetadata,
-                               request: IRequest,
-                               response: IResponse,
-                               next: INext) {
+                               request: Express.Request,
+                               response: Express.Response,
+                               next: Express.NextFunction) {
 
         const params = actionMetadata.params;
         const actionName = actionMetadata.actionName;
@@ -164,7 +170,7 @@ export class MVCContainer {
 
     public static renderRestAction() {
 
-        return (request: IRequest, response: IResponse, next: INext) => {
+        return (request: TypedRequest, response: TypedResponse, next: TypedNext) => {
 
             if (!response.headersSent) {
 
@@ -191,7 +197,7 @@ export class MVCContainer {
 
     public static renderPageAction() {
 
-         return (request: IRequest, response: IResponse, next: INext) => {
+         return (request: TypedRequest, response: TypedResponse, next: TypedNext) => {
 
             if (!response.headersSent) {
 
