@@ -82,8 +82,8 @@ export abstract class TypedApplication {
 
     protected $onError() {
         this.server.use((err, req: Express.Request, res: Express.Response) => {
+
             if (err instanceof HttpException) {
-                Log.logger.error(err.stack);
                 res.status(err.code).send(err.message);
             }
 
