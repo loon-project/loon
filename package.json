@@ -1,6 +1,6 @@
 {
   "name": "typed-framework",
-  "version": "0.0.48",
+  "version": "0.0.49",
   "description": "typed web framework based on express and typescript",
   "main": "lib/index.js",
   "types": "dts/index.d.ts",
