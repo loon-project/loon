@@ -12,6 +12,7 @@ import {Middleware} from "./interface/Middleware";
 import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
+import {TypedViewAndModel} from "./TypedViewAndModel";
 
 
 export class MVCContainer {
@@ -219,7 +220,17 @@ export class MVCContainer {
                     response.status(201);
                 }
 
-                response.render(response.data);
+                if (response.data && response.data instanceof TypedViewAndModel) {
+
+                    const viewAndModel = <TypedViewAndModel>response.data;
+                    response.render(viewAndModel.viewName, viewAndModel.model);
+
+                } else {
+
+                    response.render(response.data);
+
+                }
+
             }
         };
     }
