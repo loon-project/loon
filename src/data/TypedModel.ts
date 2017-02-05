@@ -21,9 +21,9 @@ export class TypedModel {
         }
     }
 
-    public static fromDB<T extends TypedModel>(data: any): T {
+    public static fromDB<T extends TypedModel>(type: { new(...args): T}, data: any): T {
 
-        const instance = <T>new TypedModel();
+        const instance = new type();
 
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
