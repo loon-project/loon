@@ -20,3 +20,5 @@ export * from './error/HttpException';
 export * from './error/InternalServerError';
 export * from './error/NotFound';
 export * from './error/Unauthorized';
+
+export * from './TypedViewAndModel';
