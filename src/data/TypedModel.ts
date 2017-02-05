@@ -30,7 +30,9 @@ export class TypedModel {
                 const value = data[column];
                 const columnName = column.split(`${this.table()}.`)[1];
                 const modelColumn = this.modelColumns().find(item => item.columnName === columnName);
-                instance[modelColumn.propertyName] = value;
+                if (typeof modelColumn !== 'undefined') {
+                    instance[modelColumn.propertyName] = value;
+                }
             }
         }
 
