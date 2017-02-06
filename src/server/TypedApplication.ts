@@ -57,18 +57,16 @@ export abstract class TypedApplication {
 
     protected $onInitViews() {
 
-        const viewFolder = Path.resolve(TypedContext.srcDir, 'views');
-
         const hbs = require('express-handlebars').create({
             defaultLayout: 'main',
             extname: '.hbs',
-            layoutsDir: viewFolder + "/layouts",
-            partialsDir: viewFolder + "/partials"
+            layoutsDir: TypedContext.viewDir + "/layouts",
+            partialsDir: TypedContext.viewDir + "/partials"
         });
 
         this.server.engine('.hbs', hbs.engine);
         this.server.set('view engine', '.hbs');
-        this.server.set('views', viewFolder);
+        this.server.set('views', TypedContext.viewDir);
 
         return this;
     }

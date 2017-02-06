@@ -10,4 +10,6 @@ export interface TypedApplicationOption {
     logDir?: string;
 
     dbDir?: string;
+
+    viewDir?: string;
 }

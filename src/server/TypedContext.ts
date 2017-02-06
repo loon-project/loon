@@ -19,6 +19,7 @@ export class TypedContext {
     public static logDir;
     public static configDir;
     public static dbDir;
+    public static viewDir;
 
 
 
@@ -29,6 +30,7 @@ export class TypedContext {
         this.srcDir = options.srcDir ? options.srcDir : Path.resolve(rootDir, 'src');
         this.logDir = options.logDir ? options.logDir : Path.resolve(rootDir, 'logs');
         this.configDir = options.configDir ? options.configDir : Path.resolve(rootDir, 'config');
+        this.viewDir = options.viewDir ? options.viewDir : Path.resolve(rootDir, 'src/views');
 
         let env = "development";
 
