@@ -1,10 +1,19 @@
 {
   "name": "typed-framework",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "main": "lib/index.js",
   "types": "dts/index.d.ts",
-  "keywords": ["express", "expressjs", "typescript", "mvc", "mvc-framework", "enterprise", "typed", "typed-project"],
+  "keywords": [
+    "express",
+    "expressjs",
+    "typescript",
+    "mvc",
+    "mvc-framework",
+    "enterprise",
+    "typed",
+    "typed-project"
+  ],
   "repository": {
     "url": "https://github.com/typed-project/typed-framework",
     "type": "git"
