@@ -1,26 +1,27 @@
 import * as Express from "express";
+import * as Path from "path";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
-import * as morgan from 'morgan';
-import * as Path from 'path';
+import * as morgan from "morgan";
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
-import {TypedApplicationOption} from "./TypedApplicationOption";
 import {HttpException} from "../mvc/error/HttpException";
 
-export abstract class TypedApplication {
+export class TypedServer {
 
     public server: Express.Application;
 
+    private name: string;
+
     protected port: number = 8080;
 
-    constructor(rootDir: string, options: TypedApplicationOption) {
+    constructor(targetApplication: Function) {
 
         console.log("[TYPED] => booting application");
 
-        TypedContext.init(rootDir, options);
+        this.name = targetApplication.name;
 
         this
             .$onInitServer()
@@ -28,6 +29,7 @@ export abstract class TypedApplication {
             .$onInitViews()
             .$onInitRoutes()
             .$onError();
+
     }
 
     protected $onInitServer() {
@@ -48,9 +50,7 @@ export abstract class TypedApplication {
         this.use(bodyParser.json());
         this.use(bodyParser.urlencoded({ extended: true }));
         this.use(cookieParser());
-        this.use(methodOverride('X-HTTP-Method'));
         this.use(methodOverride('X-HTTP-Method-Override'));
-        this.use(methodOverride('X-Method-Override'));
 
         return this;
     }
@@ -67,6 +67,16 @@ export abstract class TypedApplication {
         this.server.engine('.hbs', hbs.engine);
         this.server.set('view engine', '.hbs');
         this.server.set('views', TypedContext.viewDir);
+
+        return this;
+    }
+
+    protected $onInitAssets() {
+
+        const webpackConfig = Path.resolve(TypedContext.configDir, 'webpack.dev.config');
+
+        if (process.env.NODE_ENV !== 'production') {
+        }
 
         return this;
     }

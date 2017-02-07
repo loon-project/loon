@@ -1,9 +1,9 @@
 import "../../TestHelper";
-import {TypedApplication} from "../../../src/index";
+import {TypedServer} from "../../../src/index";
 
 // describe("Server", () => {
 //
-//     class Application extends TypedApplication {
+//     class Application extends TypedServer {
 //     }
 //
 //     const app = new Application();

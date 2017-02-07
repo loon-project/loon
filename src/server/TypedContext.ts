@@ -16,21 +16,21 @@ export class TypedContext {
     public static rootDir;
     public static srcDir;
     public static publicDir;
-    public static logDir;
+    public static logsDir;
     public static configDir;
     public static dbDir;
     public static viewDir;
+    public static assetsDir;
 
 
+    public static init(options: TypedApplicationOption) {
 
-
-    public static init(rootDir: string, options: TypedApplicationOption) {
-
-        this.rootDir = rootDir;
-        this.srcDir = options.srcDir ? options.srcDir : Path.resolve(rootDir, 'src');
-        this.logDir = options.logDir ? options.logDir : Path.resolve(rootDir, 'logs');
-        this.configDir = options.configDir ? options.configDir : Path.resolve(rootDir, 'config');
-        this.viewDir = options.viewDir ? options.viewDir : Path.resolve(rootDir, 'src/views');
+        this.rootDir = options.rootDir ? options.rootDir : __dirname;
+        this.srcDir = options.srcDir ? options.srcDir : Path.resolve(this.rootDir, 'src');
+        this.logsDir = options.logsDir ? options.logsDir : Path.resolve(this.rootDir, 'logs');
+        this.configDir = options.configDir ? options.configDir : Path.resolve(this.rootDir, 'config');
+        this.viewDir = options.viewsDir ? options.viewsDir : Path.resolve(this.rootDir, 'src/views');
+        this.assetsDir = options.assetsDir ? options.assetsDir : Path.resolve(this.rootDir, 'assets');
 
         let env = "development";
 
@@ -53,7 +53,7 @@ export class TypedContext {
         console.log("[TYPED] => initialize beans");
         require('require-all')({
             dirname     :  this.srcDir,
-            excludeDirs :  /^\.(git|svn|node_modules)$/,
+            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.assetsDir}|${this.viewDir}|${this.configDir}|${this.logsDir}})$`),
             recursive   : true
         });
 
@@ -70,7 +70,7 @@ export class TypedContext {
         const fileLogOptions = {
             level: 'debug',
             filename: `${env}.log`,
-            dirname: this.logDir,
+            dirname: this.logsDir,
             timestamp: true,
             maxFiles: 30
         };

@@ -1,15 +1,19 @@
 
 export interface TypedApplicationOption {
 
+    rootDir?: string;
+
     srcDir?: string;
 
     publicDir?: string;
 
     configDir?: string;
 
-    logDir?: string;
+    logsDir?: string;
 
     dbDir?: string;
 
-    viewDir?: string;
+    viewsDir?: string;
+
+    assetsDir?: string;
 }

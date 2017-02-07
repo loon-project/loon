@@ -1,8 +1,18 @@
 #! /usr/bin/env node --harmony
 import * as Program from 'commander';
+import * as Path from 'path';
+import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
 const packageJson = require('../../package.json');
 
+const initFile = packageJson['typed'];
+
+if (typeof initFile !== 'undefined') {
+    require(initFile);
+    const initializer = new TypedApplicationInitializer();
+} else {
+
+}
 
 Program
     .version(packageJson.version);
@@ -25,10 +35,15 @@ Program
 
 
 Program
-    .command('server <file>')
+    .command('server')
     .alias('s')
-    .description('# Start TypedApplication server')
+    .description('# Start TypedServer server')
     .action((file, options) => {
+        const filePath = Path.resolve(file);
+        const initializer = new TypedApplicationInitializer(filePath);
+        initializer.init();
+
+        const typdApplication = require(file);
         console.log(`server ${file}`);
     });
 
