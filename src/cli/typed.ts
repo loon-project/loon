@@ -39,11 +39,6 @@ Program
     .alias('s')
     .description('# Start TypedServer server')
     .action((file, options) => {
-        const filePath = Path.resolve(file);
-        const initializer = new TypedApplicationInitializer(filePath);
-        initializer.init();
-
-        const typdApplication = require(file);
         console.log(`server ${file}`);
     });
 
