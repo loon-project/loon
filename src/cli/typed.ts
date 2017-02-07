@@ -1,3 +1,4 @@
+#! /usr/bin/env node --harmony
 import * as Program from 'commander';
 
 const packageJson = require('../../package.json');
