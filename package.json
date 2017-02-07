@@ -10,6 +10,9 @@
   },
   "author": "vincent178 <vincent.007.cn@gmail.com>",
   "license": "Apache-2.0",
+  "bin": {
+    "typed": "./lib/cli/typed.js"
+  },
   "scripts": {
     "prepublish": "npm run tsc:release",
     "test": "npm run tsc && npm run lint && nyc --reporter=html --reporter=text _mocha --recursive",
@@ -28,16 +31,24 @@
     "@types/knex": "0.0.39",
     "@types/lodash": "^4.14.52",
     "@types/winston": "^2.2.0",
+    "assets-webpack-plugin": "^3.5.1",
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
     "body-parser": "^1.15.2",
+    "commander": "^2.9.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
+    "extract-text-webpack-plugin": "^2.0.0-rc.1",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
     "morgan": "^1.7.0",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",
+    "ts-node": "^2.0.0",
+    "webpack": "^2.2.1",
     "winston": "^2.3.0",
     "winston-daily-rotate-file": "^1.4.4"
   },
@@ -53,6 +64,7 @@
     "sinon-chai": "^2.8.0",
     "source-map-support": "^0.4.8",
     "tslint": "^4.3.1",
-    "typescript": "^2.1.5"
+    "typescript": "^2.1.5",
+    "webpack-dev-server": "^2.3.0"
   }
 }
