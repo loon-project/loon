@@ -1,19 +1,21 @@
 #! /usr/bin/env node --harmony
 import * as Program from 'commander';
 import * as Path from 'path';
+import * as Fs from 'fs';
 import * as FindUp from 'find-up';
 import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
-const packageJsonFilePath = FindUp.sync('package.json');
+const clientPackageJsonFilePath = FindUp.sync('package.json');
+const frameworkPackageJson = require('../../package.json');
 
-console.log(packageJsonFilePath);
+checkClientPackageJsonFile();
 
-// const initFile = packageJson['typed'];
+const clientPackageJson = require('clientPackageJsonFilePath');
 
-const initFile = '';
+const clientApplicationFile = clientPackageJson.typed;
 
 Program
-    .version('0.0.1');
+    .version(frameworkPackageJson.version);
 
 
 Program
@@ -39,7 +41,7 @@ Program
     .action((options) => {
 
         if (checkPropertyInPackageJson()) {
-            require(initFile);
+            require(clientApplicationFile);
             const initializer = new TypedApplicationInitializer();
             initializer.start();
         }
@@ -64,12 +66,20 @@ Program
 Program.parse(process.argv);
 
 function checkPropertyInPackageJson() {
-    if (typeof initFile === 'undefined') {
-        console.log('[TYPED] missing the initialize file in package.json');
-        return false;
-    }
 
-    return true;
+    if (typeof clientPackageJson === 'undefined') {
+        console.log('[TYPED] missing typed property in package.json');
+        return 1;
+    }
 }
 
+
+
+function checkClientPackageJsonFile() {
+
+    if (!Fs.existsSync(clientPackageJsonFilePath)) {
+        console.log('[TYPED] missing package.json file in your project, have you run `npm init`?');
+        return 1;
+    }
+}
 
