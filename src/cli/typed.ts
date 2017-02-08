@@ -1,8 +1,7 @@
 #! /usr/bin/env node --harmony
-import * as Program from 'commander';
-import * as Path from 'path';
-import * as Fs from 'fs';
-import * as FindUp from 'find-up';
+import * as Program from "commander";
+import * as Fs from "fs";
+import * as FindUp from "find-up";
 import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
 const clientPackageJsonFilePath = FindUp.sync('package.json');
@@ -10,7 +9,8 @@ const frameworkPackageJson = require('../../package.json');
 
 checkClientPackageJsonFile();
 
-const clientPackageJson = require('clientPackageJsonFilePath');
+console.log(`package.json: ${clientPackageJsonFilePath}`);
+const clientPackageJson = require(clientPackageJsonFilePath);
 
 const clientApplicationFile = clientPackageJson.typed;
 
