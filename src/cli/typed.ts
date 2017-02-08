@@ -9,16 +9,14 @@ const clientPackageJsonFilePath = FindUp.sync('package.json');
 const packageJson = require(clientPackageJsonFilePath);
 
 if (typeof packageJson.typed === 'undefined') {
-    console.log('[TYPED] missing typed property in package.json');
-    return 1;
+    throw new Error('[TYPED] missing typed property in package.json');
 }
 
 const typedFile = packageJson.typed;
 const typedFilePath = Path.resolve(clientPackageJsonFilePath, typedFile);
 
 if (!Fs.existsSync(typedFilePath)) {
-    console.log(`[TYPED] load failed. Can not find file: ${typedFile}`);
-    return 1;
+    throw new Error(`[TYPED] load failed. Can not find file: ${typedFile}`);
 }
 
 require(typedFilePath);
