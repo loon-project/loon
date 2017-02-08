@@ -5,12 +5,26 @@ import * as Path from 'path';
 import * as FindUp from "find-up";
 import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
+const clientPackageJsonFilePath = FindUp.sync('package.json');
+const packageJson = require(clientPackageJsonFilePath);
 
-const initializer = load();
-
-if (initializer === 1) {
+if (typeof packageJson.typed === 'undefined') {
+    console.log('[TYPED] missing typed property in package.json');
     return 1;
 }
+
+const typedFile = packageJson.typed;
+const typedFilePath = Path.resolve(clientPackageJsonFilePath, typedFile);
+
+if (!Fs.existsSync(typedFilePath)) {
+    console.log(`[TYPED] load failed. Can not find file: ${typedFile}`);
+    return 1;
+}
+
+require(typedFilePath);
+
+const initializer = new TypedApplicationInitializer();
+
 
 Program
     .version(require('../../package.json').version);
@@ -57,27 +71,5 @@ Program
 
 Program.parse(process.argv);
 
-function load() {
-    const clientPackageJsonFilePath = FindUp.sync('package.json');
-    const packageJson = require(clientPackageJsonFilePath);
-
-    if (typeof packageJson.typed === 'undefined') {
-        console.log('[TYPED] missing typed property in package.json');
-        return 1;
-    }
-
-    const typedFile = packageJson.typed;
-    const typedFilePath = Path.resolve(clientPackageJsonFilePath, typedFile);
-
-    if (!Fs.existsSync(typedFilePath)) {
-        console.log(`[TYPED] load failed. Can not find file: ${typedFile}`);
-        return 1;
-    }
-
-    require(typedFilePath);
-
-    return new TypedApplicationInitializer();
-
-}
 
 
