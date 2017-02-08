@@ -1,15 +1,19 @@
 #! /usr/bin/env node --harmony
 import * as Program from 'commander';
 import * as Path from 'path';
+import * as FindUp from 'find-up';
 import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
-const packageJson = require('../../package.json');
+const packageJsonFilePath = FindUp.sync('package.json');
 
-const initFile = packageJson['typed'];
+console.log(packageJsonFilePath);
 
+// const initFile = packageJson['typed'];
+
+const initFile = '';
 
 Program
-    .version(packageJson.version);
+    .version('0.0.1');
 
 
 Program
