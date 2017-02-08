@@ -1,21 +1,19 @@
 #! /usr/bin/env node --harmony
 import * as Program from "commander";
 import * as Fs from "fs";
+import * as Path from 'path';
 import * as FindUp from "find-up";
 import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
-const clientPackageJsonFilePath = FindUp.sync('package.json');
-const frameworkPackageJson = require('../../package.json');
 
-checkClientPackageJsonFile();
+const initializer = load();
 
-console.log(`package.json: ${clientPackageJsonFilePath}`);
-const clientPackageJson = require(clientPackageJsonFilePath);
-
-const clientApplicationFile = clientPackageJson.typed;
+if (initializer === 1) {
+    return 1;
+}
 
 Program
-    .version(frameworkPackageJson.version);
+    .version(require('../../package.json').version);
 
 
 Program
@@ -39,13 +37,7 @@ Program
     .alias('s')
     .description('# Start TypedServer server')
     .action((options) => {
-
-        if (checkPropertyInPackageJson()) {
-            require(clientApplicationFile);
-            const initializer = new TypedApplicationInitializer();
-            initializer.start();
-        }
-
+        initializer.start();
     });
 
 Program
@@ -65,21 +57,27 @@ Program
 
 Program.parse(process.argv);
 
-function checkPropertyInPackageJson() {
+function load() {
+    const clientPackageJsonFilePath = FindUp.sync('package.json');
+    const packageJson = require(clientPackageJsonFilePath);
 
-    if (typeof clientPackageJson === 'undefined') {
+    if (typeof packageJson.typed === 'undefined') {
         console.log('[TYPED] missing typed property in package.json');
         return 1;
     }
-}
 
+    const typedFile = packageJson.typed;
+    const typedFilePath = Path.resolve(clientPackageJsonFilePath, typedFile);
 
-
-function checkClientPackageJsonFile() {
-
-    if (!Fs.existsSync(clientPackageJsonFilePath)) {
-        console.log('[TYPED] missing package.json file in your project, have you run `npm init`?');
+    if (!Fs.existsSync(typedFilePath)) {
+        console.log(`[TYPED] load failed. Can not find file: ${typedFile}`);
         return 1;
     }
+
+    require(typedFilePath);
+
+    return new TypedApplicationInitializer();
+
 }
+
 
