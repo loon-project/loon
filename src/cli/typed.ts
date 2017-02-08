@@ -13,7 +13,7 @@ if (typeof packageJson.typed === 'undefined') {
 }
 
 const typedFile = packageJson.typed;
-const typedFilePath = Path.resolve(clientPackageJsonFilePath, typedFile);
+const typedFilePath = Path.resolve(clientPackageJsonFilePath, '..', typedFile);
 
 if (!Fs.existsSync(typedFilePath)) {
     throw new Error(`[TYPED] load failed. Can not find file: ${typedFile}`);
