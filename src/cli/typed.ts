@@ -7,12 +7,6 @@ const packageJson = require('../../package.json');
 
 const initFile = packageJson['typed'];
 
-if (typeof initFile !== 'undefined') {
-    require(initFile);
-    const initializer = new TypedApplicationInitializer();
-} else {
-
-}
 
 Program
     .version(packageJson.version);
@@ -38,8 +32,14 @@ Program
     .command('server')
     .alias('s')
     .description('# Start TypedServer server')
-    .action((file, options) => {
-        console.log(`server ${file}`);
+    .action((options) => {
+
+        if (checkPropertyInPackageJson()) {
+            require(initFile);
+            const initializer = new TypedApplicationInitializer();
+            initializer.start();
+        }
+
     });
 
 Program
@@ -58,5 +58,14 @@ Program
     });
 
 Program.parse(process.argv);
+
+function checkPropertyInPackageJson() {
+    if (typeof initFile === 'undefined') {
+        console.log('[TYPED] missing the initialize file in package.json');
+        return false;
+    }
+
+    return true;
+}
 
 
