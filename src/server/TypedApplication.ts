@@ -77,7 +77,7 @@ export class TypedServer {
     protected $onInitWebpack() {
 
         const webpacker = new Webpacker();
-        const compiler = webpack(webpacker.webpackConfig);
+        const compiler = webpack(webpacker.webpackConfig());
 
         if (process.env.NODE_ENV !== 'production') {
             this.server.use(webpackDevMiddleware(compiler));

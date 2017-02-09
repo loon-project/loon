@@ -1,5 +1,6 @@
 import {TypedContext} from "../server/TypedContext";
 import * as Path from 'path';
+import * as Fs from 'fs';
 
 export class Webpacker {
 
@@ -31,9 +32,19 @@ export class Webpacker {
 
     private extendFile(file) {
         if (Path.isAbsolute(file)) {
-            return file;
+            if (Fs.existsSync(file)) {
+                return file;
+            } else {
+                throw new Error(`[TYPED] error file path: ${file}`);
+            }
         } else {
-            return Path.resolve(TypedContext.assetsDir, file);
+            const path = Path.resolve(TypedContext.assetsDir, file);
+            if (Fs.existsSync(path)) {
+                return path;
+            } else {
+                throw new Error(`[TYPED] error file path: ${file}. 
+                    The file in webpack.json should be relative to assetsDir: ${TypedContext.assetsDir}`);
+            }
         }
     }
 }
