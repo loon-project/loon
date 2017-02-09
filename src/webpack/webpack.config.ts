@@ -33,7 +33,8 @@ module.exports = {
     },
 
     output: {
-        path: `${TypedContext.publicDir}/assets`,
+        path: `${TypedContext.publicDir}/assets/`,
+        publicPath: '/assets/',
         filename: TypedContext.isProduction() ? '[name].[chunkhash].js' : '[name].js'
     },
 

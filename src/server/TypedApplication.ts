@@ -80,7 +80,7 @@ export class TypedServer {
         const compiler = webpack(webpacker.webpackConfig());
 
         if (process.env.NODE_ENV !== 'production') {
-            this.server.use(webpackDevMiddleware(compiler));
+            this.server.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
         }
 
         return this;
