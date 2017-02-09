@@ -1,4 +1,5 @@
 #! /usr/bin/env node --harmony
+
 import * as Program from "commander";
 import * as Fs from "fs";
 import * as Path from 'path';
@@ -27,6 +28,12 @@ const initializer = new TypedApplicationInitializer();
 Program
     .version(require('../../package.json').version);
 
+/*
+ * for production
+ *      webpack -p
+ * for development
+ *      webpack
+ */
 
 Program
     .command('assets:compile')
@@ -66,12 +73,6 @@ Program
     .action(options => {
         console.log('db:rollback');
     });
-
-Program
-    .command('*')
-    .description('')
-
-
 
 Program.parse(process.argv);
 

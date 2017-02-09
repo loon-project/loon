@@ -22,6 +22,19 @@ export class TypedContext {
     public static viewDir;
     public static assetsDir;
 
+    public static env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+
+    public static isDevelopment() {
+        return this.env === 'development';
+    }
+
+    public static isTest() {
+        return this.env === 'test';
+    }
+
+    public static isProduction() {
+        return this.env === 'production';
+    }
 
     public static init(options: TypedApplicationOption) {
 
@@ -31,23 +44,20 @@ export class TypedContext {
         this.configDir = options.configDir ? options.configDir : Path.resolve(this.rootDir, 'config');
         this.viewDir = options.viewsDir ? options.viewsDir : Path.resolve(this.rootDir, 'src/views');
         this.assetsDir = options.assetsDir ? options.assetsDir : Path.resolve(this.rootDir, 'assets');
-
-        let env = "development";
-
-        if (process.env.NODE_ENV) {
-            env = process.env.NODE_ENV;
-        }
+        this.publicDir = options.publicDir ? options.publicDir : Path.resolve(this.rootDir, 'public');
 
         console.log("[TYPED] => initialize configuration");
         const databaseConfig = Path.join(this.configDir, 'database.json');
         const applicationConfig = Path.join(this.configDir, 'application.json');
+        const webpackConfig = Path.join(this.configDir, 'webpack.json');
         ConfigContainer.registerConfig(databaseConfig);
         ConfigContainer.registerConfig(applicationConfig);
+        ConfigContainer.registerConfig(webpackConfig);
 
 
         if (this.getConfig("database")) {
             console.log("[TYPED] => initialize database");
-            TypedContext.connection = Knex(this.getConfig(`database.${env}`));
+            TypedContext.connection = Knex(this.getConfig(`database.${this.env}`));
         }
 
         console.log("[TYPED] => initialize beans");
@@ -69,13 +79,13 @@ export class TypedContext {
 
         const fileLogOptions = {
             level: 'debug',
-            filename: `${env}.log`,
+            filename: `${this.env}.log`,
             dirname: this.logsDir,
             timestamp: true,
             maxFiles: 30
         };
 
-        if (env === 'production') {
+        if (this.isProduction()) {
             defaultLogLevel = 'info';
             fileLogOptions.level = 'info';
         }

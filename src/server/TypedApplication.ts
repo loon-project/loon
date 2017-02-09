@@ -1,13 +1,15 @@
 import * as Express from "express";
-import * as Path from "path";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
 import * as morgan from "morgan";
+import * as webpackDevMiddleware from "webpack-dev-middleware";
+import * as webpack from "webpack";
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
 import {HttpException} from "../mvc/error/HttpException";
+import {Webpacker} from "../webpack/Webpacker";
 
 export class TypedServer {
 
@@ -28,6 +30,7 @@ export class TypedServer {
             .$onInitMiddlewares()
             .$onInitViews()
             .$onInitRoutes()
+            .$onInitWebpack()
             .$onError();
 
     }
@@ -71,11 +74,13 @@ export class TypedServer {
         return this;
     }
 
-    protected $onInitAssets() {
+    protected $onInitWebpack() {
 
-        const webpackConfig = Path.resolve(TypedContext.configDir, 'webpack.dev.config');
+        const webpacker = new Webpacker();
+        const compiler = webpack(webpacker.webpackConfig);
 
         if (process.env.NODE_ENV !== 'production') {
+            this.server.use(webpackDevMiddleware(compiler));
         }
 
         return this;
