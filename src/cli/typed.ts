@@ -67,7 +67,15 @@ Program
         console.log('db:rollback');
     });
 
+Program
+    .command('*')
+    .description('')
+
+
+
 Program.parse(process.argv);
 
-
+if (Program.args.length === 0) {
+    Program.help();
+}
 

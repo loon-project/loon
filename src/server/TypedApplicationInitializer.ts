@@ -4,12 +4,10 @@ import {ServerContainer} from "./ServerContainer";
 
 export class TypedApplicationInitializer {
 
-    init() {
+    constructor(...args) {
 
         const options = ServerContainer.options;
-
         TypedContext.init(options);
-
     }
 
     start() {
