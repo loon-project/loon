@@ -46,7 +46,6 @@ export class TypedContext {
         this.assetsDir = options.assetsDir ? options.assetsDir : Path.resolve(this.rootDir, 'assets');
         this.publicDir = options.publicDir ? options.publicDir : Path.resolve(this.rootDir, 'public');
 
-        console.log("[TYPED] => initialize configuration");
         const databaseConfig = Path.join(this.configDir, 'database.json');
         const applicationConfig = Path.join(this.configDir, 'application.json');
         const webpackConfig = Path.join(this.configDir, 'webpack.json');
@@ -56,18 +55,14 @@ export class TypedContext {
 
 
         if (this.getConfig("database")) {
-            console.log("[TYPED] => initialize database");
             TypedContext.connection = Knex(this.getConfig(`database.${this.env}`));
         }
 
-        console.log("[TYPED] => initialize beans");
         require('require-all')({
             dirname     :  this.srcDir,
             excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.assetsDir}|${this.viewDir}|${this.configDir}|${this.logsDir}})$`),
             recursive   : true
         });
-
-        console.log("[TYPED] => initialize logger");
 
         let defaultLogLevel = 'debug';
         const consoleTransport: Winston.TransportInstance = new (Winston.transports.Console)({
