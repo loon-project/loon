@@ -9,7 +9,7 @@ export class Webpacker {
     constructor() {
         this.defaultConfig = require('./webpack.config');
         const config: any = TypedContext.getConfig('webpack');
-        this.mergeConfig(config, ['main', 'vendor']);
+        this.mergeConfig(config, ['entry']);
     }
 
     webpackConfig() {
@@ -20,12 +20,13 @@ export class Webpacker {
         properties.forEach(property => {
             if (config && config[property]) {
                 if (Array.isArray(config[property])) {
-                    this.defaultConfig.entry[property] = config[property].map(this.extendFile);
+                    this.defaultConfig[property] = config[property].map(this.extendFile);
                 } else {
-                    this.defaultConfig.entry[property] = this.extendFile(config[property]);
+                    this.defaultConfig[property] = this.extendFile(config[property]);
                 }
+            } else {
+                throw new Error('[TYPED] no entry file specified');
             }
-
         });
 
     }

@@ -5,15 +5,15 @@ import * as ManifestPlugin from "webpack-manifest-plugin";
 import {TypedContext} from "../server/TypedContext";
 
 
-const chunk = new webpack.optimize.CommonsChunkPlugin({
-    names: ["vendor", "manifest"],
-    minChunks: Infinity
-});
-
-const chunkManifest = new ChunkManifestPlugin({
-    filename: "chunk-manifest.json",
-    manifestVariable: "webpackManifest"
-});
+// const chunk = new webpack.optimize.CommonsChunkPlugin({
+//     names: ["vendor", "manifest"],
+//     minChunks: Infinity
+// });
+//
+// const chunkManifest = new ChunkManifestPlugin({
+//     filename: "chunk-manifest.json",
+//     manifestVariable: "webpackManifest"
+// });
 
 const css = new ExtractTextPlugin(TypedContext.isProduction() ? "[name].[contenthash].css" : "[name].css");
 
@@ -30,8 +30,6 @@ module.exports = {
     cache: TypedContext.isProduction(),
 
     entry: {
-        'main': null,
-        'vendor': null
     },
 
     output: {
@@ -63,5 +61,5 @@ module.exports = {
             }
         ]
     },
-    plugins: [env, css, chunk, manifest, chunkManifest]
+    plugins: [env, css, manifest]
 };
