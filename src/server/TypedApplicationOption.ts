@@ -9,7 +9,7 @@ export interface TypedApplicationOption {
 
     configDir?: string;
 
-    logsDir?: string;
+    logDir?: string;
 
     dbDir?: string;
 

@@ -4,12 +4,10 @@ import * as PkgDir from 'pkg-dir';
 import {ConfigContainer} from "../config/ConfigContainer";
 import {Log} from "../logger/index";
 import * as Winston from 'winston';
-import * as WinstonDailyRotateFile from 'winston-daily-rotate-file';
 import {DIContainer} from "../di/DIContainer";
 import {TypedApplicationOption} from "./TypedApplicationOption";
 import * as _ from 'lodash';
-
-Winston.transports.DailyRotateFile = WinstonDailyRotateFile;
+import * as Fs from 'fs';
 
 export class TypedContext {
 
@@ -18,7 +16,7 @@ export class TypedContext {
     public static rootDir;
     public static srcDir;
     public static publicDir;
-    public static logsDir;
+    public static logDir;
     public static configDir;
     public static dbDir;
     public static viewDir;
@@ -46,11 +44,11 @@ export class TypedContext {
 
         this.rootDir = options.rootDir ? options.rootDir : PkgDir.sync(__dirname);
         this.srcDir = options.srcDir ? options.srcDir : Path.resolve(this.rootDir, 'src');
-        this.logsDir = options.logsDir ? options.logsDir : Path.resolve(this.rootDir, 'logs');
+        this.logDir = options.logDir ? options.logDir : Path.resolve(this.rootDir, 'log');
         this.configDir = options.configDir ? options.configDir : Path.resolve(this.rootDir, 'config');
-        this.viewDir = options.viewsDir ? options.viewsDir : Path.resolve(this.rootDir, 'src/views');
         this.assetsDir = options.assetsDir ? options.assetsDir : Path.resolve(this.rootDir, 'assets');
         this.publicDir = options.publicDir ? options.publicDir : Path.resolve(this.rootDir, 'public');
+        this.viewDir = options.viewsDir ? options.viewsDir : Path.resolve(this.srcDir, 'views');
 
         const databaseConfig = Path.join(this.configDir, 'database.json');
         const applicationConfig = Path.join(this.configDir, 'application.json');
@@ -70,6 +68,10 @@ export class TypedContext {
             recursive   : true
         });
 
+        if (!Fs.existsSync(this.logDir)) {
+            Fs.mkdirSync(this.logDir);
+        }
+
         let defaultLogLevel = 'debug';
         const consoleTransport: Winston.TransportInstance = new (Winston.transports.Console)({
             colorize: true,
@@ -81,7 +83,7 @@ export class TypedContext {
         const fileLogOptions = {
             level: 'debug',
             filename: `${this.env}.log`,
-            dirname: this.logsDir,
+            dirname: this.logDir,
             timestamp: true,
             maxFiles: 30
         };
@@ -91,7 +93,7 @@ export class TypedContext {
             fileLogOptions.level = 'info';
         }
 
-        const fileTransports: Winston.TransportInstance = new (Winston.transports.DailyRotateFile)(fileLogOptions);
+        const fileTransports: Winston.TransportInstance = new (Winston.transports.File)(fileLogOptions);
 
         Log.logger.configure({
             level: defaultLogLevel,
