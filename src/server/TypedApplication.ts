@@ -74,14 +74,21 @@ export class TypedServer {
 
     protected $onInitWebpack() {
 
-        const webpacker = new Webpacker();
-        const compiler = webpack(webpacker.webpackConfig());
+        try {
 
-        if (process.env.NODE_ENV !== 'production') {
-            this.server.use(webpackDevMiddleware(compiler, {
-                publicPath: '/assets/'
-            }));
+            const webpacker = new Webpacker();
+            const compiler = webpack(webpacker.webpackConfig());
+
+            if (process.env.NODE_ENV !== 'production') {
+                this.server.use(webpackDevMiddleware(compiler, {
+                    publicPath: '/assets/'
+                }));
+            }
+
+        } catch (e) {
+            console.log(e.message);
         }
+
 
         return this;
     }

@@ -1,4 +1,5 @@
 import {TypedContext} from "../server/TypedContext";
+import * as _ from 'lodash';
 import * as Path from 'path';
 import * as Fs from 'fs';
 
@@ -9,6 +10,11 @@ export class Webpacker {
     constructor() {
         this.defaultConfig = require('./webpack.config');
         const config: any = TypedContext.getConfig('webpack');
+
+        if (_.isEmpty(config)) {
+            throw new Error('[TYPED] webpack.json configuration found');
+        }
+
         this.mergeConfig(config, ['entry']);
     }
 
