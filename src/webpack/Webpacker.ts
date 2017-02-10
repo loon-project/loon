@@ -19,11 +19,11 @@ export class Webpacker {
     private mergeConfig(config, properties) {
         properties.forEach(property => {
             if (config && config[property]) {
-                if (Array.isArray(config[property])) {
-                    this.defaultConfig[property] = config[property].map(this.extendFile);
-                } else {
-                    this.defaultConfig[property] = this.extendFile(config[property]);
+
+                if (property === 'entry') {
+                    this.defaultConfig[property] = this.normalizeEntryConfig(config[property]);
                 }
+
             } else {
                 throw new Error('[TYPED] no entry file specified');
             }
@@ -31,7 +31,19 @@ export class Webpacker {
 
     }
 
-    private extendFile(file) {
+    private normalizeEntryConfig(config) {
+        let ret = {};
+
+        for (let key in config) {
+            if (config.hasOwnProperty(key)) {
+                ret[key] = this.normalizeEntryFilePath(config[key]);
+            }
+        }
+
+        return ret;
+    }
+
+    private normalizeEntryFilePath(file) {
         if (Path.isAbsolute(file)) {
             if (Fs.existsSync(file)) {
                 return file;
