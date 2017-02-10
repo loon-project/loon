@@ -1,6 +1,5 @@
 import * as webpack from "webpack";
 import * as ExtractTextPlugin from "extract-text-webpack-plugin";
-import * as ChunkManifestPlugin from "chunk-manifest-webpack-plugin";
 import * as ManifestPlugin from "webpack-manifest-plugin";
 import {TypedContext} from "../server/TypedContext";
 

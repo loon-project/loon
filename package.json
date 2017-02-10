@@ -60,6 +60,7 @@
     "method-override": "^2.3.7",
     "morgan": "^1.7.0",
     "node-sass": "^4.5.0",
+    "pkg-dir": "^1.0.0",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",
     "sass-loader": "^5.0.1",

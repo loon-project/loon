@@ -1,5 +1,6 @@
 import * as Knex from "knex";
 import * as Path from 'path';
+import * as PkgDir from 'pkg-dir';
 import {ConfigContainer} from "../config/ConfigContainer";
 import {Log} from "../logger/index";
 import * as Winston from 'winston';
@@ -38,7 +39,7 @@ export class TypedContext {
 
     public static init(options: TypedApplicationOption) {
 
-        this.rootDir = options.rootDir ? options.rootDir : __dirname;
+        this.rootDir = options.rootDir ? options.rootDir : PkgDir.sync(__dirname);
         this.srcDir = options.srcDir ? options.srcDir : Path.resolve(this.rootDir, 'src');
         this.logsDir = options.logsDir ? options.logsDir : Path.resolve(this.rootDir, 'logs');
         this.configDir = options.configDir ? options.configDir : Path.resolve(this.rootDir, 'config');

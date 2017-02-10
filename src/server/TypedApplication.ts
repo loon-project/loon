@@ -21,8 +21,6 @@ export class TypedServer {
 
     constructor(targetApplication: Function) {
 
-        console.log("[TYPED] => booting application");
-
         this.name = targetApplication.name;
 
         this
@@ -80,7 +78,7 @@ export class TypedServer {
         const compiler = webpack(webpacker.webpackConfig());
 
         if (process.env.NODE_ENV !== 'production') {
-            this.server.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
+            this.server.use(webpackDevMiddleware(compiler));
         }
 
         return this;
@@ -121,7 +119,7 @@ export class TypedServer {
     public start() {
 
         this.server.listen(this.port, () => {
-            Log.logger.info(`Application is listening on port ${this.port}`);
+            Log.logger.info(`${this.name} is listening on port ${this.port}`);
         });
     }
 }
