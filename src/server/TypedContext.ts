@@ -7,6 +7,7 @@ import * as Winston from 'winston';
 import * as WinstonDailyRotateFile from 'winston-daily-rotate-file';
 import {DIContainer} from "../di/DIContainer";
 import {TypedApplicationOption} from "./TypedApplicationOption";
+import * as _ from 'lodash';
 
 Winston.transports.DailyRotateFile = WinstonDailyRotateFile;
 
@@ -38,6 +39,10 @@ export class TypedContext {
     }
 
     public static init(options: TypedApplicationOption) {
+
+        if (_.isEmpty(options)) {
+            options = {};
+        }
 
         this.rootDir = options.rootDir ? options.rootDir : PkgDir.sync(__dirname);
         this.srcDir = options.srcDir ? options.srcDir : Path.resolve(this.rootDir, 'src');
