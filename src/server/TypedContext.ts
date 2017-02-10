@@ -64,7 +64,7 @@ export class TypedContext {
 
         require('require-all')({
             dirname     :  this.srcDir,
-            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.assetsDir}|${this.viewDir}|${this.configDir}|${this.logsDir}})$`),
+            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.assetsDir}|${this.viewDir}|${this.configDir}|${this.logDir}})$`),
             recursive   : true
         });
 
