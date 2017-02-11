@@ -222,29 +222,30 @@ export class MVCContainer {
                     response.status(201);
                 }
 
-                try {
-
-                    const manifestPath = Path.resolve(TypedContext.publicDir, 'assets/manifest.json');
-                    const manifestJson = require(manifestPath);
-                    response.data = Object.assign({}, response.data, {manifest: manifestJson});
-
-                } catch (e) {
-                }
-
-
-
+                let viewName, data;
 
                 if (response.data && response.data instanceof TypedViewAndModel) {
 
                     const viewAndModel = <TypedViewAndModel>response.data;
-                    response.render(viewAndModel.viewName, viewAndModel.model);
+                    viewName = viewAndModel.viewName;
+                    data = viewAndModel.model;
 
                 } else {
 
-                    response.render(response.data);
+                    viewName = response.data;
+                }
+
+                try {
+
+                    const manifestPath = Path.resolve(TypedContext.publicDir, 'assets/manifest.json');
+                    const manifestJson = require(manifestPath);
+                    data = Object.assign({}, data, {manifest: manifestJson});
+
+                } catch (e) {
 
                 }
 
+                return response.render(viewName, data);
             }
         };
     }
