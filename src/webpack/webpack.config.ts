@@ -16,7 +16,9 @@ import {TypedContext} from "../server/TypedContext";
 
 const css = new ExtractTextPlugin(TypedContext.isProduction() ? "[name].[contenthash].css" : "[name].css");
 
-const manifest = new ManifestPlugin();
+const manifest = new ManifestPlugin({
+    writeToFileEmit: true
+});
 
 const env = new webpack.DefinePlugin({
     'process.env.NODE_ENV': TypedContext.env
