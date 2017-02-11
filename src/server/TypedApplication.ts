@@ -76,13 +76,24 @@ export class TypedServer {
 
         try {
 
-            const webpacker = new Webpacker();
-            const compiler = webpack(webpacker.webpackConfig());
+            if (!TypedContext.isProduction()) {
+                const webpacker = new Webpacker();
+                const compiler = webpack(webpacker.webpackConfig());
 
-            if (process.env.NODE_ENV !== 'production') {
                 this.server.use(webpackDevMiddleware(compiler, {
-                    publicPath: '/assets/'
+                    publicPath: '/assets/',
+                    serverSideRender: true
                 }));
+
+                this.server.use((req, res, next) => {
+
+                    const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
+
+                    console.log(assetsByChunkName);
+
+                    next();
+
+                });
             }
 
         } catch (e) {
