@@ -81,19 +81,9 @@ export class TypedServer {
                 const compiler = webpack(webpacker.webpackConfig());
 
                 this.server.use(webpackDevMiddleware(compiler, {
-                    publicPath: '/assets/',
-                    serverSideRender: true
+                    publicPath: '/assets/'
                 }));
 
-                this.server.use((req, res, next) => {
-
-                    const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
-
-                    console.log(assetsByChunkName);
-
-                    next();
-
-                });
             }
 
         } catch (e) {

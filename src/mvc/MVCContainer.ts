@@ -1,5 +1,6 @@
 import * as Express from "express";
 import * as _ from "lodash";
+import * as Path from 'path';
 import {MiddlewareLevel} from "./enum/MiddlewareLevel";
 import {ControllerMetadata} from "./metadata/ControllerMetadata";
 import {ActionMetadata} from "./metadata/ActionMetadata";
@@ -13,6 +14,7 @@ import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
 import {TypedViewAndModel} from "./TypedViewAndModel";
+import {TypedContext} from "../server/TypedContext";
 
 
 export class MVCContainer {
@@ -219,6 +221,18 @@ export class MVCContainer {
                 if (request.method === 'POST') {
                     response.status(201);
                 }
+
+                try {
+
+                    const manifestPath = Path.resolve(TypedContext.publicDir, 'assets/manifest.json');
+                    const manifestJson = require(manifestPath);
+                    response.data = Object.assign({}, response.data, {manifest: manifestJson});
+
+                } catch (e) {
+                }
+
+
+
 
                 if (response.data && response.data instanceof TypedViewAndModel) {
 
