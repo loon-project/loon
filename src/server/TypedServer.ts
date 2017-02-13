@@ -3,13 +3,10 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
 import * as morgan from "morgan";
-import * as webpackDevMiddleware from "webpack-dev-middleware";
-import * as webpack from "webpack";
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
 import {HttpException} from "../mvc/error/HttpException";
-import {Webpacker} from "../webpack/Webpacker";
 
 export class TypedServer {
 
@@ -19,9 +16,11 @@ export class TypedServer {
 
     protected port: number = 8080;
 
-    constructor(targetApplication: Function) {
+    constructor(rootDir: string) {
 
-        this.name = targetApplication.name;
+        TypedContext.init({rootDir});
+
+        this.name = this.constructor.name;
 
         this
             .$onInitServer()
@@ -74,21 +73,21 @@ export class TypedServer {
 
     protected $onInitWebpack() {
 
-        try {
-
-            if (!TypedContext.isProduction()) {
-                const webpacker = new Webpacker();
-                const compiler = webpack(webpacker.webpackConfig());
-
-                this.server.use(webpackDevMiddleware(compiler, {
-                    publicPath: '/assets/'
-                }));
-
-            }
-
-        } catch (e) {
-            console.log(e.message);
-        }
+        // try {
+        //
+        //     if (!TypedContext.isProduction()) {
+        //         const webpacker = new Webpacker();
+        //         const compiler = webpack(webpacker.webpackConfig());
+        //
+        //         this.server.use(webpackDevMiddleware(compiler, {
+        //             publicPath: '/assets/'
+        //         }));
+        //
+        //     }
+        //
+        // } catch (e) {
+        //     console.log(e.message);
+        // }
 
 
         return this;
