@@ -27,7 +27,6 @@ export class TypedServer {
             .$onInitMiddlewares()
             .$onInitViews()
             .$onInitRoutes()
-            .$onInitWebpack()
             .$onError();
 
     }
@@ -67,28 +66,6 @@ export class TypedServer {
         this.server.engine('.hbs', hbs.engine);
         this.server.set('view engine', '.hbs');
         this.server.set('views', TypedContext.viewDir);
-
-        return this;
-    }
-
-    protected $onInitWebpack() {
-
-        // try {
-        //
-        //     if (!TypedContext.isProduction()) {
-        //         const webpacker = new Webpacker();
-        //         const compiler = webpack(webpacker.webpackConfig());
-        //
-        //         this.server.use(webpackDevMiddleware(compiler, {
-        //             publicPath: '/assets/'
-        //         }));
-        //
-        //     }
-        //
-        // } catch (e) {
-        //     console.log(e.message);
-        // }
-
 
         return this;
     }

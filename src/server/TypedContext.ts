@@ -52,10 +52,8 @@ export class TypedContext {
 
         const databaseConfig = Path.join(this.configDir, 'database.json');
         const applicationConfig = Path.join(this.configDir, 'application.json');
-        const webpackConfig = Path.join(this.configDir, 'webpack.json');
         ConfigContainer.registerConfig(databaseConfig);
         ConfigContainer.registerConfig(applicationConfig);
-        ConfigContainer.registerConfig(webpackConfig);
 
 
         if (this.getConfig("database")) {

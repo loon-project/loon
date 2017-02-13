@@ -28,13 +28,6 @@ const initializer = new TypedApplicationInitializer();
 Program
     .version(require('../../package.json').version);
 
-/*
- * for production
- *      webpack -p
- * for development
- *      webpack
- */
-
 Program
     .command('assets:compile')
     .description('# Compile all the assets named in assetsDir')
