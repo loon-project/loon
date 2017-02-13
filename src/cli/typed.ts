@@ -4,7 +4,6 @@ import * as Program from "commander";
 import * as Fs from "fs";
 import * as Path from 'path';
 import * as FindUp from "find-up";
-import {TypedApplicationInitializer} from "../server/TypedApplicationInitializer";
 
 const clientPackageJsonFilePath = FindUp.sync('package.json');
 const packageJson = require(clientPackageJsonFilePath);
@@ -22,7 +21,6 @@ if (!Fs.existsSync(typedFilePath)) {
 
 require(typedFilePath);
 
-const initializer = new TypedApplicationInitializer();
 
 
 Program
@@ -49,7 +47,6 @@ Program
     .alias('s')
     .description('# Start TypedServer server')
     .action((options) => {
-        initializer.start();
     });
 
 Program
