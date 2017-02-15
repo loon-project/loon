@@ -42,7 +42,7 @@ export class TypedContext {
             options = {};
         }
 
-        this.rootDir = options.rootDir ? options.rootDir : PkgDir.sync(__dirname);
+        this.rootDir = options.rootDir ? options.rootDir : __dirname;
         this.srcDir = options.srcDir ? options.srcDir : Path.resolve(this.rootDir, 'src');
         this.logDir = options.logDir ? options.logDir : Path.resolve(this.rootDir, 'log');
         this.configDir = options.configDir ? options.configDir : Path.resolve(this.rootDir, 'config');

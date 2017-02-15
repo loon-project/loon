@@ -7,6 +7,9 @@ import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
 import {HttpException} from "../mvc/error/HttpException";
+import {TypedRequest} from "../mvc/interface/TypedRequest";
+import {TypedResponse} from "../mvc/interface/TypedResponse";
+import {TypedNext} from "../mvc/interface/TypedNext";
 
 export class TypedServer {
 
@@ -16,9 +19,7 @@ export class TypedServer {
 
     protected port: number = 8080;
 
-    constructor(rootDir: string) {
-
-        TypedContext.init({rootDir});
+    constructor() {
 
         this.name = this.constructor.name;
 
@@ -80,7 +81,7 @@ export class TypedServer {
 
     protected $onError() {
 
-        this.server.use((err, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+        this.server.use((err, req: TypedRequest, res: TypedResponse, next: TypedNext) => {
 
             if (res.headersSent) {
                 next(err);
