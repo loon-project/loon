@@ -1,13 +1,12 @@
 import * as Knex from "knex";
-import * as Path from 'path';
-import * as PkgDir from 'pkg-dir';
+import * as Path from "path";
 import {ConfigContainer} from "../config/ConfigContainer";
 import {Log} from "../logger/index";
-import * as Winston from 'winston';
+import * as Winston from "winston";
 import {DIContainer} from "../di/DIContainer";
 import {TypedApplicationOption} from "./TypedApplicationOption";
-import * as _ from 'lodash';
-import * as Fs from 'fs';
+import * as _ from "lodash";
+import * as Fs from "fs";
 
 export class TypedContext {
 
