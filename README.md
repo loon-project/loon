@@ -100,7 +100,7 @@ export class HomeController {
 $ ts-node src/Application.ts
 ```
 
-* open browser, and go to http://localhost:8080
+* open browser, and go to http://localhost:9000
 
 The code of quick start guide: [code](https://github.com/typed-project/example/tree/master/basic)
 

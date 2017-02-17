@@ -17,7 +17,7 @@ export class TypedServer {
 
     private name: string;
 
-    protected port: number = 8080;
+    protected port: number = 9000;
 
     constructor() {
 
