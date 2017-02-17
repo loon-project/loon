@@ -1,6 +1,6 @@
 {
   "name": "typed-framework",
-  "version": "0.0.108",
+  "version": "0.1.0",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "main": "lib/index.js",
   "types": "dts/index.d.ts",
