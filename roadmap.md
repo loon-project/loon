@@ -10,7 +10,8 @@
 - [ ] orm support
 
 #### 0.1.0
-- [ ] easy initialize application
-- [ ] decorator style controller and routes
-- [ ] built in logger support
+- [x] easy initialize application
+- [x] decorator style controller and routes
+- [x] built in logger support
+
 
