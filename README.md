@@ -89,11 +89,21 @@ export class HomeController {
 
 }
 ```
+* run the code
+```typescript
+$ ts-node src/Application.ts
+```
 
 * open browser, and go to http://localhost:8080
 
 The code of quick start guide: [code](https://github.com/typed-project/example/tree/master/basic)
 
+<h2 align="center">Features</h2>
+
+* Dependency Injection (constructor injection and property injection)
+* Service class
+* Rest route and controller, param data injection support
+* Log support
 
 <h2 align="center">Release note</h2>
 
@@ -105,6 +115,7 @@ The code of quick start guide: [code](https://github.com/typed-project/example/t
 * Best practice middlewares preinstalled
 * Best practice project structure
 * Easy server initialization
+* Dependency Injection
 
 <h2 align="center">Core Team</h2>
 <table>
@@ -114,27 +125,11 @@ The code of quick start guide: [code](https://github.com/typed-project/example/t
         <img width="150" height="150" src="https://github.com/vincent178.png?s=150">
         <br>
         <a href="https://github.com/vincent178">Vincent</a>
-        <p>Core</p>
-        <br>
         <p>Founder of typed-framework</p>
       </td>
      </tr>
   </tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
