@@ -10,14 +10,20 @@
 
 > Enterprise ready spring like framework build on Typescript and Express
 
+<h2 align="center">Features</h2>
+
+* Dependency Injection (constructor injection and property injection)
+* Service class
+* Rest route and controller, param data injection support
+* Log support
+
 
 <h2 align="center">Install</h2>
 ```bash
 npm install --save typed-framework
 ```
 
-
-<h2 align="center">Quick start</h2>
+<h2 align="center">Quick Start</h2>
 
 * install `typescript` and `ts-node`
 ```bash
@@ -98,12 +104,6 @@ $ ts-node src/Application.ts
 
 The code of quick start guide: [code](https://github.com/typed-project/example/tree/master/basic)
 
-<h2 align="center">Features</h2>
-
-* Dependency Injection (constructor injection and property injection)
-* Service class
-* Rest route and controller, param data injection support
-* Log support
 
 <h2 align="center">Release note</h2>
 
