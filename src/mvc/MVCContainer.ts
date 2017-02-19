@@ -13,7 +13,7 @@ import {Middleware} from "./interface/Middleware";
 import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
-import {TypedViewAndModel} from "./ViewAndModel";
+import {ViewAndModel} from "./ViewAndModel";
 import {TypedContext} from "../server/TypedContext";
 
 
@@ -224,9 +224,9 @@ export class MVCContainer {
 
                 let viewName, data;
 
-                if (response.data && response.data instanceof TypedViewAndModel) {
+                if (response.data && response.data instanceof ViewAndModel) {
 
-                    const viewAndModel = <TypedViewAndModel>response.data;
+                    const viewAndModel = <ViewAndModel>response.data;
                     viewName = viewAndModel.viewName;
                     data = viewAndModel.model;
 
