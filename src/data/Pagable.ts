@@ -1,8 +1,8 @@
 
 export class Pagable {
 
-    private page: number;
-    private size: number;
+    public page: number;
+    public size: number;
 
     constructor(page: number, size?: number) {
 
