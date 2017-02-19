@@ -14,7 +14,7 @@ import {TypedNext} from "../mvc/interface/TypedNext";
 
 export class TypedServer {
 
-    public server: Express.Application;
+    public server: Express.Application = Express();
 
     private name: string;
 
@@ -25,19 +25,11 @@ export class TypedServer {
         this.name = this.constructor.name;
 
         this
-            .$onInitServer()
             .$onInitMiddlewares()
             .$onInitViews()
             .$onInitRoutes()
             .$onError();
 
-    }
-
-    protected $onInitServer() {
-
-        this.server = Express();
-
-        return this;
     }
 
     protected $onInitMiddlewares() {
