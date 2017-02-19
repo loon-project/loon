@@ -1,18 +1,21 @@
 
 export class Pagable {
 
-    private pageNumber: number;
-    private pageSize: number;
+    private _page: number;
+    private _size: number;
 
-    constructor(pageNumber: number, pageSize?: number) {
+    constructor(page: number, size?: number) {
 
-        this.pageNumber = pageNumber;
+        this._page = page;
 
-        if (pageSize) {
-            this.pageSize = pageSize;
+        if (size) {
+            this._size = size;
         } else {
-            this.pageSize = 10;
+            this._size = 10;
         }
 
     }
+
+    public readonly page = this._page;
+    public readonly size = this._size;
 }
