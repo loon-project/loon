@@ -13,7 +13,7 @@ import {Middleware} from "./interface/Middleware";
 import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
-import {TypedViewAndModel} from "./TypedViewAndModel";
+import {TypedViewAndModel} from "./ViewAndModel";
 import {TypedContext} from "../server/TypedContext";
 
 
