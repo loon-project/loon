@@ -13,7 +13,7 @@ export class TypedApplication {
     public static run() {
         TypedContext.init(ServerContainer.options);
         const server = new TypedServer();
-        this.middlewares.map(server.use);
+        this.middlewares.map(server.use.bind(server));
         server.start();
     }
 
