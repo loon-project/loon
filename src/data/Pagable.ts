@@ -1,5 +1,5 @@
 
-export class TypedPagable {
+export class Pagable {
 
     private pageNumber: number;
     private pageSize: number;
