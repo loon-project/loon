@@ -10,6 +10,8 @@ export class Pagable {
 
         if (pageSize) {
             this.pageSize = pageSize;
+        } else {
+            this.pageSize = 10;
         }
 
     }
