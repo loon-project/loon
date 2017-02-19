@@ -1,17 +1,9 @@
 import {Entity} from "./Entity";
+import {Klass} from "../core/Klass";
 
 export class EntityManager {
 
-    public static getEntity(model: any) {
+    public static getEntity<T>(model: Klass<T>) {
         return new Entity(model);
     }
 }
-
-class User {
-
-}
-
-
-const userEntity = EntityManager.getEntity(User);
-
-

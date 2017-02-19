@@ -1,11 +1,12 @@
 import {DataContainer} from "./DataContainer";
-import {TypedModel} from "./TypedModel";
+import {Klass} from "../core/Klass";
+
 
 export class Entity<T> {
 
-    private model: T;
+    private model: Klass<T>;
 
-    constructor(model: T) {
+    constructor(model: Klass<T>) {
         this.model = model;
     }
 
@@ -29,9 +30,9 @@ export class Entity<T> {
         }
     }
 
-    public fromDB<T extends TypedModel>(type: { new(...args): T}, data: any): T {
+    public from(data: any) {
 
-        const instance = new type();
+        const instance  = new (this.model)();
 
         for (let column in data) {
             if (data.hasOwnProperty(column)) {
