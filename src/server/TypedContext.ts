@@ -8,6 +8,11 @@ import {TypedApplicationOption} from "./TypedApplicationOption";
 import * as _ from "lodash";
 import * as Fs from "fs";
 
+
+// config
+// logger
+// server
+
 export class TypedContext {
 
     private static connection: Knex;

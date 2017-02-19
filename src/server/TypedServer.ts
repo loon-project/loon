@@ -3,6 +3,7 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as methodOverride from "method-override";
 import * as morgan from "morgan";
+import * as serveStatic from 'serve-static';
 import {MVCContainer} from "../mvc/MVCContainer";
 import {Log} from "../logger/index";
 import {TypedContext} from "./TypedContext";
@@ -51,6 +52,7 @@ export class TypedServer {
         this.use(bodyParser.urlencoded({ extended: true }));
         this.use(cookieParser());
         this.use(methodOverride('X-HTTP-Method-Override'));
+        this.use(serveStatic(TypedContext.publicDir));
 
         return this;
     }

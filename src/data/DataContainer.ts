@@ -13,7 +13,7 @@ export class DataContainer {
         this.tables.push({type, tableName});
     }
 
-    public static getTableName(type: Function) {
+    public static getTableName(type: any) {
         const table = this.tables.find(item => item.type === type);
         if (typeof table !== 'undefined') {
             return table.tableName;
@@ -22,7 +22,7 @@ export class DataContainer {
         }
     }
 
-    public static getColumnsName(type: Function) {
+    public static getColumnsName(type: any) {
         this.columns
             .filter(item => item.type === type)
             .map(column => {
@@ -30,7 +30,7 @@ export class DataContainer {
             });
     }
 
-    public static getColumns(type: Function) {
+    public static getColumns(type: any) {
         return this.columns
             .filter(item => item.type === type);
     }
