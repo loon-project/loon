@@ -105,14 +105,14 @@ The code of quick start guide: [code](https://github.com/typed-project/example/t
 <h2 align="center">Roadmap</h2>
 
 
-| Version Code |   Release Date  | Description                            |
-| :----------: |  :------------: | -------------------------------------- |
-|    0.1.0     |   2017-02-17    | controller/server/service api          |
-|    0.2.0     |                 | middleware/plugin system               |
-|    0.3.0     |                 | enrich controller api                  |
-|    0.4.0     |                 | add event emit/listen api              |
-|    0.5.0     |                 | stable api/pre-production version      |
-|  **1.0.0**   |                 |                                        |
+| Version Code |  Target Date   |  Release Date  | Description                            |
+| :----------: | :------------: | :------------: | -------------------------------------- |
+|    0.1.0     |  2017-02-17    |  2017-02-17    | controller/server/service api          |
+|    0.2.0     |  2017-03-05    |                | middleware/plugin system               |
+|    0.3.0     |  2017-03-12    |                | enrich controller api                  |
+|    0.4.0     |  2017-03-19    |                | add event emit/listen api              |
+|    0.5.0     |  2017-03-26    |                | stable api/pre-production version      |
+|  **1.0.0**   |**2017-03-26**  |                | enrich document                        |
 
 
 <h2 align="center">Release note</h2>
