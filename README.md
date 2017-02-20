@@ -112,7 +112,7 @@ The code of quick start guide: [code](https://github.com/typed-project/example/t
 |    0.3.0     |  2017-03-12    |                | enrich controller api                  |
 |    0.4.0     |  2017-03-19    |                | add event emit/listen api              |
 |    0.5.0     |  2017-03-26    |                | stable api/pre-production version      |
-|  **1.0.0**   |**2017-03-26**  |                | enrich document                        |
+|  **1.0.0**   |**2017-04-01**  |                | enrich document                        |
 
 
 <h2 align="center">Release note</h2>
