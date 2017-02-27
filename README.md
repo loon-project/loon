@@ -17,92 +17,9 @@
 * Rest route and controller, param data injection support
 * Log support
 
-API details: [API](https://github.com/typed-project/typed-framework/tree/master/wikis/api.md)
+Core API details: [link](https://github.com/typed-project/typed-framework/tree/master/wikis/api.md)
 
 
-<h2 align="center">Install</h2>
-
-```
-npm install --save typed-framework
-```
-
-<h2 align="center">Quick Start</h2>
-
-* install `typescript` and `ts-node`
-```bash
-npm install -g typescript ts-node
-```
-
-* create `tsconfig.json` file
-
-```json
-{
-  "compilerOptions": {
-    "target": "es6",
-    "lib": ["dom", "es7"],
-    "types": ["reflect-metadata"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "experimentalDecorators":true,
-    "emitDecoratorMetadata": true,
-    "sourceMap": true,
-    "declaration": false
-  },
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
-}
-```
-
-* create `src`, and create a `Application.ts` file inside it
-```bash
-$ mkdir src
-$ cd src
-$ touch Application.ts
-```
-
-```typescript
-import {TypedApplicationLoader, TypedApplication, Inject} from "typed-framework";
-
-@TypedApplicationLoader({rootDir: `${__dirname}/../`})
-class Application {
-
-    public static start() {
-        TypedApplication.run();
-    }
-
-}
-
-Application.start();
-```
-
-* create first controller `HomeController.ts` and return json result
-```typescript
-import {RestController, Get} from "typed-framework";
-
-@RestController("")
-export class HomeController {
-
-    @Get("/")
-    public indexAction() {
-
-        return {
-            framework: 'typed-framework'
-        }
-
-    }
-
-}
-```
-* run the code
-```typescript
-$ ts-node src/Application.ts
-```
-
-* open browser, and go to http://localhost:9000
-
-The code of quick start guide: [code](https://github.com/typed-project/example/tree/master/basic)
 
 
 <h2 align="center">Roadmap</h2>
