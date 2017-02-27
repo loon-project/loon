@@ -4,7 +4,7 @@
 
 ## Dependency Injection
 
-Class: <b>`DependencyRegistry`</b>
+Class: <b>`TypedDependencyRegistry`</b>
 
 1. use `@Component` decorate a class
 2. use `register(nameOrKlass: string|Klass, instance: any)` to register a component
