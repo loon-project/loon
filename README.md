@@ -17,6 +17,8 @@
 * Rest route and controller, param data injection support
 * Log support
 
+API details: [API](https://github.com/typed-project/typed-framework/tree/master/wikis/api.md)
+
 
 <h2 align="center">Install</h2>
 
