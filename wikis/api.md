@@ -1,5 +1,7 @@
 <h1 align="center">CORE API</h1>
 
+<br>
+
 ## Dependency Injection
 
 Class: <b>`DependencyRegistry`</b>
@@ -7,6 +9,8 @@ Class: <b>`DependencyRegistry`</b>
 1. use `@Component` decorate a class
 2. use `register(nameOrKlass: string|Klass, instance: any)` to register a component
 3. use `unregister(nameOrKlass: string|Klass)` to unregister a component
+
+<br>
 
 ## Application
 
@@ -18,6 +22,8 @@ Class: <b>`TypedApplication`</b>
 
 initialize runs before middleware and routes
 
+<br>
+
 ## Path
 
 Class: <b>`TypedPath`</b>
@@ -28,6 +34,8 @@ Class: <b>`TypedPath`</b>
 4. `logDir` returns log folder path
 5. `configDir` returns configuration file folder path
 6. `dbDir` return database related folder path
+
+<br>
 
 ## Configuration
 
