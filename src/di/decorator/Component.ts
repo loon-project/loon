@@ -1,9 +1,9 @@
-import {DIContainer} from "../DIContainer";
-import {Metadata} from "../../metadata/Metadata";
+import {TypedDependencyRegistry} from "../TypedDependencyRegistry";
+import {Klass} from "../../core/Klass";
 
-export function Component(name?: string) {
-    return (target: Function) => {
-        const params = Metadata.getParams(target);
-        DIContainer.registerComponent(name, target, params);
+export function Component() {
+    return (klass: Klass) => {
+        console.log(klass.name);
+        TypedDependencyRegistry.registerComponent(klass);
     };
 }

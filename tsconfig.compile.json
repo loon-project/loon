@@ -10,6 +10,7 @@
     "alwaysStrict": true,
     "pretty": true,
     "strictNullChecks": true,
+    "skipLibCheck": true,
     "declaration": true,
     "declarationDir": "dts",
     "types":[

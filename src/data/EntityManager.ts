@@ -3,7 +3,7 @@ import {Klass} from "../core/Klass";
 
 export class EntityManager {
 
-    public static getEntity<T>(model: Klass<T>) {
+    public static getEntity(model: Klass) {
         return new Entity(model);
     }
 }

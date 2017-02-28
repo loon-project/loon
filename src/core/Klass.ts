@@ -1,5 +1,7 @@
-export interface Klass<T> {
-    new (...args): T;
+
+export interface Klass {
+    new (...args): any;
+    name: string;
 }
 
 

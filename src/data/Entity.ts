@@ -2,11 +2,11 @@ import {DataContainer} from "./DataContainer";
 import {Klass} from "../core/Klass";
 
 
-export class Entity<T> {
+export class Entity {
 
-    private model: Klass<T>;
+    private model: Klass;
 
-    constructor(model: Klass<T>) {
+    constructor(model: Klass) {
         this.model = model;
     }
 

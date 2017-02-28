@@ -7,7 +7,17 @@
     "emitDecoratorMetadata": true,
     "alwaysStrict": true,
     "pretty": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "types":[
+      "node",
+      "express",
+      "reflect-metadata",
+      "winston",
+      "chai",
+      "mocha",
+      "lodash"
+    ]
   },
 
   "exclude": [
