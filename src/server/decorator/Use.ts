@@ -1,7 +1,7 @@
 import {TypedApplicationOption} from "../TypedApplicationOption";
 import {ServerContainer} from "../ServerContainer";
 
-export function TypedApplicationLoader(options?: TypedApplicationOption) {
+export function Use(...args: any[]) {
 
     return (klass: Function) => {
         ServerContainer.registerApplication(klass, options);

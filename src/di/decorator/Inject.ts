@@ -1,8 +1,8 @@
-import {TypedDependencyRegistry} from "../TypedDependencyRegistry";
+import {DependencyRegistry} from "../DependencyRegistry";
 
 export function Inject() {
     return (target: any, key: string, index?: number) => {
-        TypedDependencyRegistry.registerHandler(target, key, index);
+        DependencyRegistry.registerHandler(target, key, index);
     };
 }
 

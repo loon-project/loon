@@ -66,6 +66,7 @@ export class TypedServer {
     }
 
     protected $onInitRoutes() {
+
         MVCContainer
             .getRoutes()
             .map(item => this.server.use(item.baseRoute, item.router));

@@ -1,7 +1,7 @@
 import "../../TestHelper";
 import {Component, Inject} from "../../../src/index";
 import {DIException} from "../../../src/di/error/DIException";
-import {TypedDependencyRegistry} from "../../../src/di/TypedDependencyRegistry";
+import {DependencyRegistry} from "../../../src/di/DependencyRegistry";
 
 
 describe('Dependency Injection', () => {
@@ -35,20 +35,20 @@ describe('Dependency Injection', () => {
     }
 
     it('should have injected params', () => {
-        const aClass = TypedDependencyRegistry.get(AClass);
+        const aClass = DependencyRegistry.get(AClass);
         aClass.aParamComponent.name().should.be.equal('name');
     });
 
     it('should have injected properties', () => {
-        const aClass = TypedDependencyRegistry.get(AClass);
+        const aClass = DependencyRegistry.get(AClass);
         aClass.aPropertyComponent.name().should.be.equal('name');
     });
 
     it('should throw DIException error when constructor param non-injected', () => {
-        (() => TypedDependencyRegistry.get(NoSuchParamInjectComponent)).should.throw(DIException);
+        (() => DependencyRegistry.get(NoSuchParamInjectComponent)).should.throw(DIException);
     });
 
     it("should throw DIException error when there's no such component", () => {
-        (() => TypedDependencyRegistry.get(NoSuchComponent)).should.throw(DIException);
+        (() => DependencyRegistry.get(NoSuchComponent)).should.throw(DIException);
     });
 });
