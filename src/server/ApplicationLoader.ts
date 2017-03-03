@@ -112,7 +112,8 @@ export class ApplicationLoader {
 
         return Promise
             .resolve()
-            .then(() => {})
+            .then(() => {
+            })
             .then(() => '$onInit' in this ? (<any>this).$onInit() : null)
             .catch((e) => {
                 throw e;
