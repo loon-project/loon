@@ -39,6 +39,10 @@ export class ApplicationLoader {
         return this._components;
     }
 
+    get routes(): any {
+        return this._routes;
+    }
+
     get rootDir(): string {
         return this._rootDir;
     }
@@ -113,8 +117,9 @@ export class ApplicationLoader {
         return Promise
             .resolve()
             .then(() => {
+                console.log('init');
             })
-            .then(() => '$onInit' in this ? (<any>this).$onInit() : null)
+            .then(() => '$onInit' in this ? (<any> this).$onInit() : null)
             .catch((e) => {
                 throw e;
             });
