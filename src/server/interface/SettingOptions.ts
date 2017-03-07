@@ -57,13 +57,13 @@ export interface SettingOptions {
      * value is the file path to the mount routers
      * Default value: {}
      */
-    routes: {[key: string]: string};
+    routes?: {[key: string]: string};
 
     /**
      * List all components need to initialization and add to DependencyInjectionRegistry
      * Default value: []
      */
-    components: string[];
+    components?: string[];
 
 }
 

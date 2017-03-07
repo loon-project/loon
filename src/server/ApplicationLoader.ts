@@ -1,5 +1,10 @@
 import {ApplicationRegistry} from "./ApplicationRegistry";
 import * as Express from "express";
+import {LogFactory} from "../logger/LogFactory";
+import {ConnectionFactory} from "../data/ConnectionFactory";
+import * as Fs from 'fs';
+import {MVCContainer} from "../mvc/MVCContainer";
+
 
 export class ApplicationLoader {
 
@@ -21,10 +26,11 @@ export class ApplicationLoader {
 
     private _port: number;
 
+    // TODO: add routes group support
     private _routes: {[key: string]: string};
 
+    // TODO: add external components support
     private _components: string[];
-
 
 
     get server() {
@@ -83,11 +89,17 @@ export class ApplicationLoader {
         this._env = process.env.NODE_ENV || settings.env || 'development';
 
         this._rootDir = settings.rootDir;
-        this._srcDir = settings.srcDir || `${this._rootDir}/src`;
-        this._publicDir = settings.publicDir || `${this._rootDir}/public`;
-        this._logDir = settings.logDir || `${this._rootDir}/log`;
-        this._configDir = settings.configDir || `${this._rootDir}/config`;
-        this._dbDir = settings.dbDir || `${this._rootDir}/db`;
+
+        // Assign user defined folder structure to ApplicationLoader
+        // If no such folder, then create it
+        ['src', 'public', 'log', 'config', 'db'].map(item => {
+            this[`_${item}Dir`] = settings[`${item}Dir`] || `${this._rootDir}/${item}`;
+
+            if (!Fs.existsSync(this[`_${item}Dir`]) && this._env !== 'test') {
+                Fs.mkdirSync(this[`_${item}Dir`]);
+            }
+        });
+
 
         this._port = process.env.PORT || settings.port || 9000;
 
@@ -108,6 +120,7 @@ export class ApplicationLoader {
     /**
      *
      * Initialize all settings
+     * If exception occurs when initialization, throw the error and stop the application
      * Run $onInit hooks if user defined
      *
      * @returns {Promise<any>}
@@ -117,9 +130,39 @@ export class ApplicationLoader {
         return Promise
             .resolve()
             .then(() => {
-                console.log('init');
+
+                LogFactory.init(this.logDir, this.env);
+
+                ConnectionFactory.init(this.configDir, this.env);
+
             })
             .then(() => '$onInit' in this ? (<any> this).$onInit() : null)
+            .then(() => {
+
+                const logger = LogFactory.getLogger();
+
+                this.server.use(require('morgan')("combined", {
+                    stream: {
+                        write: message => logger.info(message)
+                    }
+                }));
+
+                this.server.use(require('body-parser').json());
+                this.server.use(require('body-parser').urlencoded({ extended: true }));
+                this.server.use(require('cookie-parser')());
+                this.server.use(require('method-override')());
+                this.server.use(require('serve-static')(this.publicDir));
+
+            })
+            .then(() => {
+
+                require('require-all')({
+                    dirname     :  this.srcDir,
+                    excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
+                    recursive   : true
+                });
+
+            })
             .catch((e) => {
                 throw e;
             });
@@ -155,13 +198,16 @@ export class ApplicationLoader {
         return Promise
             .resolve()
             .then(() => {
+                this.server.listen(this.port, () => {
+                    const logger = LogFactory.getLogger();
+                    logger.info(`Application is listening on port ${this.port}`);
+                });
             })
             .catch(() => {
             });
     }
 
     private scan(paths: string[]) {
-
         paths.forEach(path => {
             require('require-all')({
                 dirname: path,
@@ -177,6 +223,12 @@ export class ApplicationLoader {
     }
 
     private loadRoutes() {
+
+        MVCContainer
+            .getRoutes()
+            .map(item => this.server.use(item.baseRoute, item.router));
+
+        return this;
     }
 
     private loadErrorHandlers() {

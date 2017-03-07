@@ -1,18 +1,18 @@
-import * as Fs from "fs";
-import {TypedPath} from "../path/TypedPath";
 import * as Winston from "winston";
 
+/**
+ *
+ * LogFactory for init and get logger
+ *
+ * logger is actually a Winston Logger instance https://github.com/winstonjs/winston/blob/master/README.md
+ * use {LogConfigLoader} to transform config file to winston transport
+ *
+ */
 export class LogFactory {
 
     private static logger: Winston.LoggerInstance;
 
-    public static init() {
-
-        const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-
-        if (!Fs.existsSync(TypedPath.logDir)) {
-            Fs.mkdirSync(TypedPath.logDir);
-        }
+    public static init(logDir: string, env: string) {
 
         let defaultLogLevel = 'debug';
         const consoleTransport: Winston.TransportInstance = new (Winston.transports.Console)({
@@ -25,7 +25,7 @@ export class LogFactory {
         const fileLogOptions = {
             level: 'debug',
             filename: `${env}.log`,
-            dirname: TypedPath.logDir,
+            dirname: logDir,
             timestamp: true,
             maxFiles: 30
         };

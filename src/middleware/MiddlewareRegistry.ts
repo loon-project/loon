@@ -1,5 +1,9 @@
 import {MiddlewareMetadata} from "./MiddlewareMetadata";
 import {MiddlewareOptions} from "./MiddlewareOptions";
+import * as Express from 'express';
+import {IMiddleware} from "./interface/IMiddleware";
+import {DependencyRegistry} from "../di/DependencyRegistry";
+import {Klass} from "../core/Klass";
 
 /**
  * MiddlewareRegistry
@@ -50,6 +54,23 @@ export class MiddlewareRegistry {
      * @returns {Array}
      */
     public static getMiddlewares() {
+
+        this
+            .sortMiddlewares(this._middlewares)
+            .map(middlewareMetadata => {
+
+                const middlewareKlass = <Klass>middlewareMetadata.type;
+                const middlewareInstance = DependencyRegistry.get(middlewareKlass);
+
+                return (request: Express.Request, response: Express.Response, next: Express.NextFunction) =>  {
+
+                    return middlewareInstance.use.apply(middlewareInstance, );
+
+                };
+
+            });
+
+
         return this.getMiddlewaresFromStore(this._middlewares);
     }
 
@@ -69,6 +90,30 @@ export class MiddlewareRegistry {
         });
 
         return ret;
+    }
+
+    private static sortMiddlewares(store: MiddlewareMetadata[]) {
+
+        return store.sort((a, b) => {
+
+            if (typeof a.order === 'undefined' && typeof b.order === 'undefined') {
+                return 0;
+            }
+
+            if (a.order && b.order) {
+                return a.order - b.order;
+            }
+
+            if (typeof a.order === 'undefined') {
+                return -1;
+            }
+
+            if (typeof b.order === 'undefined') {
+                return 1;
+            }
+
+            return 0;
+        });
     }
 
 }

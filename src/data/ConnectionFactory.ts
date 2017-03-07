@@ -1,16 +1,13 @@
-import {TypedPath} from "../path/TypedPath";
-import * as Path from 'path';
+import * as Path from "path";
 import {ConfigContainer} from "../config/ConfigContainer";
-import * as Knex from 'knex';
+import * as Knex from "knex";
 
-export class DBConnectionFactory {
+export class ConnectionFactory {
 
     private static connection: Knex;
 
-    public static init() {
+    public static init(configDir: string, env: string) {
 
-        const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-        const configDir = TypedPath.configDir;
         const databaseConfig = Path.join(configDir, 'database.json');
 
         ConfigContainer.registerConfig(databaseConfig);
