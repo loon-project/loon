@@ -33,16 +33,5 @@ export function AfterAction(MiddlewareClass: new (...args) => Middleware): Funct
     };
 }
 
-export function Middleware() {
-    return (target: any) => {
-
-    };
-}
-
-export function ErrorMiddleware() {
-    return (target: any) => {
-
-    };
-}
 
 

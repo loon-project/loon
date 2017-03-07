@@ -3,9 +3,9 @@ import {ServerContainer} from "./ServerContainer";
 import {TypedServer} from "./TypedServer";
 import {TypedApplicationOption} from "./TypedApplicationOption";
 import * as Express from "express";
-import {TypedPath} from "../path/TypedPath";
 import {LogFactory} from "../logger/LogFactory";
 import {DBConnectionFactory} from "../data/DBConnectionFactory";
+import {TypedPath} from "../path/TypedPath";
 
 
 export class TypedApplication {

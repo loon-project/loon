@@ -1,8 +1,7 @@
 import {DIContainer} from "../../di/DIContainer";
-import {isTypeSimple} from "../../util/Util";
 import {ConfigContainer} from "../ConfigContainer";
-import {ConfigOption} from "../interface/ConfigOption";
 import {ConfigException} from "../error/ConfigException";
+import {TypeUtil} from "../../util/TypeUtil";
 
 export function Value(expression: string) {
 
@@ -33,7 +32,7 @@ export function Value(expression: string) {
 }
 
 function getValue(type: Function, expression: string): () => any {
-    if (isTypeSimple(type)) {
+    if (TypeUtil.isSimpleType(type)) {
         return () => ConfigContainer.get(expression);
     } else {
         throw new ConfigException(`[TYPED] Value decorator don't support type ${type}`);

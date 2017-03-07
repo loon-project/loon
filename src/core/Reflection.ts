@@ -1,5 +1,5 @@
-
 import {Klass} from "./Klass";
+
 export class Reflection {
 
     public static getType(klass: Klass, key?: string) {
