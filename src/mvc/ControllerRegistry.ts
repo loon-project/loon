@@ -3,6 +3,7 @@ import * as Express from 'express';
 import {HandlerMetadata} from "./HandlerMetadata";
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
 import {ParamType} from "./enum/ParamType";
+import {ConvertUtil} from "../util/ConvertUtil";
 
 export class ControllerRegistry {
 
@@ -121,18 +122,21 @@ export class ControllerRegistry {
             this._controllers.set(type, controllerMetadata);
         }
 
-        const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
-        const handlerParamsMap = new Map<number, HandlerParamMetadata>();
+        let handlerMetadata = controllerMetadata.handlers.get(actionName);
 
-        handlerParams.forEach((param, index) => {
-            handlerParamsMap.set(index, param);
+        if (typeof handlerMetadata === 'undefined') {
+
+            const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
+            const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
+            handlerMetadata = new HandlerMetadata(type, actionName, handlerParamsMap);
+            controllerMetadata.handlers.set(actionName, handlerMetadata);
+
+        }
+
+        handlerMetadata.httpMethodAndPaths.push({
+            method: httpMethod,
+            path
         });
-
-        const handlerMetadata = new HandlerMetadata(type, actionName, handlerParamsMap);
-        handlerMetadata.path = path;
-        handlerMetadata.httpMethod = httpMethod;
-
-        controllerMetadata.handlers.set(actionName, handlerMetadata);
     }
 
     public static registerParam(type: Function, paramType: ParamType, methodName: string, index: number, expression: string) {

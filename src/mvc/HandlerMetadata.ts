@@ -1,4 +1,5 @@
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
+import {HTTPMethodAndPath} from "./HTTPMethodAndPath";
 
 export class HandlerMetadata {
 
@@ -8,9 +9,7 @@ export class HandlerMetadata {
 
     private _params: Map<number, HandlerParamMetadata>;
 
-    private _path: string|RegExp;
-
-    private _httpMethod: string;
+    private _httpMethodAndPaths: HTTPMethodAndPath[];
 
     private _isErrorHandler: boolean;
 
@@ -30,34 +29,22 @@ export class HandlerMetadata {
         return this._actionName;
     }
 
-    get path(): string|RegExp {
-        return this._path;
-    }
-
-    get httpMethod(): string {
-        return this._httpMethod;
+    get httpMethodAndPaths(): HTTPMethodAndPath[] {
+        return this._httpMethodAndPaths;
     }
 
     set params(value: Map<number, HandlerParamMetadata>) {
         this._params = value;
     }
 
-    set path(value: string|RegExp) {
-        this._path = value;
-    }
-
-    set httpMethod(value: string) {
-        this._httpMethod = value;
-    }
-
     set isErrorHandler(value: boolean) {
         this._isErrorHandler = value;
     }
 
-    constructor(type: Function, methodName: string, params?: Map<number, HandlerParamMetadata>, isErrorHandler?: boolean) {
+    constructor(type: Function, actionName: string, params?: Map<number, HandlerParamMetadata>, isErrorHandler?: boolean) {
 
         this._type = type;
-        this._actionName = methodName;
+        this._actionName = actionName;
 
         if (typeof params !== 'undefined') {
             this._params = params;
@@ -68,5 +55,7 @@ export class HandlerMetadata {
         } else {
             this._isErrorHandler = false;
         }
+
+        this._httpMethodAndPaths = [];
     }
 }
