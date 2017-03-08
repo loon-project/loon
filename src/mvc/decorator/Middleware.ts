@@ -1,47 +1,27 @@
-import {Middleware} from "../interface/Middleware";
-import {MVCContainer} from "../MVCContainer";
-import {MiddlewareLevel} from "../enum/MiddlewareLevel";
-import {MiddlewareType} from "../enum/MiddlewareType";
+import {ControllerRegistry} from "../ControllerRegistry";
 
-export function BeforeAction(MiddlewareClass: new (...args) => Middleware): Function {
 
-    return (target: any, actionName?: string) => {
-
-        if (actionName) {
-
-            MVCContainer.registerMiddlewares(target.constructor, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction, actionName);
-
-        } else {
-
-            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.BeforeAction);
-        }
-
+export function GlobalMiddleware() {
+    return (target: any) => {
+        ControllerRegistry.registerMiddleware(target, true, false);
     };
 }
 
-export function AfterAction(MiddlewareClass: new (...args) => Middleware): Function {
-    return (target: any, actionName?: string) => {
-
-        if (actionName) {
-
-            MVCContainer.registerMiddlewares(target.constructor, MiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction, actionName);
-
-        } else {
-
-            MVCContainer.registerMiddlewares(target, MiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.AfterAction);
-        }
+export function GlobalErrorMiddleware() {
+    return (target: any) => {
+        ControllerRegistry.registerMiddleware(target, true, true);
     };
 }
 
 export function Middleware() {
     return (target: any) => {
-
+        ControllerRegistry.registerMiddleware(target, false, false);
     };
 }
 
 export function ErrorMiddleware() {
     return (target: any) => {
-
+        ControllerRegistry.registerMiddleware(target, false, true);
     };
 }
 

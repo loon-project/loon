@@ -9,7 +9,7 @@ export interface Middleware {
 
 export interface IMiddleware {
 
-    use(request: Express.Request, response: Express.Response, next: Express.NextFunction): any;
+    use(...args): any;
 }
 
 export interface IErrorMiddleware {

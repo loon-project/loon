@@ -3,6 +3,8 @@ import {RestController, Controller} from "../../src/mvc/decorator/Controller";
 import {Get, Post, Put, Patch} from "../../src/mvc/decorator/Method";
 import {Request, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {GlobalMiddleware, GlobalErrorMiddleware, Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
+import {IMiddleware} from "../../src/mvc/interface/Middleware";
 
 
 describe("ControllerRegistry", () => {
@@ -29,7 +31,33 @@ describe("ControllerRegistry", () => {
         }
     }
 
+    @GlobalMiddleware()
+    class ATestGlobalMiddlewareClass implements IMiddleware {
+        public use() {
+        }
+    }
+
+    @GlobalErrorMiddleware()
+    class ATestGlobalErrorMiddlewareClass implements IMiddleware {
+        public use() {
+        }
+    }
+
+    @Middleware()
+    class ATestMiddlewareClass implements IMiddleware {
+        public use() {
+        }
+    }
+
+    @ErrorMiddleware()
+    class ATestErrorMiddlewareClass implements IMiddleware {
+        public use() {
+        }
+    }
+
+
     it('should successfully register a rest controller', () => {
+
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
@@ -39,6 +67,7 @@ describe("ControllerRegistry", () => {
     });
 
     it('should successfully register a controller', () => {
+
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestController);
 
         controllerMetadata.should.not.be.undefined;
@@ -48,6 +77,7 @@ describe("ControllerRegistry", () => {
     });
 
     it('should successfully register a handler for RestController', () => {
+
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
@@ -102,6 +132,7 @@ describe("ControllerRegistry", () => {
     });
 
     it('should successfully register a handler with multiple http method and path', () => {
+
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
@@ -125,4 +156,40 @@ describe("ControllerRegistry", () => {
         const handlerParamMetadata: any = handlerMetadata.params.get(0);
         (typeof handlerParamMetadata === 'undefined').should.be.true;
     });
+
+    it('should successfully register a global middleware', () => {
+        middlewareShouldPass(ATestGlobalMiddlewareClass, true, false);
+    });
+
+    it('should successfully register a global error middleware', () => {
+        middlewareShouldPass(ATestGlobalErrorMiddlewareClass, true, true);
+    });
+
+    it('should successfully register a middleware', () => {
+        middlewareShouldPass(ATestMiddlewareClass, false, false);
+    });
+
+    it('should successfully register a error middleware', () => {
+        middlewareShouldPass(ATestErrorMiddlewareClass, false, true);
+    });
+
+
+    const middlewareShouldPass = (type: Function, isGlobal: boolean, isError: boolean) => {
+
+        const middlewareMetadata: any = ControllerRegistry.middlewares.get(type);
+
+        middlewareMetadata.should.not.be.undefined;
+        middlewareMetadata.type.should.be.equal(type);
+        middlewareMetadata.isGlobalMiddleware.should.be.equal(isGlobal);
+        middlewareMetadata.isErrorMiddleware.should.be.equal(isError);
+        middlewareMetadata.handler.should.not.be.undefined;
+
+        const handlerMetadata: any = middlewareMetadata.handler;
+
+        handlerMetadata.type.should.be.equal(type);
+        handlerMetadata.actionName.should.be.equal('use');
+        handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+
+        return middlewareMetadata;
+    };
 });
