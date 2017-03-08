@@ -1,5 +1,4 @@
 import {ControllerMetadata} from "./ControllerMetadata";
-import * as Express from 'express';
 import {HandlerMetadata} from "./HandlerMetadata";
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
 import {ParamType} from "./enum/ParamType";
@@ -7,7 +6,7 @@ import {ConvertUtil} from "../util/ConvertUtil";
 import {MiddlewareMetadata} from "./MiddlewareMetadata";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {Klass} from "../core/Klass";
-import {Metadata} from "../metadata/Metadata";
+import {Reflection} from "../core/Reflection";
 
 export class ControllerRegistry {
 
@@ -233,7 +232,7 @@ export class ControllerRegistry {
         const middlewareMetadata = new MiddlewareMetadata(type, isGlobal, isError);
         const handlerMetadata = new HandlerMetadata(type, actionName);
 
-        const params = Metadata.getParams(type.prototype, actionName);
+        const params = Reflection.getParams(type.prototype, actionName);
         if (params) {
             const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
             const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);

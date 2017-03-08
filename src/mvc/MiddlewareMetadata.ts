@@ -10,6 +10,9 @@ export class MiddlewareMetadata {
 
     private _type: Function;
 
+    // TODO: add order support for middleware
+    private _order: number;
+
     get type(): Function {
         return this._type;
     }

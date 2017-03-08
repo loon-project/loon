@@ -5,7 +5,6 @@ import {TypedApplicationOption} from "./TypedApplicationOption";
 import * as Express from "express";
 import {LogFactory} from "../logger/LogFactory";
 import {ConnectionFactory} from "../data/ConnectionFactory";
-import {TypedPath} from "../path/TypedPath";
 
 
 export class TypedApplication {

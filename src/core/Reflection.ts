@@ -6,8 +6,8 @@ export class Reflection {
         return (<any> Reflect).getMetadata("design:type", klass, key);
     }
 
-    public static getParams(klass: Klass, key?: string): any[] {
-        return (<any> Reflect).getMetadata("design:paramtypes", klass, key);
+    public static getParams(prototype: any, key?: string): any[] {
+        return (<any> Reflect).getMetadata("design:paramtypes", prototype, key);
     }
 
 }
