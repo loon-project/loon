@@ -90,10 +90,10 @@ export class HandlerTransformer {
                     args.push(_.get(request.params, param.expression));
                     return;
                 case ParamType.Query:
-                    args.push(_.get(request.query, param.expression))
+                    args.push(_.get(request.query, param.expression));
                     return;
                 case ParamType.Header:
-                    args.push(request.header(param.expression ? param.expression : ""))
+                    args.push(request.header(param.expression ? param.expression : ""));
                     return;
                 case ParamType.Error:
                     args.push(error);

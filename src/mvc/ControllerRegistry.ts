@@ -135,13 +135,14 @@ export class ControllerRegistry {
 
         let handlerMetadata = controllerMetadata.handlers.get(actionName);
 
-        if (typeof handlerMetadata === 'undefined') {
+        const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
+        const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
 
-            const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
-            const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
+        if (typeof handlerMetadata === 'undefined') {
             handlerMetadata = new HandlerMetadata(type, actionName, handlerParamsMap);
             controllerMetadata.handlers.set(actionName, handlerMetadata);
-
+        } else {
+            handlerMetadata.params = handlerParamsMap;
         }
 
         handlerMetadata.httpMethodAndPaths.push({

@@ -1,6 +1,6 @@
 import {MiddlewareLevel} from "../enum/MiddlewareLevel";
 import {MiddlewareType} from "../enum/MiddlewareType";
-import {Middleware} from "../interface/Middleware";
+import {Middleware} from "../interface/IMiddleware";
 
 export interface MiddlewareMetadata {
 

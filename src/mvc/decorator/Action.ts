@@ -1,4 +1,4 @@
-import {Middleware} from "../interface/Middleware";
+import {Middleware} from "../interface/IMiddleware";
 import {MVCContainer} from "../MVCContainer";
 import {MiddlewareLevel} from "../enum/MiddlewareLevel";
 import {MiddlewareType} from "../enum/MiddlewareType";

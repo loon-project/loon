@@ -48,6 +48,8 @@ export class HandlerMetadata {
 
         if (typeof params !== 'undefined') {
             this._params = params;
+        } else {
+            this._params = new Map();
         }
 
         if (typeof isErrorHandler !== 'undefined') {

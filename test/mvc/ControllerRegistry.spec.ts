@@ -4,7 +4,7 @@ import {Get, Post, Put, Patch} from "../../src/mvc/decorator/Method";
 import {Request, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {GlobalMiddleware, GlobalErrorMiddleware, Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
-import {IMiddleware} from "../../src/mvc/interface/Middleware";
+import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 
 
 describe("ControllerRegistry", () => {

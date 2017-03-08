@@ -9,7 +9,7 @@ import {ParamMetadata} from "./metadata/ParamMetadata";
 import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {ParamType} from "./enum/ParamType";
 import {DIContainer} from "../di/DIContainer";
-import {Middleware} from "./interface/Middleware";
+import {Middleware} from "./interface/IMiddleware";
 import {TypedResponse} from "./interface/TypedResponse";
 import {TypedNext} from "./interface/TypedNext";
 import {TypedRequest} from "./interface/TypedRequest";
