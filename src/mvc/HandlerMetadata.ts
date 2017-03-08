@@ -1,22 +1,72 @@
+import {HandlerParamMetadata} from "./HandlerParamMetadata";
 
 export class HandlerMetadata {
 
     private _type: Function;
 
-    private _name: string;
+    private _actionName: string;
 
-    private _params: Function[];
+    private _params: Map<number, HandlerParamMetadata>;
+
+    private _path: string|RegExp;
+
+    private _httpMethod: string;
+
+    private _isErrorHandler: boolean;
+
+    get params(): Map<number, HandlerParamMetadata> {
+        return this._params;
+    }
+
+    get isErrorHandler(): boolean {
+        return this._isErrorHandler;
+    }
 
     get type(): Function {
         return this._type;
     }
 
-    get name(): string {
-        return this._name;
+    get actionName(): string {
+        return this._actionName;
     }
 
-    get params(): Function[] {
-        return this._params;
+    get path(): string|RegExp {
+        return this._path;
     }
 
+    get httpMethod(): string {
+        return this._httpMethod;
+    }
+
+    set params(value: Map<number, HandlerParamMetadata>) {
+        this._params = value;
+    }
+
+    set path(value: string|RegExp) {
+        this._path = value;
+    }
+
+    set httpMethod(value: string) {
+        this._httpMethod = value;
+    }
+
+    set isErrorHandler(value: boolean) {
+        this._isErrorHandler = value;
+    }
+
+    constructor(type: Function, methodName: string, params?: Map<number, HandlerParamMetadata>, isErrorHandler?: boolean) {
+
+        this._type = type;
+        this._actionName = methodName;
+
+        if (typeof params !== 'undefined') {
+            this._params = params;
+        }
+
+        if (typeof isErrorHandler !== 'undefined') {
+            this._isErrorHandler = isErrorHandler;
+        } else {
+            this._isErrorHandler = false;
+        }
+    }
 }

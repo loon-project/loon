@@ -25,8 +25,8 @@ export class DIContainer {
         this.propertyHandlers.push(handler);
     }
 
-    // public static unregisterComponent(name: string|undefined, type: Function) {
-    //     this.components = this.components.filter(item => item.name !== name && item.type !== type);
+    // public static unregisterComponent(actionName: string|undefined, type: Function) {
+    //     this.components = this.components.filter(item => item.actionName !== actionName && item.type !== type);
     // }
     //
     // public static set(nameOrType: Function|string, value: any) {
@@ -38,7 +38,7 @@ export class DIContainer {
     //     if (typeof nameOrType === "string") {
     //
     //         this.instances.push({
-    //             name: nameOrType,
+    //             actionName: nameOrType,
     //             type: undefined,
     //             instance: value
     //         });
@@ -46,7 +46,7 @@ export class DIContainer {
     //     } else {
     //
     //         this.instances.push({
-    //             name: undefined,
+    //             actionName: undefined,
     //             type: nameOrType,
     //             instance: value
     //         });

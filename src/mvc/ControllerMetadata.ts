@@ -1,6 +1,6 @@
 import {HandlerMetadata} from "./HandlerMetadata";
 
-export class RouterMetadata {
+export class ControllerMetadata {
 
     private _type: Function;
 
@@ -18,17 +18,34 @@ export class RouterMetadata {
         return this._baseUrl;
     }
 
+    set baseUrl(value: string) {
+        this._baseUrl = value;
+    }
+
     get isRest(): boolean {
         return this._isRest;
+    }
+
+    set isRest(value: boolean) {
+        this._isRest = value;
     }
 
     get handlers(): Map<string, HandlerMetadata> {
         return this._handlers;
     }
 
-    constructor(type: Function, baseUrl: string, isRest: boolean) {
+    constructor(type: Function, baseUrl?: string, isRest?: boolean) {
         this._type = type;
-        this._baseUrl = baseUrl;
-        this._isRest = isRest;
+
+        if (typeof baseUrl !== 'undefined') {
+            this._baseUrl = baseUrl;
+        }
+
+        if (typeof isRest !== 'undefined') {
+            this._isRest = isRest;
+        }
+
+        this._handlers = new Map();
     }
+
 }

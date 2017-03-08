@@ -1,5 +1,6 @@
 import {MVCContainer} from "../MVCContainer";
 import {ParamType} from "../enum/ParamType";
+import {ControllerRegistry} from "../ControllerRegistry";
 
 export function PathParam(expression: string) {
     return (target: any, actionName: string, index: number) => {
@@ -55,6 +56,12 @@ export function Next() {
     };
 }
 
+export function Error() {
+    return (target: any, methodName: string, index: number) => {
+        registerHelper(target.constructor, ParamType.Error, methodName, index, "");
+    };
+}
+
 function registerHelper(type: Function,
                         paramType: ParamType,
                         actionName: string,
@@ -62,5 +69,8 @@ function registerHelper(type: Function,
                         expression: string) {
 
     MVCContainer.registerParams(type, paramType, actionName, index, expression);
+
+    ControllerRegistry.registerParam(type, paramType, actionName, index, expression);
+
 }
 

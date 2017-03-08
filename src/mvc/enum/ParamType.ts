@@ -8,6 +8,7 @@ export enum ParamType {
 
     Request,
     Response,
-    Next
+    Next,
+    Error
 
 }
