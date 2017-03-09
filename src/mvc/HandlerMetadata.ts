@@ -1,7 +1,9 @@
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
 import {HTTPMethodAndPath} from "./HTTPMethodAndPath";
+import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
+import {MiddlewareStore} from "./MiddlewareStore";
 
-export class HandlerMetadata {
+export class HandlerMetadata extends MiddlewareStore {
 
     private _type: Function;
 
@@ -42,6 +44,8 @@ export class HandlerMetadata {
     }
 
     constructor(type: Function, actionName: string, params?: Map<number, HandlerParamMetadata>, isErrorHandler?: boolean) {
+
+        super();
 
         this._type = type;
         this._actionName = actionName;

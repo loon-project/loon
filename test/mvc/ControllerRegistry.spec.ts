@@ -5,31 +5,12 @@ import {Request, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {GlobalMiddleware, GlobalErrorMiddleware, Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
+import {BeforeAction, AfterAction, ErrorAction} from "../../src/mvc/decorator/Action";
+import {MiddlewareLevel} from "../../src/mvc/enum/MiddlewareLevel";
+import {MiddlewareType} from "../../src/mvc/enum/MiddlewareType";
 
 
 describe("ControllerRegistry", () => {
-
-
-    @RestController("/test")
-    class AControllerRegistryTestRestController {
-
-        @Get("/")
-        public indexAction(@Request() request: Express.Request) {
-        }
-
-        @Put("/api/:id/")
-        @Patch("/api/:id/2")
-        public updateAction() {
-        }
-    }
-
-    @Controller()
-    class AControllerRegistryTestController {
-
-        @Post("/:id")
-        public createAction(@PathParam('id') id: number) {
-        }
-    }
 
     @GlobalMiddleware()
     class ATestGlobalMiddlewareClass implements IMiddleware {
@@ -52,6 +33,33 @@ describe("ControllerRegistry", () => {
     @ErrorMiddleware()
     class ATestErrorMiddlewareClass implements IMiddleware {
         public use() {
+        }
+    }
+
+    @RestController("/test")
+    @BeforeAction(ATestMiddlewareClass)
+    @AfterAction(ATestMiddlewareClass)
+    @ErrorAction(ATestErrorMiddlewareClass)
+    class AControllerRegistryTestRestController {
+
+        @Get("/")
+        @BeforeAction(ATestMiddlewareClass)
+        @AfterAction(ATestMiddlewareClass)
+        @ErrorAction(ATestErrorMiddlewareClass)
+        public indexAction(@Request() request: Express.Request) {
+        }
+
+        @Put("/api/:id/")
+        @Patch("/api/:id/2")
+        public updateAction() {
+        }
+    }
+
+    @Controller()
+    class AControllerRegistryTestController {
+
+        @Post("/:id")
+        public createAction(@PathParam('id') id: number) {
         }
     }
 
@@ -173,6 +181,72 @@ describe("ControllerRegistry", () => {
         middlewareShouldPass(ATestErrorMiddlewareClass, false, true);
     });
 
+    it('should successfully register a controller level before action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.BeforeAction);
+    });
+
+    it('should successfully register a controller level after action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.AfterAction);
+    });
+
+    it('should successfully register a controller level error action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestErrorMiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.ErrorAction);
+    });
+
+    it('should successfully register a action level before action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction);
+    });
+
+    it('should successfully register a action level after action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction);
+    });
+
+    it('should successfully register a action level error action', () => {
+        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestErrorMiddlewareClass, MiddlewareLevel.Action, MiddlewareType.ErrorAction);
+    });
+
+    const registerMiddlewareShouldPass = (controllerType: Function, type: Function, middlewareLevel: MiddlewareLevel, middlewareType: MiddlewareType) => {
+
+        const controllerMetadata: any = ControllerRegistry.controllers.get(controllerType);
+
+        controllerMetadata.should.not.be.undefined;
+
+        let middlewareTypeString = "";
+        let isError = false;
+        let store;
+
+        switch (middlewareType) {
+            case MiddlewareType.BeforeAction:
+                middlewareTypeString = 'beforeActions';
+                break;
+            case MiddlewareType.AfterAction:
+                middlewareTypeString = 'afterActions';
+                break;
+            case MiddlewareType.ErrorAction:
+                middlewareTypeString = 'errorActions';
+                isError = true;
+                break;
+        }
+
+        switch (middlewareLevel) {
+            case MiddlewareLevel.Controller:
+                store = controllerMetadata;
+                break;
+            case MiddlewareLevel.Action:
+                store = controllerMetadata.handlers.get('indexAction');
+                break;
+        }
+
+        store[middlewareTypeString].should.not.be.undefined;
+        store[middlewareTypeString].length.should.be.equal(1);
+
+        const middlewareMetadata = store[middlewareTypeString][0];
+
+        middlewareMetadata.should.not.be.undefined;
+        middlewareMetadata.type.should.be.equal(type);
+
+        middlewareShouldPass(middlewareMetadata.type, false, isError);
+    };
 
     const middlewareShouldPass = (type: Function, isGlobal: boolean, isError: boolean) => {
 

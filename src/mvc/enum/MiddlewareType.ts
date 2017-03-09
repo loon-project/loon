@@ -1,5 +1,6 @@
 
 export enum MiddlewareType {
     BeforeAction,
-    AfterAction
+    AfterAction,
+    ErrorAction
 }

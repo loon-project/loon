@@ -15,16 +15,15 @@ describe('HandlerTransformer', () => {
     class ATestRestControllerClass {
 
         @Get("/")
-        public indexAction(
-            @BodyParam("body") body: string,
-            @CookieParam("user_id") userId: number,
-            @PathParam("path_id") pathId: number,
-            @QueryParam("q") q: any,
-            @HeaderParam("Authorization") authorization: string,
-            @Request() request: Express.Request,
-            @Response() response: Express.Response,
-            @Next() next: Express.NextFunction
-        ) {
+        public indexAction(@BodyParam("body") body: string,
+                           @CookieParam("user_id") userId: number,
+                           @PathParam("path_id") pathId: number,
+                           @QueryParam("q") q: any,
+                           @HeaderParam("Authorization") authorization: string,
+                           @Request() request: Express.Request,
+                           @Response() response: Express.Response,
+                           @Next() next: Express.NextFunction) {
+
             return {
                 text: "Hello world"
             };

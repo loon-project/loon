@@ -7,6 +7,10 @@ import {MiddlewareMetadata} from "./MiddlewareMetadata";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {Klass} from "../core/Klass";
 import {Reflection} from "../core/Reflection";
+import {MiddlewareType} from "./enum/MiddlewareType";
+import {MiddlewareLevel} from "./enum/MiddlewareLevel";
+import {ArgumentError} from "../core/error/ArgumentError";
+import {MiddlewareStore} from "./MiddlewareStore";
 
 export class ControllerRegistry {
 
@@ -66,20 +70,11 @@ export class ControllerRegistry {
 
         DependencyRegistry.registerComponent(<Klass>type);
 
-        let controllerMetadata = this._controllers.get(type);
-
-        if (controllerMetadata) {
-
-            controllerMetadata.baseUrl = baseUrl;
-            controllerMetadata.isRest = isRest;
-
-        } else {
-
-            controllerMetadata = new ControllerMetadata(type, baseUrl, isRest);
-            this._controllers.set(type, controllerMetadata);
-
-        }
+        const controllerMetadata = this.getController(type);
+        controllerMetadata.baseUrl = baseUrl;
+        controllerMetadata.isRest = isRest;
     }
+
 
     /**
      * used to register a controller action, an action used to handle http request
@@ -119,37 +114,16 @@ export class ControllerRegistry {
      * @param actionName
      * @param params
      */
-    public static registerAction(
-        type: Function,
-        httpMethod: string,
-        path: string|RegExp,
-        actionName: string,
-        params: Function[]) {
+    public static registerAction(type: Function, httpMethod: string, path: string|RegExp, actionName: string) {
 
-        let controllerMetadata = this._controllers.get(type);
-
-        if (typeof controllerMetadata === 'undefined') {
-            controllerMetadata = new ControllerMetadata(type);
-            this._controllers.set(type, controllerMetadata);
-        }
-
-        let handlerMetadata = controllerMetadata.handlers.get(actionName);
-
-        const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
-        const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
-
-        if (typeof handlerMetadata === 'undefined') {
-            handlerMetadata = new HandlerMetadata(type, actionName, handlerParamsMap);
-            controllerMetadata.handlers.set(actionName, handlerMetadata);
-        } else {
-            handlerMetadata.params = handlerParamsMap;
-        }
+        const handlerMetadata = this.getAction(type, actionName);
 
         handlerMetadata.httpMethodAndPaths.push({
             method: httpMethod,
             path
         });
     }
+
 
     /**
      * used to register a parameter, for decoration.
@@ -192,33 +166,35 @@ export class ControllerRegistry {
      */
     public static registerParam(type: Function, paramType: ParamType, actionName: string, index: number, expression: string) {
 
-        let controllerMetadata = this._controllers.get(type);
+        const handlerMetadata = this.getAction(type, actionName);
 
-        if (typeof controllerMetadata === 'undefined') {
-            controllerMetadata = new ControllerMetadata(type);
-            this._controllers.set(type, controllerMetadata);
-        }
-
-        let handlerMetadata = controllerMetadata.handlers.get(actionName);
-
-        if (typeof handlerMetadata === 'undefined') {
-            handlerMetadata = new HandlerMetadata(type, actionName);
-            controllerMetadata.handlers.set(actionName, handlerMetadata);
-        }
-
-        const handlerParamsMap = new Map<number, HandlerParamMetadata>();
-        // TODO: add isRequired feature later on
         const isRequired = false;
         const handlerParam = new HandlerParamMetadata(type, actionName, index, isRequired, paramType, expression);
-        handlerParamsMap.set(index, handlerParam);
-
-        handlerMetadata.params = handlerParamsMap;
+        handlerMetadata.params.set(index, handlerParam);
     }
 
 
     /**
      * used to register a middleware, including GlobalMiddleware, GlobalErrorMiddleware, Middleware, ErrorMiddleware
      *
+     * for example:
+     *
+     *   @GlobalMiddleware()
+     *   class ATestGlobalMiddleware implements IMiddleware {
+     *      public use() {
+     *      }
+     *   }
+     *
+     *   type
+     *      is the middleware class, in this example: ATestGlobalMiddleware
+     *
+     *   isGlobal
+     *      is a flag indicate a global middleware or not, in this example: true
+     *
+     *   isError
+     *      is a flag indicate a error middleware or not, in this example: false
+     *
+     *   Middleware class must implements IMiddleware interface
      *
      * @param type
      * @param isGlobal
@@ -227,21 +203,168 @@ export class ControllerRegistry {
     public static registerMiddleware(type: Function, isGlobal: boolean, isError: boolean) {
 
         DependencyRegistry.registerComponent(<Klass>type);
+        const middlewareMetadata = this.getMiddleware(type);
+        middlewareMetadata.isGlobalMiddleware = isGlobal;
+        middlewareMetadata.isErrorMiddleware = isError;
 
-        const actionName = 'use';
+        const handlerMetadata = this.getAction(type, 'use');
+        middlewareMetadata.handler = handlerMetadata;
+    }
 
-        const middlewareMetadata = new MiddlewareMetadata(type, isGlobal, isError);
-        const handlerMetadata = new HandlerMetadata(type, actionName);
+    /**
+     * used to register an action hook, including BeforeAction, AfterAction, ErrorAction
+     *
+     * for example:
+     *
+     *   @Middleware()
+     *   class ATestMiddleware implements IMiddleware {
+     *      ...
+     *   }
+     *
+     *   @BeforeAction(ATestMiddleware)
+     *   @RestController()
+     *   class ATestController {
+     *   }
+     *
+     *   controllerType
+     *      is the controller type for the middleware, in this example: ATestController
+     *
+     *   type
+     *      is the middleware type, in this example: ATestMiddleware
+     *
+     *   middlewareLevel
+     *      is the level for the middleware, in this example: MiddlewareLevel.Controller
+     *
+     *   middlewareType
+     *      is the type for the middleware, in this example: MiddlewareType.BeforeAction
+     *
+     *   actionName
+     *      if register a controller level middleware, actionName should be the controller action name
+     *      in this example: undefined
+     *
+     * @param controllerType
+     * @param type
+     * @param middlewareLevel
+     * @param middlewareType
+     * @param actionName
+     */
+    public static registerActionHook(controllerType: Function,
+                                     type: Function,
+                                     middlewareLevel: MiddlewareLevel,
+                                     middlewareType: MiddlewareType,
+                                     actionName?: string) {
 
-        const params = Reflection.getParams(type.prototype, actionName);
-        if (params) {
-            const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
-            const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
-            handlerMetadata.params = handlerParamsMap;
+        const pushMiddlewareToStore = (store: MiddlewareStore) => {
+
+            const middlewareMetadata = this.getMiddleware(type);
+
+            switch (middlewareType) {
+                case MiddlewareType.BeforeAction:
+                    store.beforeActions.push(middlewareMetadata);
+                    return;
+                case MiddlewareType.AfterAction:
+                    store.afterActions.push(middlewareMetadata);
+                    return;
+                case MiddlewareType.ErrorAction:
+                    store.errorActions.push(middlewareMetadata);
+                    return;
+                default:
+                    return;
+            }
+        };
+
+        if (middlewareLevel === MiddlewareLevel.Action) {
+
+            if (typeof actionName === 'undefined') {
+                throw new ArgumentError('action middleware level should pass in action name');
+            }
+
+            const handlerMetadata = this.getAction(controllerType, actionName);
+            pushMiddlewareToStore(handlerMetadata);
+            return;
         }
 
-        middlewareMetadata.handler = handlerMetadata;
+        if (middlewareLevel === MiddlewareLevel.Controller) {
 
-        this._middlewares.set(type, middlewareMetadata);
+            const controllerMetadata = this.getController(controllerType);
+            pushMiddlewareToStore(controllerMetadata);
+            return;
+        }
+
+        throw new ArgumentError('not valid arguments');
     }
+
+    /**
+     * safe get middleware
+     *
+     * @param type
+     * @returns {MiddlewareMetadata}
+     */
+    private static getMiddleware(type: Function) {
+
+        let middlewareMetadata = this._middlewares.get(type);
+
+        if (middlewareMetadata) {
+            return middlewareMetadata;
+        } else {
+            middlewareMetadata = new MiddlewareMetadata(type);
+            this._middlewares.set(type, middlewareMetadata);
+            return middlewareMetadata;
+        }
+    }
+
+    /**
+     * safe get controller
+     *
+     * @param type
+     * @returns {ControllerMetadata}
+     */
+    private static getController(type: Function) {
+
+        let controllerMetadata = this._controllers.get(type);
+
+        if (controllerMetadata) {
+            return controllerMetadata;
+        } else {
+            controllerMetadata = new ControllerMetadata(type);
+            this._controllers.set(type, controllerMetadata);
+            return controllerMetadata;
+        }
+    }
+
+    /**
+     * safe get action
+     *
+     * @param type
+     * @param actionName
+     * @returns {HandlerMetadata}
+     */
+    private static getAction(type: Function, actionName: string) {
+
+        const controllerMetadata = this.getController(type);
+
+        let handlerMetadata = controllerMetadata.handlers.get(actionName);
+
+        if (handlerMetadata) {
+            return handlerMetadata;
+        } else {
+
+            handlerMetadata = new HandlerMetadata(type, actionName);
+
+            const params = Reflection.getParams(type.prototype, actionName);
+
+            if (params) {
+                const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
+                const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
+                handlerMetadata.params = handlerParamsMap;
+            }
+
+            controllerMetadata.handlers.set(actionName, handlerMetadata);
+
+            return handlerMetadata;
+        }
+    }
+
+
+
 }

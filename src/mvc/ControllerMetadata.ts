@@ -1,6 +1,7 @@
 import {HandlerMetadata} from "./HandlerMetadata";
+import {MiddlewareStore} from "./MiddlewareStore";
 
-export class ControllerMetadata {
+export class ControllerMetadata extends MiddlewareStore {
 
     private _type: Function;
 
@@ -35,6 +36,9 @@ export class ControllerMetadata {
     }
 
     constructor(type: Function, baseUrl?: string, isRest?: boolean) {
+
+        super();
+
         this._type = type;
 
         if (typeof baseUrl !== 'undefined') {
