@@ -1,6 +1,5 @@
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
 import {HTTPMethodAndPath} from "./HTTPMethodAndPath";
-import {MiddlewareMetadata} from "./metadata/MiddlewareMetadata";
 import {MiddlewareStore} from "./MiddlewareStore";
 
 export class HandlerMetadata extends MiddlewareStore {

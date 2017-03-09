@@ -364,7 +364,4 @@ export class ControllerRegistry {
             return handlerMetadata;
         }
     }
-
-
-
 }

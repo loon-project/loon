@@ -25,7 +25,7 @@ export class HandlerTransformer {
 
         if (isErrorHandler) {
 
-            return (err: Error, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+            return (err: any, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
 
                 return new Promise((resolve, reject) => {
 

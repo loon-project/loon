@@ -2,8 +2,10 @@ import {ApplicationRegistry} from "./ApplicationRegistry";
 import * as Express from "express";
 import {LogFactory} from "../logger/LogFactory";
 import {ConnectionFactory} from "../data/ConnectionFactory";
-import * as Fs from 'fs';
-import {MVCContainer} from "../mvc/MVCContainer";
+import * as Fs from "fs";
+import {ControllerRegistry} from "../mvc/ControllerRegistry";
+import {HandlerTransformer} from "../mvc/HandlerTransformer";
+import {ControllerTransformer} from "../mvc/ControllerTransformer";
 
 
 export class ApplicationLoader {
@@ -136,7 +138,11 @@ export class ApplicationLoader {
                 ConnectionFactory.init(this.configDir, this.env);
 
             })
-            .then(() => '$onInit' in this ? (<any> this).$onInit() : null)
+            .then(() => {
+
+                '$onInit' in this ? (<any> this).$onInit() : null;
+
+            })
             .then(() => {
 
                 const logger = LogFactory.getLogger();
@@ -183,7 +189,7 @@ export class ApplicationLoader {
             .resolve()
             .then(() => this.loadMiddlewares())
             .then(() => this.loadRoutes())
-            .then(() => this.loadErrorHandlers());
+            .then(() => this.loadErrorMiddlewares());
 
     }
 
@@ -203,34 +209,37 @@ export class ApplicationLoader {
                     logger.info(`Application is listening on port ${this.port}`);
                 });
             })
-            .catch(() => {
+            .catch((e) => {
+                throw e;
             });
-    }
-
-    private scan(paths: string[]) {
-        paths.forEach(path => {
-            require('require-all')({
-                dirname: path,
-                excludeDirs :  /^\.(git|svn)$/,
-                recursive: true
-            });
-        });
-
-        return this;
     }
 
     private loadMiddlewares() {
+        ControllerRegistry.middlewares.forEach(middlewareMetadata => {
+            if (middlewareMetadata.isGlobalMiddleware && !middlewareMetadata.isErrorMiddleware) {
+                const handlerMetadata = middlewareMetadata.handler;
+                const transformer = new HandlerTransformer(handlerMetadata);
+                this._server.use(transformer.transform());
+            }
+        });
     }
 
     private loadRoutes() {
 
-        MVCContainer
-            .getRoutes()
-            .map(item => this.server.use(item.baseRoute, item.router));
-
-        return this;
+        ControllerRegistry.controllers.forEach(controllerMetadata => {
+            const transformer = new ControllerTransformer(controllerMetadata);
+            const router = transformer.transform();
+            this._server.use(controllerMetadata.baseUrl, router);
+        });
     }
 
-    private loadErrorHandlers() {
+    private loadErrorMiddlewares() {
+        ControllerRegistry.middlewares.forEach(middlewareMetadata => {
+            if (middlewareMetadata.isGlobalMiddleware && middlewareMetadata.isErrorMiddleware) {
+                const handlerMetadata = middlewareMetadata.handler;
+                const transformer = new HandlerTransformer(handlerMetadata);
+                this._server.use(transformer.transform());
+            }
+        });
     }
 }
