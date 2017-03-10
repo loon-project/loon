@@ -5,7 +5,7 @@ import {HttpHelper} from "../../helper/HttpHelper";
 import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
 import {Res} from "../../../src/mvc/decorator/Params";
 
-describe("Controller integration", () => {
+describe("[Integration] Controller", () => {
 
     @RestController("/1")
     class User1Controller {

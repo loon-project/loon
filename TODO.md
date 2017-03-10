@@ -6,3 +6,5 @@
 - [ ] test action ErrorAction
 - [ ] test send data successfully
 - [ ] test multiple http method decorated action
+
+- [ ] error handler registry

@@ -9,7 +9,7 @@ import {BeforeAction, AfterAction} from "../../../src/mvc/decorator/Action";
 import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../../helper/HttpHelper";
 
-describe("[Integration] ActionHook ", () => {
+describe("[Integration] Middleware", () => {
 
     @Middleware()
     class TestMiddleware implements IMiddleware {
