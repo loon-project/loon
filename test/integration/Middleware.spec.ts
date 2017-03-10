@@ -1,13 +1,13 @@
-import "../../TestHelper";
-import {Res, Next} from "../../../src/mvc/decorator/Params";
-import {Get} from "../../../src/mvc/decorator/Method";
-import {RestController} from "../../../src/mvc/decorator/Controller";
+import "../TestHelper";
 import * as Express from "express";
-import {Middleware} from "../../../src/mvc/decorator/Middleware";
-import {IMiddleware} from "../../../src/mvc/interface/IMiddleware";
-import {BeforeAction, AfterAction} from "../../../src/mvc/decorator/Action";
-import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
-import {HttpHelper} from "../../helper/HttpHelper";
+import {Next, Res} from "../../src/mvc/decorator/Params";
+import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
+import {Middleware} from "../../src/mvc/decorator/Middleware";
+import {RestController} from "../../src/mvc/decorator/Controller";
+import {BeforeAction, AfterAction} from "../../src/mvc/decorator/Action";
+import {Get} from "../../src/mvc/decorator/Method";
+import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {HttpHelper} from "../helper/HttpHelper";
 
 describe("[Integration] Middleware", () => {
 

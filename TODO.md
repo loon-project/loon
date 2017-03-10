@@ -8,3 +8,4 @@
 - [ ] test multiple http method decorated action
 
 - [ ] error handler registry
+- [ ] handler transformer type convert, object to class

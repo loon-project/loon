@@ -1,11 +1,11 @@
-import "../../TestHelper";
-import {Get, Post, RestController, PathParam, BodyParam, HeaderParam, QueryParam} from "../../../src/index";
-import {ServerHelper} from "../../helper/ServerHelper";
-import {HttpHelper} from "../../helper/HttpHelper";
-import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
+import "../TestHelper";
 import * as Express from 'express';
-import {Res} from "../../../src/mvc/decorator/Params";
-import {Patch} from "../../../src/mvc/decorator/Method";
+import {RestController} from "../../src/mvc/decorator/Controller";
+import {Get, Post, Patch} from "../../src/mvc/decorator/Method";
+import {HeaderParam, Res, QueryParam, PathParam, BodyParam} from "../../src/mvc/decorator/Params";
+import {ServerHelper} from "../helper/ServerHelper";
+import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {HttpHelper} from "../helper/HttpHelper";
 
 
 describe("[Integration] Param", () => {

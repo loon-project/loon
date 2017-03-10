@@ -1,9 +1,10 @@
-import "../../TestHelper";
+import "../TestHelper";
 import * as Express from "express";
-import {RestController, Get, Post, Patch, Put, Delete} from "../../../src/index";
-import {HttpHelper} from "../../helper/HttpHelper";
-import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
-import {Res} from "../../../src/mvc/decorator/Params";
+import {RestController} from "../../src/mvc/decorator/Controller";
+import {Get, Post, Put, Patch, Delete} from "../../src/mvc/decorator/Method";
+import {Res} from "../../src/mvc/decorator/Params";
+import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {HttpHelper} from "../helper/HttpHelper";
 
 describe("[Integration] Controller", () => {
 
