@@ -3,26 +3,33 @@ import {ControllerRegistry} from "../ControllerRegistry";
 
 export function GlobalMiddleware() {
     return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, true, false);
+        ControllerRegistry.registerMiddleware(target, true);
     };
 }
 
-export function GlobalErrorMiddleware() {
-    return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, true, true);
-    };
-}
+
 
 export function Middleware() {
     return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, false, false);
+        ControllerRegistry.registerMiddleware(target, false);
     };
 }
 
-export function ErrorMiddleware() {
+
+
+export function ErrorHandler() {
     return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, false, true);
     };
 }
 
+// export function GlobalErrorMiddleware() {
+//     return (target: any) => {
+//         ControllerRegistry.registerMiddleware(target, true, true);
+//     };
+// }
 
+// export function ErrorMiddleware() {
+//     return (target: any) => {
+//         ControllerRegistry.registerMiddleware(target, false, true);
+//     };
+// }

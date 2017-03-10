@@ -216,7 +216,7 @@ export class ApplicationLoader {
 
     private loadMiddlewares() {
         ControllerRegistry.middlewares.forEach(middlewareMetadata => {
-            if (middlewareMetadata.isGlobalMiddleware && !middlewareMetadata.isErrorMiddleware) {
+            if (middlewareMetadata.isGlobalMiddleware) {
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(transformer.transform());
@@ -234,12 +234,12 @@ export class ApplicationLoader {
     }
 
     private loadErrorMiddlewares() {
-        ControllerRegistry.middlewares.forEach(middlewareMetadata => {
-            if (middlewareMetadata.isGlobalMiddleware && middlewareMetadata.isErrorMiddleware) {
-                const handlerMetadata = middlewareMetadata.handler;
-                const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.use(transformer.transform());
-            }
-        });
+        // ControllerRegistry.middlewares.forEach(middlewareMetadata => {
+        //     if (middlewareMetadata.isGlobalMiddleware && middlewareMetadata.isErrorMiddleware) {
+        //         const handlerMetadata = middlewareMetadata.handler;
+        //         const transformer = new HandlerTransformer(handlerMetadata);
+        //         this._server.use(transformer.transform());
+        //     }
+        // });
     }
 }

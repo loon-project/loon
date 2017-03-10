@@ -3,7 +3,7 @@ import * as Express from "express";
 import {RestController, Get, Post, Patch, Put, Delete} from "../../../src/index";
 import {HttpHelper} from "../../helper/HttpHelper";
 import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
-import {Response} from "../../../src/mvc/decorator/Params";
+import {Res} from "../../../src/mvc/decorator/Params";
 
 describe("Controller integration", () => {
 
@@ -11,23 +11,23 @@ describe("Controller integration", () => {
     class User1Controller {
 
         @Get("/users")
-        public indexAction(@Response() response: Express.Response) {
+        public indexAction(@Res() response: Express.Response) {
             response.send("all users");
         }
 
         @Post("/users")
-        public createAction(@Response() response: Express.Response) {
+        public createAction(@Res() response: Express.Response) {
             response.status(201).send("create user");
         }
 
         @Put("/users/1")
         @Patch("/users/1")
-        public updateAction(@Response() response: Express.Response) {
+        public updateAction(@Res() response: Express.Response) {
             response.send("update user");
         }
 
         @Delete("/users/1")
-        public destroyAction(@Response() response: Express.Response) {
+        public destroyAction(@Res() response: Express.Response) {
             response.send("delete user");
         }
     }

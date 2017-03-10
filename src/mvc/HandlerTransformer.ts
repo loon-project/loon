@@ -19,9 +19,7 @@ export class HandlerTransformer {
 
     public transform() {
 
-
         const isErrorHandler = this.handlerMetadata.isErrorHandler;
-
 
         if (isErrorHandler) {
 

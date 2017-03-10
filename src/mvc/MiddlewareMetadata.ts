@@ -4,8 +4,6 @@ export class MiddlewareMetadata {
 
     private _isGlobalMiddleware: boolean;
 
-    private _isErrorMiddleware: boolean;
-
     private _handler: HandlerMetadata;
 
     private _type: Function;
@@ -21,10 +19,6 @@ export class MiddlewareMetadata {
         return this._isGlobalMiddleware;
     }
 
-    get isErrorMiddleware(): boolean {
-        return this._isErrorMiddleware;
-    }
-
     get handler(): HandlerMetadata {
         return this._handler;
     }
@@ -37,20 +31,12 @@ export class MiddlewareMetadata {
         this._isGlobalMiddleware = value;
     }
 
-    set isErrorMiddleware(value: boolean) {
-        this._isErrorMiddleware = value;
-    }
-
-    constructor(type: Function, isGlobalMiddleware?: boolean, isErrorMiddleware?: boolean, handler?: HandlerMetadata) {
+    constructor(type: Function, isGlobalMiddleware?: boolean, handler?: HandlerMetadata) {
 
         this._type = type;
 
         if (typeof isGlobalMiddleware !== 'undefined') {
             this._isGlobalMiddleware = isGlobalMiddleware;
-        }
-
-        if (typeof isErrorMiddleware !== 'undefined') {
-            this._isErrorMiddleware = isErrorMiddleware;
         }
 
         if (typeof handler !== 'undefined') {

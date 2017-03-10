@@ -2,8 +2,8 @@ import "../TestHelper";
 import {RestController} from "../../src/mvc/decorator/Controller";
 import {Get} from "../../src/mvc/decorator/Method";
 import {
-    BodyParam, CookieParam, PathParam, QueryParam, HeaderParam, Request,
-    Response, Next
+    BodyParam, CookieParam, PathParam, QueryParam, HeaderParam, Req,
+    Res, Next
 } from "../../src/mvc/decorator/Params";
 import * as Express from 'express';
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
@@ -20,8 +20,8 @@ describe('HandlerTransformer', () => {
                            @PathParam("path_id") pathId: number,
                            @QueryParam("q") q: any,
                            @HeaderParam("Authorization") authorization: string,
-                           @Request() request: Express.Request,
-                           @Response() response: Express.Response,
+                           @Req() request: Express.Request,
+                           @Res() response: Express.Response,
                            @Next() next: Express.NextFunction) {
 
             return {

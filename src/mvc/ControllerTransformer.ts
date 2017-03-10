@@ -14,8 +14,6 @@ export class ControllerTransformer {
 
     private _controllerAfterActions: Express.RequestHandler[];
 
-    private _controllerErrorActions: Express.ErrorRequestHandler[];
-
     get controllerMetadata(): ControllerMetadata {
         return this._controllerMetadata;
     }
@@ -24,14 +22,14 @@ export class ControllerTransformer {
         this._controllerMetadata = controllerMetadata;
         this._router = Express.Router();
 
-        [this._controllerBeforeActions, this._controllerAfterActions, this._controllerErrorActions] = this.getActionHooks(controllerMetadata);
+        [this._controllerBeforeActions, this._controllerAfterActions] = this.getActionHooks(controllerMetadata);
     }
 
     public transform() {
 
         this._controllerMetadata.handlers.forEach(handlerMetadata => {
 
-            const [beforeActions, afterActions, errorActions] = this.getActionHooks(handlerMetadata);
+            const [beforeActions, afterActions] = this.getActionHooks(handlerMetadata);
             const handlerTransformer = new HandlerTransformer(handlerMetadata);
             const handler = handlerTransformer.transform();
 
@@ -40,9 +38,7 @@ export class ControllerTransformer {
                 beforeActions,
                 <any>handler,
                 this._controllerAfterActions,
-                afterActions,
-                this._controllerErrorActions,
-                errorActions);
+                afterActions);
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
                 this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);
@@ -53,7 +49,7 @@ export class ControllerTransformer {
     }
 
     private getActionHooks(middlewareStore: MiddlewareStore) {
-        return ['beforeActions', 'afterActions', 'errorActions'].map(key => {
+        return ['beforeActions', 'afterActions'].map(key => {
             const store: any[] = [];
 
             middlewareStore[key].forEach(middlewareMetadata => {

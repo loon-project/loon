@@ -57,7 +57,6 @@ export class ControllerRegistry {
             });
         }
 
-
         return result;
     }
 
@@ -231,12 +230,11 @@ export class ControllerRegistry {
      * @param isGlobal
      * @param isError
      */
-    public static registerMiddleware(type: Function, isGlobal: boolean, isError: boolean) {
+    public static registerMiddleware(type: Function, isGlobal: boolean) {
 
         DependencyRegistry.registerComponent(<Klass>type);
         const middlewareMetadata = this.getMiddleware(type);
         middlewareMetadata.isGlobalMiddleware = isGlobal;
-        middlewareMetadata.isErrorMiddleware = isError;
 
         const handlerMetadata = this.getAction(type, 'use');
         middlewareMetadata.handler = handlerMetadata;

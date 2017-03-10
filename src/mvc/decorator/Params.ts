@@ -38,13 +38,13 @@ export function SessionParam(expression: string) {
     };
 }
 
-export function Request() {
+export function Req() {
     return (target: any, actionName: string, index: number) => {
         registerHelper(target.constructor, ParamType.Request, actionName, index, "");
     };
 }
 
-export function Response() {
+export function Res() {
     return (target: any, actionName: string, index: number) => {
         registerHelper(target.constructor, ParamType.Response, actionName, index, "");
     };
@@ -56,7 +56,7 @@ export function Next() {
     };
 }
 
-export function Error() {
+export function Err() {
     return (target: any, methodName: string, index: number) => {
         registerHelper(target.constructor, ParamType.Error, methodName, index, "");
     };
