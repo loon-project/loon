@@ -11,6 +11,7 @@ import {MiddlewareType} from "./enum/MiddlewareType";
 import {MiddlewareLevel} from "./enum/MiddlewareLevel";
 import {ArgumentError} from "../core/error/ArgumentError";
 import {MiddlewareStore} from "./MiddlewareStore";
+import {ControllerTransformer} from "./ControllerTransformer";
 
 export class ControllerRegistry {
 
@@ -33,7 +34,37 @@ export class ControllerRegistry {
     public static registerRouter() {
     }
 
-    public static getRoutes() {
+    public static getRoutes(type?: Function) {
+
+        const result = new Map();
+
+        if (type) {
+
+            const controllerMetadata = ControllerRegistry._controllers.get(type);
+
+            if (controllerMetadata) {
+                const transformer = new ControllerTransformer(controllerMetadata);
+                const router = transformer.transform();
+                result.set(controllerMetadata.baseUrl, router);
+            }
+
+        } else {
+
+            ControllerRegistry.controllers.forEach(controllerMetadata => {
+                const transformer = new ControllerTransformer(controllerMetadata);
+                const router = transformer.transform();
+                result.set(controllerMetadata.baseUrl, router);
+            });
+        }
+
+
+        return result;
+    }
+
+    public static getGlobalMiddlewares() {
+    }
+
+    public static getGlobalErrorMiddlewares() {
     }
 
 

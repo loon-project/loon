@@ -1,8 +1,9 @@
 import "../../TestHelper";
 import * as Express from "express";
-import {RestController, Get, Post, Patch, Put, Delete} from '../../../src/index';
-import {MVCContainer} from "../../../src/mvc/MVCContainer";
+import {RestController, Get, Post, Patch, Put, Delete} from "../../../src/index";
 import {HttpHelper} from "../../helper/HttpHelper";
+import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";
+import {Response} from "../../../src/mvc/decorator/Params";
 
 describe("Controller integration", () => {
 
@@ -10,24 +11,24 @@ describe("Controller integration", () => {
     class User1Controller {
 
         @Get("/users")
-        public indexAction() {
-            return "all users";
+        public indexAction(@Response() response: Express.Response) {
+            response.send("all users");
         }
 
         @Post("/users")
-        public createAction() {
-            return "create user";
+        public createAction(@Response() response: Express.Response) {
+            response.status(201).send("create user");
         }
 
         @Put("/users/1")
         @Patch("/users/1")
-        public updateAction() {
-            return "update user";
+        public updateAction(@Response() response: Express.Response) {
+            response.send("update user");
         }
 
         @Delete("/users/1")
-        public destroyAction() {
-            return "delete user";
+        public destroyAction(@Response() response: Express.Response) {
+            response.send("delete user");
         }
     }
 
@@ -35,8 +36,13 @@ describe("Controller integration", () => {
     let server;
 
     before(done => {
-        const routes = MVCContainer.getRoutes();
-        routes.forEach(item => app.use(item.baseRoute, item.router));
+
+        const routes = ControllerRegistry.getRoutes(User1Controller);
+
+        routes.forEach((route, baseUrl) => {
+            app.use(baseUrl, route);
+        });
+
         server = app.listen(4444, done);
     });
 
@@ -79,3 +85,4 @@ describe("Controller integration", () => {
         });
     });
 });
+
