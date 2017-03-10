@@ -1,4 +1,3 @@
-import {MVCContainer} from "../MVCContainer";
 import {ParamType} from "../enum/ParamType";
 import {ControllerRegistry} from "../ControllerRegistry";
 
@@ -67,8 +66,6 @@ function registerHelper(type: Function,
                         actionName: string,
                         index: number,
                         expression: string) {
-
-    MVCContainer.registerParams(type, paramType, actionName, index, expression);
 
     ControllerRegistry.registerParam(type, paramType, actionName, index, expression);
 

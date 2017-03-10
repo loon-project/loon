@@ -5,7 +5,7 @@ import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {GlobalMiddleware, Middleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
-import {BeforeAction, AfterAction, ErrorAction} from "../../src/mvc/decorator/Action";
+import {BeforeAction, AfterAction} from "../../src/mvc/decorator/Action";
 import {MiddlewareLevel} from "../../src/mvc/enum/MiddlewareLevel";
 import {MiddlewareType} from "../../src/mvc/enum/MiddlewareType";
 

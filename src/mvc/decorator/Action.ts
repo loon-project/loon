@@ -1,7 +1,6 @@
 import {MiddlewareLevel} from "../enum/MiddlewareLevel";
 import {MiddlewareType} from "../enum/MiddlewareType";
 import {ControllerRegistry} from "../ControllerRegistry";
-import {ArgumentError} from "../../core/error/ArgumentError";
 
 export function BeforeAction(middlewareType: Function): Function {
 
@@ -26,19 +25,4 @@ export function AfterAction(middlewareType: Function): Function {
         }
     };
 }
-
-export function ErrorAction(middlewareType: Function): Function {
-
-    return (target: any, actionName?: string) => {
-
-        if (actionName) {
-            throw new ArgumentError('action level error handler is not allowed');
-        } else {
-            ControllerRegistry.registerActionHook(target, middlewareType, MiddlewareLevel.Controller, MiddlewareType.ErrorAction);
-        }
-
-    };
-}
-
-
 

@@ -1,4 +1,4 @@
-import {SettingOptions} from "../interface/SettingOptions";
+import {SettingOptions} from "../SettingOptions";
 import {ApplicationRegistry} from "../ApplicationRegistry";
 
 export function ApplicationSettings(options: SettingOptions) {

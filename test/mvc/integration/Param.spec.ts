@@ -1,6 +1,5 @@
 import "../../TestHelper";
 import {Get, Post, RestController, PathParam, BodyParam, HeaderParam, QueryParam} from "../../../src/index";
-import {MVCContainer} from "../../../src/mvc/MVCContainer";
 import {ServerHelper} from "../../helper/ServerHelper";
 import {HttpHelper} from "../../helper/HttpHelper";
 import {ControllerRegistry} from "../../../src/mvc/ControllerRegistry";

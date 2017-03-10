@@ -6,18 +6,12 @@ export class MiddlewareStore {
 
     private _afterActions: MiddlewareMetadata[];
 
-    private _errorActions: MiddlewareMetadata[];
-
     get beforeActions(): MiddlewareMetadata[] {
         return this._beforeActions;
     }
 
     get afterActions(): MiddlewareMetadata[] {
         return this._afterActions;
-    }
-
-    get errorActions(): MiddlewareMetadata[] {
-        return this._errorActions;
     }
 
     set beforeActions(value: MiddlewareMetadata[]) {
@@ -28,14 +22,8 @@ export class MiddlewareStore {
         this._afterActions = value;
     }
 
-    set errorActions(value: MiddlewareMetadata[]) {
-        this._errorActions = value;
-    }
-
     constructor() {
-
         this._beforeActions = [];
         this._afterActions = [];
-        this._errorActions = [];
     }
 }

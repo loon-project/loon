@@ -1,6 +1,6 @@
 import "../TestHelper";
 import {ApplicationRegistry} from "../../src/server/ApplicationRegistry";
-import {SettingOptions} from "../../src/server/interface/SettingOptions";
+import {SettingOptions} from "../../src/server/SettingOptions";
 
 describe("ApplicationRegistry", () => {
 

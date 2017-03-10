@@ -241,7 +241,7 @@ export class ControllerRegistry {
     }
 
     /**
-     * used to register an action hook, including BeforeAction, AfterAction, ErrorAction
+     * used to register an action hook, including BeforeAction, AfterAction
      *
      * for example:
      *
@@ -293,9 +293,6 @@ export class ControllerRegistry {
                     return;
                 case MiddlewareType.AfterAction:
                     store.afterActions.push(middlewareMetadata);
-                    return;
-                case MiddlewareType.ErrorAction:
-                    store.errorActions.push(middlewareMetadata);
                     return;
                 default:
                     return;
