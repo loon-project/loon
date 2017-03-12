@@ -1,4 +1,0 @@
-- [ ] error handler registry
-- [ ] middleware registry
-- [ ] handler transformer type convert, object to class
-- [ ] PARAMETER_OPTIONS, add parameter options: required, defaultValue 
