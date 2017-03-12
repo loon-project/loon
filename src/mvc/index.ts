@@ -1,7 +1,6 @@
 
 export * from './decorator/Action';
 export * from './decorator/Controller';
-export * from './decorator/ErrorHandler';
 export * from './decorator/Method';
 export * from './decorator/Middleware';
 export * from './decorator/Params';

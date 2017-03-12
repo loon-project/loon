@@ -6,6 +6,7 @@ import * as Fs from "fs";
 import {ControllerRegistry} from "../mvc/ControllerRegistry";
 import {HandlerTransformer} from "../mvc/HandlerTransformer";
 import {ControllerTransformer} from "../mvc/ControllerTransformer";
+import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
 
 
 export class ApplicationLoader {
@@ -264,7 +265,7 @@ export class ApplicationLoader {
     }
 
     private loadMiddlewares() {
-        ControllerRegistry.middlewares.forEach(middlewareMetadata => {
+        MiddlewareRegistry.middlewares.forEach(middlewareMetadata => {
             if (middlewareMetadata.isGlobalMiddleware) {
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
