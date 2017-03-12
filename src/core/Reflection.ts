@@ -1,9 +1,7 @@
-import {Klass} from "./Klass";
-
 export class Reflection {
 
-    public static getType(klass: Klass, key?: string) {
-        return (<any> Reflect).getMetadata("design:type", klass, key);
+    public static getType(type: Function, key?: string) {
+        return (<any> Reflect).getMetadata("design:type", type, key);
     }
 
     public static getParams(prototype: any, key?: string): any[] {
