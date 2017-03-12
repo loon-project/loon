@@ -1,4 +1,4 @@
-### future
+### Future
 - [ ] error middleware registry
 - [ ] middleware registry
 - [ ] filter registry
