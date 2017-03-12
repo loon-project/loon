@@ -39,6 +39,13 @@ Quick start example: [link](https://github.com/typed-project/typed-framework/tre
 
 <h2 align="center">Release note</h2>
 
+### v0.2.0
+* Support Middleware decorator to inject for controllers
+* Support Middleware, Controller parameter injections, now your middleware have the same ability to inject not only Req, Res, and BodyParam, PathParam and so on.
+* Support new ApplicationSettings and ApplicationLoader for new start up application way
+* Support convert class to object and object to class by Converter, and provide template ability
+
+
 ### v0.1.0
 
 * Spring like routes and controller support based on [express](https://github.com/expressjs/expressjs.com)
