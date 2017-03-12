@@ -42,18 +42,17 @@ $ touch Application.ts
 ```
 
 ```typescript
-import {TypedApplicationLoader, TypedApplication, Inject} from "typed-framework";
+@ApplicationSettings({rootDir: `${__dirname}/../`})
 
-@TypedApplicationLoader({rootDir: `${__dirname}/../`})
-class Application {
+class Application extends ApplicationLoader {
 
-    public static start() {
-        TypedApplication.run();
+    public static initialize() {
+        return new Application().start();
     }
-
 }
 
-Application.start();
+Application.initialize();
+
 ```
 
 * create first controller `HomeController.ts` and return json result
