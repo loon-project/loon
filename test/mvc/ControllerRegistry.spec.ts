@@ -3,20 +3,12 @@ import {RestController, Controller} from "../../src/mvc/decorator/Controller";
 import {Get, Post, Put, Patch} from "../../src/mvc/decorator/Method";
 import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
-import {GlobalMiddleware, Middleware} from "../../src/mvc/decorator/Middleware";
+import {Middleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {BeforeAction, AfterAction} from "../../src/mvc/decorator/Action";
-import {MiddlewareLevel} from "../../src/mvc/enum/MiddlewareLevel";
-import {MiddlewareType} from "../../src/mvc/enum/MiddlewareType";
 
 
 describe("ControllerRegistry", () => {
-
-    @GlobalMiddleware()
-    class ATestGlobalMiddlewareClass implements IMiddleware {
-        public use() {
-        }
-    }
 
     @Middleware()
     class ATestMiddlewareClass implements IMiddleware {
@@ -30,8 +22,6 @@ describe("ControllerRegistry", () => {
     class AControllerRegistryTestRestController {
 
         @Get("/")
-        @BeforeAction(ATestMiddlewareClass)
-        @AfterAction(ATestMiddlewareClass)
         public indexAction(@Req() request: Express.Request) {
         }
 
@@ -94,7 +84,6 @@ describe("ControllerRegistry", () => {
         handlerParamMetadata.should.not.be.undefined;
         handlerParamMetadata.type.should.be.equal(AControllerRegistryTestRestController);
         handlerParamMetadata.index.should.be.equal(0);
-        handlerParamMetadata.isRequired.should.be.equal(false);
         handlerParamMetadata.actionName.should.be.equal('indexAction');
     });
 
@@ -121,7 +110,6 @@ describe("ControllerRegistry", () => {
         handlerParamMetadata.should.not.be.undefined;
         handlerParamMetadata.type.should.be.equal(AControllerRegistryTestController);
         handlerParamMetadata.index.should.be.equal(0);
-        handlerParamMetadata.isRequired.should.be.equal(false);
         handlerParamMetadata.actionName.should.be.equal('createAction');
     });
 
@@ -151,83 +139,42 @@ describe("ControllerRegistry", () => {
         (typeof handlerParamMetadata === 'undefined').should.be.true;
     });
 
-    it('should successfully register a global middleware', () => {
-        middlewareShouldPass(ATestGlobalMiddlewareClass, true);
-    });
+    it('should successfully register a BeforeAction middleware', () => {
 
-    it('should successfully register a middleware', () => {
-        middlewareShouldPass(ATestMiddlewareClass, false);
-    });
-
-    it('should successfully register a controller level before action', () => {
-        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.BeforeAction);
-    });
-
-    it('should successfully register a controller level after action', () => {
-        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Controller, MiddlewareType.AfterAction);
-    });
-
-    it('should successfully register a action level before action', () => {
-        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Action, MiddlewareType.BeforeAction);
-    });
-
-    it('should successfully register a action level after action', () => {
-        registerMiddlewareShouldPass(AControllerRegistryTestRestController, ATestMiddlewareClass, MiddlewareLevel.Action, MiddlewareType.AfterAction);
-    });
-
-    const registerMiddlewareShouldPass = (controllerType: Function, type: Function, middlewareLevel: MiddlewareLevel, middlewareType: MiddlewareType) => {
-
-        const controllerMetadata: any = ControllerRegistry.controllers.get(controllerType);
+        const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
+        controllerMetadata.beforeActions.should.not.be.undefined;
+        controllerMetadata.beforeActions.length.should.be.equal(1);
 
-        let middlewareTypeString = "";
-        let store;
-
-        switch (middlewareType) {
-            case MiddlewareType.BeforeAction:
-                middlewareTypeString = 'beforeActions';
-                break;
-            case MiddlewareType.AfterAction:
-                middlewareTypeString = 'afterActions';
-                break;
-        }
-
-        switch (middlewareLevel) {
-            case MiddlewareLevel.Controller:
-                store = controllerMetadata;
-                break;
-            case MiddlewareLevel.Action:
-                store = controllerMetadata.handlers.get('indexAction');
-                break;
-        }
-
-        store[middlewareTypeString].should.not.be.undefined;
-        store[middlewareTypeString].length.should.be.equal(1);
-
-        const middlewareMetadata = store[middlewareTypeString][0];
+        const middlewareMetadata: any = controllerMetadata.beforeActions[0];
 
         middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(type);
-
-        middlewareShouldPass(middlewareMetadata.type, false);
-    };
-
-    const middlewareShouldPass = (type: Function, isGlobal: boolean) => {
-
-        const middlewareMetadata: any = ControllerRegistry.middlewares.get(type);
-
-        middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(type);
-        middlewareMetadata.isGlobalMiddleware.should.be.equal(isGlobal);
+        middlewareMetadata.type.should.be.equal(ATestMiddlewareClass);
         middlewareMetadata.handler.should.not.be.undefined;
 
         const handlerMetadata: any = middlewareMetadata.handler;
-
-        handlerMetadata.type.should.be.equal(type);
+        handlerMetadata.type.should.be.equal(ATestMiddlewareClass);
         handlerMetadata.actionName.should.be.equal('use');
         handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+    });
 
-        return middlewareMetadata;
-    };
+    it('should successfully register a AfterAction middleware', () => {
+        const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
+
+        controllerMetadata.should.not.be.undefined;
+        controllerMetadata.afterActions.should.not.be.undefined;
+        controllerMetadata.afterActions.length.should.be.equal(1);
+
+        const middlewareMetadata: any = controllerMetadata.afterActions[0];
+
+        middlewareMetadata.should.not.be.undefined;
+        middlewareMetadata.type.should.be.equal(ATestMiddlewareClass);
+        middlewareMetadata.handler.should.not.be.undefined;
+
+        const handlerMetadata: any = middlewareMetadata.handler;
+        handlerMetadata.type.should.be.equal(ATestMiddlewareClass);
+        handlerMetadata.actionName.should.be.equal('use');
+        handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+    });
 });

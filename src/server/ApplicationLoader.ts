@@ -113,9 +113,58 @@ export class ApplicationLoader {
 
         return Promise
             .resolve()
-            .then(() => this.init())
-            .then(() => this.load())
-            .then(() => this.run());
+            .then(() => {
+
+                LogFactory.init(this.logDir, this.env);
+
+                ConnectionFactory.init(this.configDir, this.env);
+            })
+            .then(() => {
+
+                '$onInit' in this ? (<any> this).$onInit() : null;
+            })
+            .then(() => {
+
+                const logger = LogFactory.getLogger();
+
+                this.server.use(require('morgan')("combined", {
+                    stream: {
+                        write: message => logger.info(message)
+                    }
+                }));
+
+                this.server.use(require('body-parser').json());
+                this.server.use(require('body-parser').urlencoded({ extended: true }));
+                this.server.use(require('cookie-parser')());
+                this.server.use(require('method-override')());
+                this.server.use(require('serve-static')(this.publicDir));
+
+            })
+            .then(() => {
+
+                require('require-all')({
+                    dirname     :  this.srcDir,
+                    excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
+                    recursive   : true
+                });
+
+            })
+            .then(() => {
+                ControllerRegistry.controllers.forEach(controllerMetadata => {
+                    const transformer = new ControllerTransformer(controllerMetadata);
+                    const router = transformer.transform();
+                    this._server.use(controllerMetadata.baseUrl, router);
+                });
+            })
+            .then(() => {
+                this.server.listen(this.port, () => {
+                    const logger = LogFactory.getLogger();
+                    logger.info(`Application is listening on port ${this.port}`);
+                });
+            })
+            .catch(e => {
+                throw e;
+            });
     }
 
 

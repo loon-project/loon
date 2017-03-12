@@ -1,14 +1,14 @@
-import {ControllerRegistry} from "../ControllerRegistry";
+import {MiddlewareRegistry} from "../MiddlewareRegistry";
 
 
 export function GlobalMiddleware() {
     return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, true);
+        MiddlewareRegistry.registerMiddleware(target, true);
     };
 }
 
 export function Middleware() {
     return (target: any) => {
-        ControllerRegistry.registerMiddleware(target, false);
+        MiddlewareRegistry.registerMiddleware(target, false);
     };
 }

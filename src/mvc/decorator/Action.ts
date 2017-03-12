@@ -1,28 +1,16 @@
-import {MiddlewareLevel} from "../enum/MiddlewareLevel";
-import {MiddlewareType} from "../enum/MiddlewareType";
 import {ControllerRegistry} from "../ControllerRegistry";
+import {ActionHookType} from "../enum/ActionHookType";
 
 export function BeforeAction(middlewareType: Function): Function {
 
-    return (target: any, actionName?: string) => {
-
-        if (actionName) {
-            ControllerRegistry.registerActionHook(target.constructor, middlewareType, MiddlewareLevel.Action, MiddlewareType.BeforeAction, actionName);
-        } else {
-            ControllerRegistry.registerActionHook(target, middlewareType, MiddlewareLevel.Controller, MiddlewareType.BeforeAction);
-        }
-
+    return (target: any) => {
+        ControllerRegistry.registerActionHook(target, middlewareType, ActionHookType.BeforeAction);
     };
 }
 
 export function AfterAction(middlewareType: Function): Function {
-    return (target: any, actionName?: string) => {
-
-        if (actionName) {
-            ControllerRegistry.registerActionHook(target.constructor, middlewareType, MiddlewareLevel.Action, MiddlewareType.AfterAction, actionName);
-        } else {
-            ControllerRegistry.registerActionHook(target, middlewareType, MiddlewareLevel.Controller, MiddlewareType.AfterAction);
-        }
+    return (target: any) => {
+        ControllerRegistry.registerActionHook(target, middlewareType, ActionHookType.AfterAction);
     };
 }
 

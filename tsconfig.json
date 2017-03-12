@@ -13,10 +13,8 @@
       "node",
       "express",
       "reflect-metadata",
-      "winston",
       "chai",
-      "mocha",
-      "lodash"
+      "mocha"
     ]
   },
 

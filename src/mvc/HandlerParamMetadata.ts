@@ -4,21 +4,22 @@ export class HandlerParamMetadata {
 
     private _type: Function;
 
-    private _returnType: Function;
-
-    private _isRequired: boolean;
-
-    private _paramType: ParamType;
+    private _actionName: string;
 
     private _index: number;
 
+    private _returnType: Function;
+
+    private _paramType: ParamType;
+
     private _expression: string;
 
-    private _actionName: string;
+    private _defaultValue: any;
 
+    private _required: boolean;
 
-    get isRequired(): boolean {
-        return this._isRequired;
+    get required(): boolean {
+        return this._required;
     }
 
     get type(): Function {
@@ -41,24 +42,17 @@ export class HandlerParamMetadata {
         return this._actionName;
     }
 
-    constructor(
-        type: Function,
-        methodName: string,
-        index: number,
-        isRequired?: boolean,
-        paramType?: ParamType,
-        expression?: string
-    ) {
+    constructor(type: Function,
+                actionName: string,
+                index: number,
+                returnType: Function,
+                paramType?: ParamType,
+                expression?: string) {
 
         this._type = type;
-        this._actionName = methodName;
+        this._actionName = actionName;
+        this._returnType = returnType;
         this._index = index;
-
-        if (typeof isRequired !== 'undefined') {
-            this._isRequired = isRequired;
-        } else {
-            this._isRequired = false;
-        }
 
         if (typeof paramType !== 'undefined') {
             this._paramType = paramType;

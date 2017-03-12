@@ -1,38 +1,17 @@
 import {ControllerMetadata} from "./ControllerMetadata";
-import {HandlerMetadata} from "./HandlerMetadata";
-import {HandlerParamMetadata} from "./HandlerParamMetadata";
-import {ParamType} from "./enum/ParamType";
-import {ConvertUtil} from "../util/ConvertUtil";
-import {MiddlewareMetadata} from "./MiddlewareMetadata";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {Klass} from "../core/Klass";
-import {Reflection} from "../core/Reflection";
-import {MiddlewareType} from "./enum/MiddlewareType";
-import {MiddlewareLevel} from "./enum/MiddlewareLevel";
 import {ArgumentError} from "../core/error/ArgumentError";
-import {MiddlewareStore} from "./MiddlewareStore";
 import {ControllerTransformer} from "./ControllerTransformer";
+import {HandlerRegistry} from "./HandlerRegistry";
+import {ActionHookType} from "./enum/ActionHookType";
+import {MiddlewareRegistry} from "./MiddlewareRegistry";
 
 export class ControllerRegistry {
 
     private static _controllers: Map<Function, ControllerMetadata> = new Map();
 
     public static controllers = ControllerRegistry._controllers;
-
-    private static _middlewares: Map<Function, MiddlewareMetadata> = new Map();
-
-    public static middlewares = ControllerRegistry._middlewares;
-
-    /**
-     * TODO: for further add api group feature
-     * load router into {ControllerRegistry} for later convert to {Express.Router}
-     * @param path
-     */
-    public static loadRoutesForPath(path: string) {
-    }
-
-    public static registerRouter() {
-    }
 
     public static getRoutes(type?: Function) {
 
@@ -123,6 +102,9 @@ export class ControllerRegistry {
      *   type
      *      is the controller class, in this example: ATestController
      *
+     *   actionName
+     *      is the action name, in this example: "indexAction"
+     *
      *   httpMethod
      *      is the http request method for the action to handle, in this example: "get",
      *      all the supported http methods
@@ -132,113 +114,25 @@ export class ControllerRegistry {
      *   path
      *      is the http request path for the action to handle, in this example: "/"
      *
-     *   actionName
-     *      is the action name, in this example: "indexAction"
-     *
-     *   params
-     *      is the parameters for the action, in this example: [Function]
-     *
      * @param type
+     * @param actionName
      * @param httpMethod
      * @param path
-     * @param actionName
-     * @param params
      */
-    public static registerAction(type: Function, httpMethod: string, path: string|RegExp, actionName: string) {
+    public static registerAction(type: Function, actionName: string, httpMethod: string, path: string|RegExp) {
 
-        const handlerMetadata = this.getAction(type, actionName);
+        const controllerMetadata = this.getController(type);
+        const handlerMetadata = HandlerRegistry.getHandler(type, actionName);
 
         handlerMetadata.httpMethodAndPaths.push({
             method: httpMethod,
             path
         });
+
+        controllerMetadata.handlers.set(actionName, handlerMetadata);
     }
 
 
-    /**
-     * used to register a parameter, for decoration.
-     * one parameter could have multiple decorator on it,
-     * this method could call multiple times to decorate same parameter
-     *
-     * for example:
-     *
-     *   @RestController()
-     *   class ATestController {
-     *
-     *       @Get("/")
-     *       public indexAction(@Request() request: Request, @BodyParam('member') @Required() member: Member) {
-     *       }
-     *   }
-     *
-     *   TODO: BodyParam serialize to a Class
-     *   TODO: Required make a parameter is Required
-     *
-     *   type
-     *      is the controller class, in this example: ATestController
-     *
-     *   paramType
-     *      is the parameter type, in this example: ParamType.Request
-     *
-     *   actionName
-     *      is the action name, in this example: 'indexAction'
-     *
-     *   index
-     *      is the parameter index, in this example: 0
-     *
-     *   expression
-     *      is the decorator expression, in this example: null, in the BodyParam example, it should be 'member'
-     *
-     * @param type
-     * @param paramType
-     * @param actionName
-     * @param index
-     * @param expression
-     */
-    public static registerParam(type: Function, paramType: ParamType, actionName: string, index: number, expression: string) {
-
-        const handlerMetadata = this.getAction(type, actionName);
-
-        const isRequired = false;
-        const handlerParam = new HandlerParamMetadata(type, actionName, index, isRequired, paramType, expression);
-        handlerMetadata.params.set(index, handlerParam);
-    }
-
-
-    /**
-     * used to register a middleware, including GlobalMiddleware, GlobalErrorMiddleware, Middleware, ErrorMiddleware
-     *
-     * for example:
-     *
-     *   @GlobalMiddleware()
-     *   class ATestGlobalMiddleware implements IMiddleware {
-     *      public use() {
-     *      }
-     *   }
-     *
-     *   type
-     *      is the middleware class, in this example: ATestGlobalMiddleware
-     *
-     *   isGlobal
-     *      is a flag indicate a global middleware or not, in this example: true
-     *
-     *   isError
-     *      is a flag indicate a error middleware or not, in this example: false
-     *
-     *   Middleware class must implements IMiddleware interface
-     *
-     * @param type
-     * @param isGlobal
-     * @param isError
-     */
-    public static registerMiddleware(type: Function, isGlobal: boolean) {
-
-        DependencyRegistry.registerComponent(<Klass>type);
-        const middlewareMetadata = this.getMiddleware(type);
-        middlewareMetadata.isGlobalMiddleware = isGlobal;
-
-        const handlerMetadata = this.getAction(type, 'use');
-        middlewareMetadata.handler = handlerMetadata;
-    }
 
     /**
      * used to register an action hook, including BeforeAction, AfterAction
@@ -278,66 +172,24 @@ export class ControllerRegistry {
      * @param actionName
      */
     public static registerActionHook(controllerType: Function,
-                                     type: Function,
-                                     middlewareLevel: MiddlewareLevel,
-                                     middlewareType: MiddlewareType,
-                                     actionName?: string) {
+                                     middlewareType: Function,
+                                     actionHookType: ActionHookType) {
 
-        const pushMiddlewareToStore = (store: MiddlewareStore) => {
+        const controllerMetadata = this.getController(controllerType);
+        const middlewareMetadata = MiddlewareRegistry.getMiddleware(middlewareType);
 
-            const middlewareMetadata = this.getMiddleware(type);
-
-            switch (middlewareType) {
-                case MiddlewareType.BeforeAction:
-                    store.beforeActions.push(middlewareMetadata);
-                    return;
-                case MiddlewareType.AfterAction:
-                    store.afterActions.push(middlewareMetadata);
-                    return;
-                default:
-                    return;
-            }
-        };
-
-        if (middlewareLevel === MiddlewareLevel.Action) {
-
-            if (typeof actionName === 'undefined') {
-                throw new ArgumentError('action middleware level should pass in action name');
-            }
-
-            const handlerMetadata = this.getAction(controllerType, actionName);
-            pushMiddlewareToStore(handlerMetadata);
-            return;
-        }
-
-        if (middlewareLevel === MiddlewareLevel.Controller) {
-
-            const controllerMetadata = this.getController(controllerType);
-            pushMiddlewareToStore(controllerMetadata);
-            return;
-        }
-
-        throw new ArgumentError('not valid arguments');
-    }
-
-    /**
-     * safe get middleware
-     *
-     * @param type
-     * @returns {MiddlewareMetadata}
-     */
-    private static getMiddleware(type: Function) {
-
-        let middlewareMetadata = this._middlewares.get(type);
-
-        if (middlewareMetadata) {
-            return middlewareMetadata;
-        } else {
-            middlewareMetadata = new MiddlewareMetadata(type);
-            this._middlewares.set(type, middlewareMetadata);
-            return middlewareMetadata;
+        switch (actionHookType) {
+            case ActionHookType.BeforeAction:
+                controllerMetadata.beforeActions.push(middlewareMetadata);
+                return;
+            case ActionHookType.AfterAction:
+                controllerMetadata.afterActions.push(middlewareMetadata);
+                return;
+            default:
+                throw new ArgumentError('not valid arguments');
         }
     }
+
 
     /**
      * safe get controller
@@ -355,39 +207,6 @@ export class ControllerRegistry {
             controllerMetadata = new ControllerMetadata(type);
             this._controllers.set(type, controllerMetadata);
             return controllerMetadata;
-        }
-    }
-
-    /**
-     * safe get action
-     *
-     * @param type
-     * @param actionName
-     * @returns {HandlerMetadata}
-     */
-    private static getAction(type: Function, actionName: string) {
-
-        const controllerMetadata = this.getController(type);
-
-        let handlerMetadata = controllerMetadata.handlers.get(actionName);
-
-        if (handlerMetadata) {
-            return handlerMetadata;
-        } else {
-
-            handlerMetadata = new HandlerMetadata(type, actionName);
-
-            const params = Reflection.getParams(type.prototype, actionName);
-
-            if (params) {
-                const handlerParams = params.map((paramType, index) => new HandlerParamMetadata(type, actionName, index));
-                const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
-                handlerMetadata.params = handlerParamsMap;
-            }
-
-            controllerMetadata.handlers.set(actionName, handlerMetadata);
-
-            return handlerMetadata;
         }
     }
 }

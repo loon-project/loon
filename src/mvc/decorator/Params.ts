@@ -1,5 +1,6 @@
 import {ParamType} from "../enum/ParamType";
 import {ControllerRegistry} from "../ControllerRegistry";
+import {HandlerRegistry} from "../HandlerRegistry";
 
 export function PathParam(expression: string) {
     return (target: any, actionName: string, index: number) => {
@@ -67,7 +68,6 @@ function registerHelper(type: Function,
                         index: number,
                         expression: string) {
 
-    ControllerRegistry.registerParam(type, paramType, actionName, index, expression);
-
+    HandlerRegistry.registerParam(type, actionName, index, paramType, expression);
 }
 

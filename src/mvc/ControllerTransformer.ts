@@ -29,16 +29,13 @@ export class ControllerTransformer {
 
         this._controllerMetadata.handlers.forEach(handlerMetadata => {
 
-            const [beforeActions, afterActions] = this.getActionHooks(handlerMetadata);
             const handlerTransformer = new HandlerTransformer(handlerMetadata);
             const handler = handlerTransformer.transform();
 
             const actions = _.concat([],
                 this._controllerBeforeActions,
-                beforeActions,
                 <any>handler,
-                this._controllerAfterActions,
-                afterActions);
+                this._controllerAfterActions);
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
                 this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);

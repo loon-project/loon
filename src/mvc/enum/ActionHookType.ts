@@ -1,5 +1,5 @@
 
-export enum MiddlewareType {
+export enum ActionHookType {
     BeforeAction,
     AfterAction
 }

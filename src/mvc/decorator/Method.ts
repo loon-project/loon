@@ -2,36 +2,36 @@ import {ControllerRegistry} from "../ControllerRegistry";
 
 export function Get(route: string|RegExp) {
     return (target: any, actionName: string) => {
-        registerHelper(target, "get", route, actionName);
+        registerHelper(target, actionName, "get", route);
     };
 }
 
 export function Post(route: string|RegExp) {
     return (target: any, actionName: string) => {
-        registerHelper(target, "post", route, actionName);
+        registerHelper(target, actionName, "post", route);
     };
 }
 
 export function Put(route: string|RegExp) {
     return (target: any, actionName: string) => {
-        registerHelper(target, "put", route, actionName);
+        registerHelper(target, actionName, "put", route);
     };
 }
 
 export function Patch(route: string|RegExp) {
     return (target: any, actionName: string) => {
-        registerHelper(target, "patch", route, actionName);
+        registerHelper(target, actionName, "patch", route);
     };
 }
 
 export function Delete(route: string|RegExp) {
     return (target: any, actionName: string) => {
-        registerHelper(target, "delete", route, actionName);
+        registerHelper(target, actionName, "delete", route);
     };
 }
 
-function registerHelper(target, method, route, actionName) {
-    ControllerRegistry.registerAction(target.constructor, method, route, actionName);
+function registerHelper(target, actionName, method, route) {
+    ControllerRegistry.registerAction(target.constructor, actionName, method, route);
 }
 
 

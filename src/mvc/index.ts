@@ -5,7 +5,6 @@ export * from './decorator/ErrorHandler';
 export * from './decorator/Method';
 export * from './decorator/Middleware';
 export * from './decorator/Params';
-export * from './decorator/Required';
 export * from './decorator/Service';
 
 export * from './enum/ParamType';
