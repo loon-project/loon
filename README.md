@@ -31,7 +31,7 @@ Quick start example: [link](https://github.com/typed-project/typed-framework/tre
 | :----------: | :------------: | :------------: | -------------------------------------- |
 |    0.1.0     |  2017-02-17    |  2017-02-17    | controller/server/service api          |
 |    0.2.0     |  2017-03-05    |  2017-03-12    | middleware/plugin system               |
-|    0.3.0     |  2017-03-12    |                | enrich controller api                  |
+|    0.3.0     |  2017-03-12    |  2017-03-13    | enrich controller api                  |
 |    0.4.0     |  2017-03-19    |                | add event emit/listen api              |
 |    0.5.0     |  2017-03-26    |                | stable api/pre-production version      |
 |  **1.0.0**   |**2017-04-01**  |                | enrich document                        |

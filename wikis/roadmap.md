@@ -1,7 +1,7 @@
 ## Future
 - [ ] middleware/error middleware registry
-- [ ] add parameter options: required, defaultValue 
 - [ ] middleware options: order
+- [ ] add parameter options: required, defaultValue 
 - [ ] winston logger json configuration support
 
 ## v0.3.0
