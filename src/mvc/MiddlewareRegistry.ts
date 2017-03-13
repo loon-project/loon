@@ -10,32 +10,6 @@ export class MiddlewareRegistry {
 
     public static middlewares = MiddlewareRegistry._middlewares;
 
-    /**
-     * used to register a middleware, including GlobalMiddleware, Middleware
-     *
-     * for example:
-     *
-     *   @GlobalMiddleware()
-     *   class ATestGlobalMiddleware implements IMiddleware {
-     *      public use() {
-     *      }
-     *   }
-     *
-     *   type
-     *      is the middleware class, in this example: ATestGlobalMiddleware
-     *
-     *   isGlobal
-     *      is a flag indicate a global middleware or not, in this example: true
-     *
-     *   isError
-     *      is a flag indicate a error middleware or not, in this example: false
-     *
-     *   Middleware class must implements IMiddleware interface
-     *
-     * @param type
-     * @param isGlobal
-     * @param isError
-     */
     public static registerMiddleware(type: Function, options?: MiddlewareOptions) {
 
         DependencyRegistry.registerComponent(<Klass>type);

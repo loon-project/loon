@@ -41,12 +41,6 @@ export class ControllerRegistry {
         return result;
     }
 
-    public static getGlobalMiddlewares() {
-    }
-
-    public static getGlobalErrorMiddlewares() {
-    }
-
 
     /**
      * used to register a class as a Controller or RestController
@@ -134,45 +128,6 @@ export class ControllerRegistry {
         controllerMetadata.handlers.set(actionName, handlerMetadata);
     }
 
-
-
-    /**
-     * used to register an action hook, including BeforeAction, AfterAction
-     *
-     * for example:
-     *
-     *   @Middleware()
-     *   class ATestMiddleware implements IMiddleware {
-     *      ...
-     *   }
-     *
-     *   @BeforeAction(ATestMiddleware)
-     *   @RestController()
-     *   class ATestController {
-     *   }
-     *
-     *   controllerType
-     *      is the controller type for the middleware, in this example: ATestController
-     *
-     *   type
-     *      is the middleware type, in this example: ATestMiddleware
-     *
-     *   middlewareLevel
-     *      is the level for the middleware, in this example: MiddlewareLevel.Controller
-     *
-     *   middlewareType
-     *      is the type for the middleware, in this example: MiddlewareType.BeforeAction
-     *
-     *   actionName
-     *      if register a controller level middleware, actionName should be the controller action name
-     *      in this example: undefined
-     *
-     * @param controllerType
-     * @param type
-     * @param middlewareLevel
-     * @param middlewareType
-     * @param actionName
-     */
 
     public static registerFilter(controllerType: Function,
                                  filterType: Function,
