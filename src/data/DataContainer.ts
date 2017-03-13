@@ -1,5 +1,3 @@
-import {Log} from "../logger/index";
-
 export class DataContainer {
 
     private static columns: {type: Function, columnName: string, propertyName: string}[] = [];
