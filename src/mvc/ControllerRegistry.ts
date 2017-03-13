@@ -4,8 +4,6 @@ import {Klass} from "../core/Klass";
 import {ArgumentError} from "../core/error/ArgumentError";
 import {ControllerTransformer} from "./ControllerTransformer";
 import {HandlerRegistry} from "./HandlerRegistry";
-import {ActionHookType} from "./enum/ActionHookType";
-import {MiddlewareRegistry} from "./MiddlewareRegistry";
 import {BeforeAfterFilterType} from "./enum/BeforeAfterFilterType";
 import {FilterOptions} from "./FilterOptions";
 import {FilterRegistry} from "./FilterRegistry";
