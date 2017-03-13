@@ -39,10 +39,16 @@ Quick start example: [link](https://github.com/typed-project/typed-framework/tre
 
 <h2 align="center">Release note</h2>
 
+### v0.3.0
+* Support @Filter decorator to decorate a class as a Filter 
+* Support @BeforeFilter, @AfterFilter to filter for a controller, add options: only, except
+* Support @Data param type to inject data for the controller and filters
+
+
 ### v0.2.0
-* Support Middleware decorator to inject for controllers
+* Support @Middleware decorator to inject for controllers
 * Support Middleware, Controller parameter injections, now your middleware have the same ability as Controller to inject not only Req, Res, and BodyParam, PathParam and so on.
-* Support new ApplicationSettings and ApplicationLoader for new start up application way
+* Support new @ApplicationSettings and ApplicationLoader for new start up application way
 * Support convert class to object and object to class by Converter, and provide template ability
 
 
