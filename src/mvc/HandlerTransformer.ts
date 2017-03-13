@@ -60,12 +60,10 @@ export class HandlerTransformer {
 
     }
 
-    private invokeMethod(
-        request: Express.Request,
-        response: Express.Response,
-        next: Express.NextFunction,
-        error?: Error
-    ) {
+    private invokeMethod(request: Express.Request,
+                         response: Express.Response,
+                         next: Express.NextFunction,
+                         error?: Error) {
 
         if (response.headersSent) {
             return;
@@ -104,6 +102,9 @@ export class HandlerTransformer {
                     return;
                 case ParamType.Next:
                     args.push(next);
+                    return;
+                case ParamType.Data:
+                    args.push(response.locals);
                     return;
                 default:
                     args.push(undefined);

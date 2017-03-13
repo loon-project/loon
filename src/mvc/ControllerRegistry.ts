@@ -6,6 +6,10 @@ import {ControllerTransformer} from "./ControllerTransformer";
 import {HandlerRegistry} from "./HandlerRegistry";
 import {ActionHookType} from "./enum/ActionHookType";
 import {MiddlewareRegistry} from "./MiddlewareRegistry";
+import {BeforeAfterFilterType} from "./enum/BeforeAfterFilterType";
+import {FilterOptions} from "./FilterOptions";
+import {FilterRegistry} from "./FilterRegistry";
+import {ControllerFilterMetadata} from "./ControllerFilterMetadata";
 
 export class ControllerRegistry {
 
@@ -171,22 +175,25 @@ export class ControllerRegistry {
      * @param middlewareType
      * @param actionName
      */
-    public static registerActionHook(controllerType: Function,
-                                     middlewareType: Function,
-                                     actionHookType: ActionHookType) {
+
+    public static registerFilter(controllerType: Function,
+                                 filterType: Function,
+                                 beforeOrAfterFilter: BeforeAfterFilterType,
+                                 options?: FilterOptions) {
 
         const controllerMetadata = this.getController(controllerType);
-        const middlewareMetadata = MiddlewareRegistry.getMiddleware(middlewareType);
+        const filterMetadata = FilterRegistry.getFilter(filterType);
+        const controllerFilterMetadata = new ControllerFilterMetadata(filterMetadata, options);
 
-        switch (actionHookType) {
-            case ActionHookType.BeforeAction:
-                controllerMetadata.beforeActions.push(middlewareMetadata);
+        switch (beforeOrAfterFilter) {
+            case BeforeAfterFilterType.BeforeFilter:
+                controllerMetadata.beforeFilters.push(controllerFilterMetadata);
                 return;
-            case ActionHookType.AfterAction:
-                controllerMetadata.afterActions.push(middlewareMetadata);
+            case BeforeAfterFilterType.AfterFilter:
+                controllerMetadata.afterFilters.push(controllerFilterMetadata);
                 return;
             default:
-                throw new ArgumentError('not valid arguments');
+                throw new ArgumentError("not valid arguments");
         }
     }
 
@@ -201,12 +208,11 @@ export class ControllerRegistry {
 
         let controllerMetadata = this._controllers.get(type);
 
-        if (controllerMetadata) {
-            return controllerMetadata;
-        } else {
+        if (typeof controllerMetadata === 'undefined') {
             controllerMetadata = new ControllerMetadata(type);
             this._controllers.set(type, controllerMetadata);
-            return controllerMetadata;
         }
+
+        return controllerMetadata;
     }
 }

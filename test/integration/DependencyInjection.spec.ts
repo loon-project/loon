@@ -1,7 +1,8 @@
-import "../../TestHelper";
-import {Component, Inject} from "../../../src/index";
-import {DIException} from "../../../src/di/error/DIException";
-import {DependencyRegistry} from "../../../src/di/DependencyRegistry";
+import "../TestHelper";
+import {Component} from "../../src/di/decorator/Component";
+import {Inject} from "../../src/di/decorator/Inject";
+import {DependencyRegistry} from "../../src/di/DependencyRegistry";
+import {DIException} from "../../src/di/error/DIException";
 
 
 describe('Dependency Injection', () => {

@@ -1,5 +1,5 @@
 import "../TestHelper";
 
-describe("[Integration] Application", () => {
+describe("Application integration", () => {
 
 });

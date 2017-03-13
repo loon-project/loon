@@ -266,11 +266,11 @@ export class ApplicationLoader {
 
     private loadMiddlewares() {
         MiddlewareRegistry.middlewares.forEach(middlewareMetadata => {
-            if (middlewareMetadata.isGlobalMiddleware) {
-                const handlerMetadata = middlewareMetadata.handler;
-                const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.use(transformer.transform());
-            }
+            // if (middlewareMetadata.isE) {
+            //     const handlerMetadata = middlewareMetadata.handler;
+            //     const transformer = new HandlerTransformer(handlerMetadata);
+            //     this._server.use(transformer.transform());
+            // }
         });
     }
 

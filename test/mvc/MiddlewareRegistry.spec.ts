@@ -1,5 +1,5 @@
 import "../TestHelper";
-import {Middleware, GlobalMiddleware} from "../../src/mvc/decorator/Middleware";
+import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {MiddlewareRegistry} from "../../src/mvc/MiddlewareRegistry";
 
@@ -12,8 +12,8 @@ describe("MiddlewareRegistry", () => {
         }
     }
 
-    @GlobalMiddleware()
-    class ATestMiddlewareRegistryGlobalMiddlewareClass implements IMiddleware {
+    @ErrorMiddleware()
+    class ATestMiddlewareRegistryErrorMiddlewareClass implements IMiddleware {
 
         public use() {
         }
@@ -24,17 +24,17 @@ describe("MiddlewareRegistry", () => {
 
         middlewareMetadata.should.not.be.undefined;
         middlewareMetadata.type.should.be.equal(ATestMiddlewareRegistryMiddlewareClass);
-        middlewareMetadata.isGlobalMiddleware.should.be.false;
         middlewareMetadata.handler.should.not.be.undefined;
+        middlewareMetadata.handler.isErrorHandler.should.be.false;
     });
 
-    it('should successfully register a GlobalMiddleware', () => {
-        const middlewareMetadata: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryGlobalMiddlewareClass);
+    it('should successfully register a ErrorMiddleware', () => {
+        const middlewareMetadata: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryErrorMiddlewareClass);
 
         middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(ATestMiddlewareRegistryGlobalMiddlewareClass);
-        middlewareMetadata.isGlobalMiddleware.should.be.true;
+        middlewareMetadata.type.should.be.equal(ATestMiddlewareRegistryErrorMiddlewareClass);
         middlewareMetadata.handler.should.not.be.undefined;
+        middlewareMetadata.handler.isErrorHandler.should.be.true;
     });
 
 });

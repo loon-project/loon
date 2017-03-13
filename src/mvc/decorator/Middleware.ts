@@ -1,14 +1,14 @@
 import {MiddlewareRegistry} from "../MiddlewareRegistry";
 
 
-export function GlobalMiddleware() {
+export function Middleware(baseUrl?: string) {
     return (target: any) => {
-        MiddlewareRegistry.registerMiddleware(target, true);
+        MiddlewareRegistry.registerMiddleware(target, {baseUrl, isError: false});
     };
 }
 
-export function Middleware() {
+export function ErrorMiddleware(baseUrl?: string) {
     return (target: any) => {
-        MiddlewareRegistry.registerMiddleware(target, false);
+        MiddlewareRegistry.registerMiddleware(target, {baseUrl, isError: true});
     };
 }

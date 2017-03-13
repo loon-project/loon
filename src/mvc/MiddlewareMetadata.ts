@@ -1,46 +1,58 @@
 import {HandlerMetadata} from "./HandlerMetadata";
+import {MiddlewareOptions} from "./MiddlewareOptions";
 
 export class MiddlewareMetadata {
-
-    private _isGlobalMiddleware: boolean;
 
     private _handler: HandlerMetadata;
 
     private _type: Function;
 
-    // TODO: add order support for middleware
     private _order: number;
+
+    private _baseUrl: string;
+
+    private _isErrorMiddleware: boolean;
 
     get type(): Function {
         return this._type;
-    }
-
-    get isGlobalMiddleware(): boolean {
-        return this._isGlobalMiddleware;
     }
 
     get handler(): HandlerMetadata {
         return this._handler;
     }
 
-    set handler(value: HandlerMetadata) {
-        this._handler = value;
+    set handler(handler: HandlerMetadata) {
+
+        if (this._isErrorMiddleware) {
+            handler.isErrorHandler = true;
+        }
+
+        this._handler = handler;
     }
 
-    set isGlobalMiddleware(value: boolean) {
-        this._isGlobalMiddleware = value;
-    }
 
-    constructor(type: Function, isGlobalMiddleware?: boolean, handler?: HandlerMetadata) {
+    constructor(type: Function, options?: MiddlewareOptions) {
 
         this._type = type;
 
-        if (typeof isGlobalMiddleware !== 'undefined') {
-            this._isGlobalMiddleware = isGlobalMiddleware;
+        this.init(options);
+    }
+
+    public init(options?: MiddlewareOptions) {
+
+        if (options && options.order) {
+            this._order = options.order;
         }
 
-        if (typeof handler !== 'undefined') {
-            this._handler = handler;
+        if (options && options.baseUrl) {
+            this._baseUrl = options.baseUrl;
         }
+
+        if (options && typeof options.isError !== 'undefined') {
+            this._isErrorMiddleware = options.isError;
+        }
+
+        return this;
     }
+
 }

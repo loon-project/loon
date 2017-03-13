@@ -1,5 +1,4 @@
 
-export * from './decorator/Action';
 export * from './decorator/Controller';
 export * from './decorator/Method';
 export * from './decorator/Middleware';

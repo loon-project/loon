@@ -1,7 +1,7 @@
 import {HandlerMetadata} from "./HandlerMetadata";
-import {MiddlewareStore} from "./MiddlewareStore";
+import {ControllerFilterMetadata} from "./ControllerFilterMetadata";
 
-export class ControllerMetadata extends MiddlewareStore {
+export class ControllerMetadata {
 
     private _type: Function;
 
@@ -10,6 +10,10 @@ export class ControllerMetadata extends MiddlewareStore {
     private _isRest: boolean;
 
     private _handlers: Map<string, HandlerMetadata>;
+
+    private _beforeFilters: ControllerFilterMetadata[];
+
+    private _afterFilters: ControllerFilterMetadata[];
 
     get type(): Function {
         return this._type;
@@ -35,9 +39,15 @@ export class ControllerMetadata extends MiddlewareStore {
         return this._handlers;
     }
 
-    constructor(type: Function, baseUrl?: string, isRest?: boolean) {
+    get beforeFilters(): ControllerFilterMetadata[] {
+        return this._beforeFilters;
+    }
 
-        super();
+    get afterFilters(): ControllerFilterMetadata[] {
+        return this._afterFilters;
+    }
+
+    constructor(type: Function, baseUrl?: string, isRest?: boolean) {
 
         this._type = type;
 
@@ -50,6 +60,9 @@ export class ControllerMetadata extends MiddlewareStore {
         }
 
         this._handlers = new Map();
+
+        this._beforeFilters = [];
+        this._afterFilters = [];
     }
 
 }

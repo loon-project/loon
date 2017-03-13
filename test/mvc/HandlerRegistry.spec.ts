@@ -1,8 +1,8 @@
 import "../TestHelper";
-import {Middleware, GlobalMiddleware} from "../../src/mvc/decorator/Middleware";
+import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
-import {ErrorController} from "../../src/mvc/decorator/ErrorController";
 import {HandlerRegistry} from "../../src/mvc/HandlerRegistry";
+import {Filter} from "../../src/mvc/decorator/Filter";
 
 describe("HandlerRegistry", () => {
 
@@ -14,32 +14,30 @@ describe("HandlerRegistry", () => {
 
     }
 
-    @GlobalMiddleware()
-    class ATestHandlerRegistryGlobalMiddlewareClass implements IMiddleware {
+    @ErrorMiddleware()
+    class ATestHandlerRegistryErrorMiddlewareClass implements IMiddleware {
 
         public use() {
         }
-
     }
 
-    @ErrorController()
-    class ATestHandlerRegistryErrorControllerClass implements IMiddleware {
+    @Filter()
+    class ATestHandlerRegistryFilterClass implements IMiddleware {
 
         public use() {
         }
-
     }
 
-    it('should successfully register a handler for Middleware', () => {
+   it('should successfully register a handler for Middleware', () => {
         middlewareShouldPass(ATestHandlerRegistryMiddlewareClass);
     });
 
-    it('should successfully register a handler for GlobalMiddleware', () => {
-        middlewareShouldPass(ATestHandlerRegistryGlobalMiddlewareClass);
+    it('should successfully register a handler for ErrorMiddleware', () => {
+        middlewareShouldPass(ATestHandlerRegistryErrorMiddlewareClass);
     });
 
-    it('should successfully register a handler for ErrorController', () => {
-        middlewareShouldPass(ATestHandlerRegistryErrorControllerClass);
+    it('should successfully register a handler for Filter', () => {
+        middlewareShouldPass(ATestHandlerRegistryFilterClass);
     });
 
     const middlewareShouldPass = (type: Function) => {

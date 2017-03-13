@@ -1,7 +1,6 @@
 import {ControllerMetadata} from "./ControllerMetadata";
 import * as Express from "express";
 import {HandlerTransformer} from "./HandlerTransformer";
-import {MiddlewareStore} from "./MiddlewareStore";
 import * as _ from "lodash";
 
 export class ControllerTransformer {
@@ -10,10 +9,6 @@ export class ControllerTransformer {
 
     private _router: Express.Router;
 
-    private _controllerBeforeActions: Express.RequestHandler[];
-
-    private _controllerAfterActions: Express.RequestHandler[];
-
     get controllerMetadata(): ControllerMetadata {
         return this._controllerMetadata;
     }
@@ -21,8 +16,6 @@ export class ControllerTransformer {
     constructor(controllerMetadata: ControllerMetadata) {
         this._controllerMetadata = controllerMetadata;
         this._router = Express.Router();
-
-        [this._controllerBeforeActions, this._controllerAfterActions] = this.getActionHooks(controllerMetadata);
     }
 
     public transform() {
@@ -31,11 +24,12 @@ export class ControllerTransformer {
 
             const handlerTransformer = new HandlerTransformer(handlerMetadata);
             const handler = handlerTransformer.transform();
+            const [beforeFilters, afterFilters] = this.getFiltersForAction(handlerMetadata.actionName);
 
             const actions = _.concat([],
-                this._controllerBeforeActions,
+                beforeFilters,
                 <any>handler,
-                this._controllerAfterActions);
+                afterFilters);
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
                 this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);
@@ -45,14 +39,33 @@ export class ControllerTransformer {
         return this._router;
     }
 
-    private getActionHooks(middlewareStore: MiddlewareStore) {
-        return ['beforeActions', 'afterActions'].map(key => {
+    private getFiltersForAction(actionName: string) {
+
+
+        return ['beforeFilters', 'afterFilters'].map(key => {
             const store: any[] = [];
 
-            middlewareStore[key].forEach(middlewareMetadata => {
-                const handlerMetadata = middlewareMetadata.handler;
-                const handlerTransformer = new HandlerTransformer(handlerMetadata);
-                store.push(handlerTransformer.transform());
+            this._controllerMetadata[key].forEach(controllerFilterMetadata => {
+
+                let flag = true;
+
+                // filter have only option, this action don't include inside it
+                if (controllerFilterMetadata.only && controllerFilterMetadata.only.indexOf(actionName) === -1) {
+                    flag = false;
+                }
+
+                // filter have except option, this action include inside it
+                if (controllerFilterMetadata.except && controllerFilterMetadata.except.indexOf(actionName) > -1) {
+                    flag = false;
+                }
+
+                if (flag) {
+                    const handlerMetadata = controllerFilterMetadata.filterMetadata.handler;
+                    const handlerTransformer = new HandlerTransformer(handlerMetadata);
+                    store.push(handlerTransformer.transform());
+                }
+
+                return store;
             });
 
             return store;

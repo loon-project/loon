@@ -3,22 +3,21 @@ import {RestController, Controller} from "../../src/mvc/decorator/Controller";
 import {Get, Post, Put, Patch} from "../../src/mvc/decorator/Method";
 import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
-import {Middleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
-import {BeforeAction, AfterAction} from "../../src/mvc/decorator/Action";
+import {BeforeFilter, AfterFilter, Filter} from "../../src/mvc/decorator/Filter";
 
 
 describe("ControllerRegistry", () => {
 
-    @Middleware()
-    class ATestMiddlewareClass implements IMiddleware {
+    @Filter()
+    class ATestFilterClass implements IMiddleware {
         public use() {
         }
     }
 
     @RestController("/test")
-    @BeforeAction(ATestMiddlewareClass)
-    @AfterAction(ATestMiddlewareClass)
+    @BeforeFilter(ATestFilterClass)
+    @AfterFilter(ATestFilterClass)
     class AControllerRegistryTestRestController {
 
         @Get("/")
@@ -139,41 +138,47 @@ describe("ControllerRegistry", () => {
         (typeof handlerParamMetadata === 'undefined').should.be.true;
     });
 
-    it('should successfully register a BeforeAction middleware', () => {
+    it('should successfully register a BeforeFilter filter', () => {
 
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
-        controllerMetadata.beforeActions.should.not.be.undefined;
-        controllerMetadata.beforeActions.length.should.be.equal(1);
+        controllerMetadata.beforeFilters.should.not.be.undefined;
+        controllerMetadata.beforeFilters.length.should.be.equal(1);
 
-        const middlewareMetadata: any = controllerMetadata.beforeActions[0];
+        const controllerFilterMetadata: any = controllerMetadata.beforeFilters[0];
 
-        middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(ATestMiddlewareClass);
-        middlewareMetadata.handler.should.not.be.undefined;
+        controllerFilterMetadata.should.not.be.undefined;
 
-        const handlerMetadata: any = middlewareMetadata.handler;
-        handlerMetadata.type.should.be.equal(ATestMiddlewareClass);
+        const filterMetadata: any = controllerFilterMetadata.filterMetadata;
+
+        filterMetadata.type.should.be.equal(ATestFilterClass);
+        filterMetadata.handler.should.not.be.undefined;
+
+        const handlerMetadata: any = filterMetadata.handler;
+        handlerMetadata.type.should.be.equal(ATestFilterClass);
         handlerMetadata.actionName.should.be.equal('use');
         handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
     });
 
-    it('should successfully register a AfterAction middleware', () => {
+    it('should successfully register a AfterFilter filter', () => {
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
 
         controllerMetadata.should.not.be.undefined;
-        controllerMetadata.afterActions.should.not.be.undefined;
-        controllerMetadata.afterActions.length.should.be.equal(1);
+        controllerMetadata.afterFilters.should.not.be.undefined;
+        controllerMetadata.afterFilters.length.should.be.equal(1);
 
-        const middlewareMetadata: any = controllerMetadata.afterActions[0];
+        const controllerFilterMetadata: any = controllerMetadata.afterFilters[0];
 
-        middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(ATestMiddlewareClass);
-        middlewareMetadata.handler.should.not.be.undefined;
+        controllerFilterMetadata.should.not.be.undefined;
 
-        const handlerMetadata: any = middlewareMetadata.handler;
-        handlerMetadata.type.should.be.equal(ATestMiddlewareClass);
+        const filterMetadata = controllerFilterMetadata.filterMetadata;
+
+        filterMetadata.type.should.be.equal(ATestFilterClass);
+        filterMetadata.handler.should.not.be.undefined;
+
+        const handlerMetadata: any = filterMetadata.handler;
+        handlerMetadata.type.should.be.equal(ATestFilterClass);
         handlerMetadata.actionName.should.be.equal('use');
         handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
     });
