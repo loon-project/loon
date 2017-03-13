@@ -4,6 +4,7 @@ export * from './decorator/Method';
 export * from './decorator/Middleware';
 export * from './decorator/Params';
 export * from './decorator/Service';
+export * from './decorator/Filter';
 
 export * from './enum/ParamType';
 
