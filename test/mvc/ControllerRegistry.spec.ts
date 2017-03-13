@@ -1,6 +1,5 @@
 import "../TestHelper";
-import {RestController, Controller} from "../../src/mvc/decorator/Controller";
-import {Get, Post, Put, Patch} from "../../src/mvc/decorator/Method";
+import {RestController, Controller, Get, Post, Put, Patch} from "../../src/index";
 import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";

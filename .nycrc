@@ -4,7 +4,9 @@
     "src/**/*.js"
   ],
   "exclude": [
-    "test"
+    "test",
+    "**/index.ts",
+    "**/index.js"
   ],
   "reporter": [
     "lcov",
