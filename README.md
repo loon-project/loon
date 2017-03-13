@@ -17,8 +17,6 @@
 * Rest route and controller, param data injection support
 * Log support
 
-Core API details: [link](https://github.com/typed-project/typed-framework/tree/master/wikis/api.md)
-
 
 <h2 align="center">Quick start</h2>
 Quick start example: [link](https://github.com/typed-project/typed-framework/tree/master/wikis/start.md)
