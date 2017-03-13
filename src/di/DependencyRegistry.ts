@@ -2,7 +2,6 @@ import {Klass} from "../core/Klass";
 import {DIException} from "./error/DIException";
 import {Component} from "../core/Component";
 import {Reflection} from "../core/Reflection";
-import {Metadata} from "../metadata/Metadata";
 
 export class DependencyRegistry {
 
@@ -71,7 +70,7 @@ export class DependencyRegistry {
             component = new Component(klass);
         }
 
-        const params = Metadata.getParams(klass);
+        const params = Reflection.getParams(klass);
         component.params = params;
         this.components.set(klass, component);
     }
@@ -89,7 +88,7 @@ export class DependencyRegistry {
 
         if (typeof index !== 'undefined') {
 
-            const params = Metadata.getParams(target, key);
+            const params = Reflection.getParams(target, key);
             const paramKlass = params[index];
             component.paramHandlers.set(index, () => DependencyRegistry.get(paramKlass));
 

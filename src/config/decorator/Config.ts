@@ -1,8 +1,8 @@
 import {ConfigContainer} from "../ConfigContainer";
-import {Metadata} from "../../metadata/Metadata";
 import {DIContainer} from "../../di/DIContainer";
 import * as Path from "path";
 import {ConfigException} from "../error/ConfigException";
+import {Reflection} from "../../core/Reflection";
 
 /**
  * Config decorator expect a file name under process.cwd() + "config"
@@ -27,7 +27,7 @@ export function Config(fileNameOrPath: string) {
             throw new ConfigException(`[TYPED] only support json config file`);
         }
 
-        const params = Metadata.getParams(target);
+        const params = Reflection.getParams(target);
         DIContainer.registerComponent(undefined, target, params);
         ConfigContainer.registerConfig(path);
     };
