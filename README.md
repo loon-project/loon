@@ -44,10 +44,8 @@ Application
 ```
 ApplicationSettings options: 
 ```typescript
-
-    /**
-     * Required
-     */
+interface SettingOptions {
+    // Required
     rootDir: string;
 
     srcDir?: string;
