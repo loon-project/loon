@@ -22,6 +22,9 @@
 
 
 > Initialize Application
+
+
+
 ```typescript
 @ApplicationSettings({rootDir: `${__dirname}/../`})
 class Application extends ApplicationLoader {
@@ -65,6 +68,9 @@ ApplicationSettings options:
 ```
 
 > Handle a request
+
+
+
 ```typescript
 @RestController()
 export class HomeController {
@@ -89,7 +95,11 @@ All parameter types:
 @Err
 @Data
 ```
+
 > Use a filter, pass data across filter and controller
+
+
+
 ```typescript
 @Filter()
 export class CurrentUser implements IMiddleware {
@@ -119,7 +129,8 @@ export class HomeController {
 ```
 
 > Use global middleware
-just define a class as a Middleware
+
+
 ```typescript
 @Middleware({order: 0})
 export class Middleware1 implements IMiddleware {
@@ -132,6 +143,8 @@ export class Middleware1 implements IMiddleware {
 ```
 
 > Use global error middleware
+
+
 ```typescript
 @ErrorMiddleware()
 export class ErrMiddleware implements IMiddleware {
@@ -143,6 +156,9 @@ export class ErrMiddleware implements IMiddleware {
 ```
 
 > Use a service and inject into controller and middleware, filter
+
+
+
 ```typescript
 @Service()
 export class UserService {
@@ -168,6 +184,9 @@ export class HomeController {
 ```
 
 > Use logger and db connection
+
+
+
 ```typescript
 @RestController()
 export class HomeController {
@@ -177,7 +196,6 @@ export class HomeController {
 
 }
 ```
-
 
 
 
