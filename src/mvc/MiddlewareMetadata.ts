@@ -60,11 +60,11 @@ export class MiddlewareMetadata {
         this._baseUrl = "/";
         this._isErrorMiddleware = false;
 
-        if (options && options.order) {
+        if (options && typeof options.order !== 'undefined') {
             this._order = options.order;
         }
 
-        if (options && options.baseUrl) {
+        if (options && typeof options.baseUrl !== 'undefined') {
             this._baseUrl = options.baseUrl;
         }
 
