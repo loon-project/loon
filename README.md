@@ -96,7 +96,7 @@ All parameter types:
 @Data
 ```
 
-> Use a filter, pass data across filter and controller
+> <h3>Use a filter, pass data across filter and controller</h3>
 
 
 
@@ -116,7 +116,11 @@ export class CurrentUser implements IMiddleware {
 }
 
 @RestController()
-@BeforeFilter(CurrentUser) // also support options only and except, for example: @BeforeFilter(CurrentUser, only: ['indexAction'])
+@BeforeFilter(CurrentUser) 
+// also support options only and except, for example: 
+// @BeforeFilter(CurrentUser, only: ['indexAction'])
+// @BeforeFilter(CurrentUser, except: ['indexAction'])
+// @AfterFilter(CurrentUser) only, except options as well
 export class HomeController {
 
     @Get("/")
