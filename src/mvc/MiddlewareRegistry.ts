@@ -10,14 +10,32 @@ export class MiddlewareRegistry {
 
     public static middlewares = MiddlewareRegistry._middlewares;
 
-    public static registerMiddleware(type: Function, options?: MiddlewareOptions) {
+    public static registerMiddleware(type: Function, isErrorMiddleware: boolean, options?: MiddlewareOptions) {
 
         DependencyRegistry.registerComponent(<Klass>type);
         const middlewareMetadata = this.getMiddleware(type);
         middlewareMetadata.init(options);
+        middlewareMetadata.isErrorMiddleware = isErrorMiddleware;
 
         const handlerMetadata = HandlerRegistry.getHandler(type, 'use');
         middlewareMetadata.handler = handlerMetadata;
+    }
+
+    public static getMiddlewares(options: {isErrorMiddleware: boolean}) {
+        const middlewares: MiddlewareMetadata[] = [];
+
+        this._middlewares.forEach(middlewareMetadata => {
+            if (middlewareMetadata.isErrorMiddleware === options.isErrorMiddleware) {
+                middlewares.push(middlewareMetadata);
+            }
+        });
+
+        return this.sortMiddlewares(middlewares);
+
+    }
+
+    private static sortMiddlewares(middlewares: MiddlewareMetadata[]) {
+        return middlewares.sort((m1, m2) => m1.order - m2.order);
     }
 
     /**

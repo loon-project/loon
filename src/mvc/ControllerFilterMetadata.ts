@@ -1,6 +1,5 @@
 import {FilterMetadata} from "./FilterMetadata";
 import {FilterOptions} from "./FilterOptions";
-import {HandlerMetadata} from "./HandlerMetadata";
 
 export class ControllerFilterMetadata {
 

@@ -114,16 +114,8 @@ export class ApplicationLoader {
 
         return Promise
             .resolve()
-            .then(() => {
-
-                LogFactory.init(this.logDir, this.env);
-
-                ConnectionFactory.init(this.configDir, this.env);
-            })
-            .then(() => {
-
-                '$onInit' in this ? (<any> this).$onInit() : null;
-            })
+            .then(() => this.init())
+            .then(() => this.invokeApplicationInitHook())
             .then(() => {
 
                 const logger = LogFactory.getLogger();
@@ -141,137 +133,45 @@ export class ApplicationLoader {
                 this.server.use(require('serve-static')(this.publicDir));
 
             })
-            .then(() => {
-
-                require('require-all')({
-                    dirname     :  this.srcDir,
-                    excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
-                    recursive   : true
-                });
-
-            })
-            .then(() => {
-                ControllerRegistry.controllers.forEach(controllerMetadata => {
-                    const transformer = new ControllerTransformer(controllerMetadata);
-                    const router = transformer.transform();
-                    this._server.use(controllerMetadata.baseUrl, router);
-                });
-            })
-            .then(() => {
-                this.server.listen(this.port, () => {
-                    const logger = LogFactory.getLogger();
-                    logger.info(`Application is listening on port ${this.port}`);
-                });
-            })
+            .then(() => this.loadComponents())
+            .then(() => this.loadMiddlewares())
+            .then(() => this.loadRoutes())
+            .then(() => this.loadErrorMiddlewares())
+            .then(() => this.run())
             .catch(e => {
                 throw e;
             });
     }
 
 
-    /**
-     *
-     * Initialize all settings
-     * If exception occurs when initialization, throw the error and stop the application
-     * Run $onInit hooks if user defined
-     *
-     * @returns {Promise<any>}
-     */
     private init() {
 
-        return Promise
-            .resolve()
-            .then(() => {
-
-                LogFactory.init(this.logDir, this.env);
-
-                ConnectionFactory.init(this.configDir, this.env);
-
-            })
-            .then(() => {
-
-                '$onInit' in this ? (<any> this).$onInit() : null;
-
-            })
-            .then(() => {
-
-                const logger = LogFactory.getLogger();
-
-                this.server.use(require('morgan')("combined", {
-                    stream: {
-                        write: message => logger.info(message)
-                    }
-                }));
-
-                this.server.use(require('body-parser').json());
-                this.server.use(require('body-parser').urlencoded({ extended: true }));
-                this.server.use(require('cookie-parser')());
-                this.server.use(require('method-override')());
-                this.server.use(require('serve-static')(this.publicDir));
-
-            })
-            .then(() => {
-
-                require('require-all')({
-                    dirname     :  this.srcDir,
-                    excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
-                    recursive   : true
-                });
-
-            })
-            .catch((e) => {
-                throw e;
-            });
-
+        LogFactory.init(this.logDir, this.env);
+        ConnectionFactory.init(this.configDir, this.env);
     }
 
-    /**
-     *
-     * Load all the user defined middlewares
-     * Load all the user defined routes
-     * Load all the user defined error handlers
-     *
-     * @returns {Promise<any>}
-     */
-    private load(): Promise<any> {
-
-        return Promise
-            .resolve()
-            .then(() => this.loadMiddlewares())
-            .then(() => this.loadRoutes())
-            .then(() => this.loadErrorMiddlewares());
-
+    private invokeApplicationInitHook() {
+        '$onInit' in this ? (<any> this).$onInit() : null;
     }
 
-    /**
-     *
-     * After initialization and load all middlewares and routes and error handlers
-     * Start run the server to serve all http requests
-     *
-     * @returns {Promise<any>}
-     */
-    private run(): Promise<any> {
-        return Promise
-            .resolve()
-            .then(() => {
-                this.server.listen(this.port, () => {
-                    const logger = LogFactory.getLogger();
-                    logger.info(`Application is listening on port ${this.port}`);
-                });
-            })
-            .catch((e) => {
-                throw e;
-            });
+    private loadComponents() {
+
+        require('require-all')({
+            dirname     :  this.srcDir,
+            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
+            recursive   : true
+        });
     }
 
     private loadMiddlewares() {
-        MiddlewareRegistry.middlewares.forEach(middlewareMetadata => {
-            // if (middlewareMetadata.isE) {
-            //     const handlerMetadata = middlewareMetadata.handler;
-            //     const transformer = new HandlerTransformer(handlerMetadata);
-            //     this._server.use(transformer.transform());
-            // }
-        });
+
+        MiddlewareRegistry
+            .getMiddlewares({isErrorMiddleware: false})
+            .forEach(middlewareMetadata => {
+                const handlerMetadata = middlewareMetadata.handler;
+                const transformer = new HandlerTransformer(handlerMetadata);
+                this._server.use(middlewareMetadata.baseUrl, transformer.transform());
+            });
     }
 
     private loadRoutes() {
@@ -284,12 +184,21 @@ export class ApplicationLoader {
     }
 
     private loadErrorMiddlewares() {
-        // ControllerRegistry.middlewares.forEach(middlewareMetadata => {
-        //     if (middlewareMetadata.isGlobalMiddleware && middlewareMetadata.isErrorMiddleware) {
-        //         const handlerMetadata = middlewareMetadata.handler;
-        //         const transformer = new HandlerTransformer(handlerMetadata);
-        //         this._server.use(transformer.transform());
-        //     }
-        // });
+
+        MiddlewareRegistry
+            .getMiddlewares({isErrorMiddleware: true})
+            .forEach(middlewareMetadata => {
+                const handlerMetadata = middlewareMetadata.handler;
+                const transformer = new HandlerTransformer(handlerMetadata);
+                this._server.use(middlewareMetadata.baseUrl, transformer.transform());
+            });
     }
+
+    private run() {
+        this.server.listen(this.port, () => {
+            const logger = LogFactory.getLogger();
+            logger.info(`Application is listening on port ${this.port}`);
+        });
+    }
+
 }

@@ -17,6 +17,22 @@ export class MiddlewareMetadata {
         return this._type;
     }
 
+    get order(): number {
+        return this._order;
+    }
+
+    get baseUrl(): string {
+        return this._baseUrl;
+    }
+
+    get isErrorMiddleware(): boolean {
+        return this._isErrorMiddleware;
+    }
+
+    set isErrorMiddleware(value: boolean) {
+        this._isErrorMiddleware = value;
+    }
+
     get handler(): HandlerMetadata {
         return this._handler;
     }
@@ -40,16 +56,16 @@ export class MiddlewareMetadata {
 
     public init(options?: MiddlewareOptions) {
 
+        this._order = Number.MAX_SAFE_INTEGER;
+        this._baseUrl = "/";
+        this._isErrorMiddleware = false;
+
         if (options && options.order) {
             this._order = options.order;
         }
 
         if (options && options.baseUrl) {
             this._baseUrl = options.baseUrl;
-        }
-
-        if (options && typeof options.isError !== 'undefined') {
-            this._isErrorMiddleware = options.isError;
         }
 
         return this;

@@ -1,143 +1,92 @@
-// import "../TestHelper";
-// import * as Express from "express";
-// import {Next, Res} from "../../src/mvc/decorator/Params";
-// import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
-// import {Middleware} from "../../src/mvc/decorator/Middleware";
-// import {RestController} from "../../src/mvc/decorator/Controller";
-// import {BeforeAction, AfterAction} from "../../src/mvc/decorator/Action";
-// import {Get} from "../../src/mvc/decorator/Method";
-// import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
-// import {HttpHelper} from "../helper/HttpHelper";
-//
-// describe("[Integration] Middleware", () => {
-//
-//     @Middleware()
-//     class TestMiddleware implements IMiddleware {
-//
-//         public use(@Res() response: Express.Response, @Next() next: Express.NextFunction) {
-//             response.locals._test1 = "1";
-//             next();
-//         }
-//     }
-//
-//     @Middleware()
-//     class TestSendMiddleware implements IMiddleware {
-//
-//         public use(@Res() res: Express.Response) {
-//             res.send(res.locals._test1);
-//         }
-//     }
-//
-//     @RestController("/1")
-//     @BeforeAction(TestMiddleware)
-//     class User1Controller {
-//
-//         @Get("/users")
-//         public indexAction(@Res() response: Express.Response) {
-//             response.send(response.locals._test1);
-//         }
-//
-//         @Get("/users/show")
-//         public showAction(@Res() response: Express.Response) {
-//             response.send(response.locals._test1);
-//         }
-//     }
-//
-//     @RestController("/3")
-//     @AfterAction(TestSendMiddleware)
-//     class User3Controller {
-//
-//         @Get("/users")
-//         public indexAction(@Res() response: Express.Response, @Next() next: Express.NextFunction) {
-//             response.locals._test1 = "1";
-//             next();
-//         }
-//
-//         @Get("/users/show")
-//         public showAction(@Res() response: Express.Response, @Next() next: Express.NextFunction) {
-//             response.locals._test1 = "1";
-//             next();
-//         }
-//     }
-//
-//     const app: Express.Application = Express();
-//     let server;
-//
-//     before(done => {
-//
-//         [
-//             User1Controller, User2Controller,
-//             User3Controller, User4Controller
-//         ].map(controller => {
-//
-//             const routes = ControllerRegistry.getRoutes(controller);
-//
-//             routes.forEach((router, baseUrl) => {
-//                 app.use(baseUrl, router);
-//             });
-//
-//         });
-//
-//         server = app.listen(4444, done);
-//     });
-//
-//     after(done => {
-//         server.close(done);
-//     });
-//
-//
-//     it('should successfully use controller level BeforeAction middleware', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/1/users", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use controller level BeforeAction middleware for all actions', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/1/users/show", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use action level BeforeAction middleware', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/2/users", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use action level BeforeAction middleware only for registered action', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/2/users/show", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             (typeof response.body === 'undefined').should.be.true;
-//         });
-//     });
-//
-//     it('should successfully use controller level AfterAction middleware', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/3/users", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use controller level AfterAction middleware for all actions', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/3/users/show", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use action level AfterAction middleware', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/4/users", undefined, (response) => {
-//             response.statusCode.should.be.equal(200);
-//             response.body.should.be.equal(1);
-//         });
-//     });
-//
-//     it('should successfully use action level AfterAction middleware only for registered action', () => {
-//         return HttpHelper.sendRequest("get", "http://localhost:4444/4/users/show", undefined, (response) => {
-//             response.statusCode.should.be.equal(404);
-//         });
-//     });
-// });
+import "../TestHelper";
+import * as Express from "express";
+import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
+import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
+import {Res, Next, Data, Err} from "../../src/mvc/decorator/Params";
+import {RestController} from "../../src/mvc/decorator/Controller";
+import {Get} from "../../src/mvc/decorator/Method";
+import {MiddlewareRegistry} from "../../src/mvc/MiddlewareRegistry";
+import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {HandlerTransformer} from "../../src/mvc/HandlerTransformer";
+import {HttpHelper} from "../helper/HttpHelper";
+
+describe("[Integration] Middleware", () => {
+
+    @Middleware()
+    class GlobalMiddleware implements IMiddleware {
+
+        public use(@Data() data: any, @Next() next: Express.NextFunction) {
+            data.message = "global";
+            next();
+        }
+    }
+
+    @ErrorMiddleware()
+    class GlobalErrorMiddleware implements IMiddleware {
+
+        public use(@Err() err: any, @Res() res: Express.Response) {
+            res.send(err.message);
+        }
+    }
+
+    @RestController()
+    class UserController {
+
+        @Get("/")
+        public indexAction(@Data() data: any, @Res() res: Express.Response) {
+            res.send(data.message);
+        }
+
+        @Get("/users")
+        public indexUsersAction(@Next() next: Express.NextFunction) {
+            try {
+                throw new Error("no user found");
+            } catch (e) {
+                next(e);
+            }
+        }
+    }
+
+
+    const app: Express.Application = Express();
+    let server;
+
+    before(done => {
+
+        const middlewareMetadata = MiddlewareRegistry.getMiddleware(GlobalMiddleware);
+        const middlewareHandler = new HandlerTransformer(middlewareMetadata.handler).transform();
+        app.use(middlewareMetadata.baseUrl, middlewareHandler);
+
+
+        const routes = ControllerRegistry.getRoutes(UserController);
+
+        routes.forEach((router, baseUrl) => {
+            app.use(baseUrl, router);
+        });
+
+        const errorMiddlewareMetadata = MiddlewareRegistry.getMiddleware(GlobalErrorMiddleware);
+        const errorMiddlewareHandler = new HandlerTransformer(errorMiddlewareMetadata.handler).transform();
+        app.use(errorMiddlewareMetadata.baseUrl, errorMiddlewareHandler);
+
+        server = app.listen(4444, done);
+    });
+
+    after(done => {
+        server.close(done);
+    });
+
+    it("should use global middleware", () => {
+        return HttpHelper.sendRequest("get", "http://localhost:4444/", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("global");
+        });
+    });
+
+    it('should use global error middleware', () => {
+        return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("no user found");
+        });
+    });
+
+});
