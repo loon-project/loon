@@ -81,8 +81,10 @@ export class HomeController {
     }
 
 }
+
 ```
-All parameter types: 
+
+Support parameter types: 
 ```typescript
 @PathParam
 @QueryParam
@@ -94,6 +96,15 @@ All parameter types:
 @Next
 @Err
 @Data
+```
+
+Support Http request method: 
+```typescript
+@Get 
+@Post
+@Put
+@Patch
+@Delete
 ```
 
 > <h3>Use a filter, pass data across filter and controller</h3>
