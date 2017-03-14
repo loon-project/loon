@@ -73,6 +73,7 @@ ApplicationSettings options:
 
 ```typescript
 @RestController()
+// RestController support baseUrl options, for example: @RestController("/users")
 export class HomeController {
 
     @Get("/")
@@ -147,7 +148,8 @@ export class HomeController {
 
 
 ```typescript
-@Middleware({order: 0})
+@Middleware({order: 0}) 
+// middleware support two options: order and baseUrl
 export class Middleware1 implements IMiddleware {
 
     public use(@Data() data: any, @Next() next: Express.NextFunction) {
@@ -162,6 +164,7 @@ export class Middleware1 implements IMiddleware {
 
 ```typescript
 @ErrorMiddleware()
+// error middleware support two options: order and baseUrl
 export class ErrMiddleware implements IMiddleware {
 
     public use(@Err() err: any, @Res() res: Express.Response) {
