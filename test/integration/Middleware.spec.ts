@@ -16,7 +16,16 @@ describe("[Integration] Middleware", () => {
     class GlobalMiddleware implements IMiddleware {
 
         public use(@Data() data: any, @Next() next: Express.NextFunction) {
-            data.message = "global";
+            data.message = 'global';
+            next();
+        }
+    }
+
+    @Middleware({baseUrl: "/user"})
+    class GlobalPartialMiddleware implements IMiddleware {
+
+        public use(@Data() data: any, @Next() next: Express.NextFunction) {
+            data.message = 'partial';
             next();
         }
     }
@@ -45,6 +54,11 @@ describe("[Integration] Middleware", () => {
                 next(e);
             }
         }
+
+        @Get("/user/1")
+        public showAction(@Data() data: any, @Res() res: Express.Response) {
+            res.send(data.message);
+        }
     }
 
 
@@ -53,9 +67,12 @@ describe("[Integration] Middleware", () => {
 
     before(done => {
 
-        const middlewareMetadata = MiddlewareRegistry.getMiddleware(GlobalMiddleware);
-        const middlewareHandler = new HandlerTransformer(middlewareMetadata.handler).transform();
-        app.use(middlewareMetadata.baseUrl, middlewareHandler);
+        [GlobalMiddleware, GlobalPartialMiddleware].forEach(middleware => {
+            const middlewareMetadata = MiddlewareRegistry.getMiddleware(middleware);
+            const middlewareHandler = new HandlerTransformer(middlewareMetadata.handler).transform();
+            app.use(middlewareMetadata.baseUrl, middlewareHandler);
+        });
+
 
 
         const routes = ControllerRegistry.getRoutes(UserController);
@@ -78,7 +95,7 @@ describe("[Integration] Middleware", () => {
     it("should use global middleware", () => {
         return HttpHelper.sendRequest("get", "http://localhost:4444/", undefined, (response) => {
             response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("global");
+            response.body.should.be.equal('global');
         });
     });
 
@@ -86,6 +103,13 @@ describe("[Integration] Middleware", () => {
         return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
             response.statusCode.should.be.equal(200);
             response.body.should.be.equal("no user found");
+        });
+    });
+
+    it('should use baseUrl option for middleware', () => {
+        return HttpHelper.sendRequest("get", "http://localhost:4444/user/1", undefined, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal("partial");
         });
     });
 
