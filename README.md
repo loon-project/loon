@@ -15,7 +15,170 @@
 * Dependency Injection (constructor injection and property injection)
 * Service class
 * Rest route and controller, param data injection support
+* Middleware 
+* Filter
 * Log support
+* DB support
+
+
+> Initialize Application
+```typescript
+@ApplicationSettings({rootDir: `${__dirname}/../`})
+class Application extends ApplicationLoader {
+
+    public static initialize() {
+        return new Application().start();
+    }
+}
+
+Application
+    .initialize()
+    .catch(e => {
+        throw e
+    });
+
+
+```
+ApplicationSettings options: 
+```typescript
+
+    /**
+     * Required
+     */
+    rootDir: string;
+
+    srcDir?: string;
+
+    publicDir?: string;
+
+    logDir?: string;
+
+    configDir?: string;
+
+    dbDir?: string;
+
+    env?: string;
+
+    port?: string|number;
+}
+
+```
+
+> Handle a request
+```typescript
+@RestController()
+export class HomeController {
+
+    @Get("/")
+    public indexAction(@Data() data: any, @Res() res: Express.Response) {
+        res.send(data);
+    }
+
+}
+```
+All parameter types: 
+```typescript
+@PathParam
+@QueryParam
+@BodyParam
+@HeaderParam
+@CookieParam
+@Req
+@Res
+@Next
+@Err
+@Data
+```
+> Use a filter, pass data across filter and controller
+```typescript
+@Filter()
+export class CurrentUser implements IMiddleware {
+
+    constructor(private userService: UserService) {
+    }
+
+    public async use(@Data() data: any, @Next() next: Express.NextFunction) {
+
+        data.user = await this.userService.findById(1);
+
+        next();
+    }
+}
+
+@RestController()
+@BeforeFilter(CurrentUser) // also support options only and except, for example: @BeforeFilter(CurrentUser, only: ['indexAction'])
+export class HomeController {
+
+    @Get("/")
+    public indexAction(@Data() data: any, @Res() res: Express.Response) {
+        res.send(data);
+    }
+
+}
+
+```
+
+> Use global middleware
+just define a class as a Middleware
+```typescript
+@Middleware({order: 0})
+export class Middleware1 implements IMiddleware {
+
+    public use(@Data() data: any, @Next() next: Express.NextFunction) {
+        data.message = "global middleware";
+        next();
+    }
+}
+```
+
+> Use global error middleware
+```typescript
+@ErrorMiddleware()
+export class ErrMiddleware implements IMiddleware {
+
+    public use(@Err() err: any, @Res() res: Express.Response) {
+        res.send(err.message);
+    }
+}
+```
+
+> Use a service and inject into controller and middleware, filter
+```typescript
+@Service()
+export class UserService {
+
+    public findById(id: number) {
+
+        const userFromDB = {
+            uuid: "123",
+            created_at: Date.now()
+        };
+        
+        return userFromDB;
+    }
+}
+
+@RestController()
+export class HomeController {
+    
+    constructor(private userService: UserService) {
+    }
+
+}
+```
+
+> Use logger and db connection
+```typescript
+@RestController()
+export class HomeController {
+    
+    private connection = ConnectionFactory.getConnection(); // Database connection is Knex instance 
+    private logger = LogFactory.getLogger(); // Logger is winston instance
+
+}
+```
+
+
 
 
 <h2 align="center">Quick start</h2>
