@@ -42,7 +42,7 @@ Application
 
 
 ```
-ApplicationSettings options: 
+Support ApplicationSettings options: 
 ```typescript
 interface SettingOptions {
     // Required
