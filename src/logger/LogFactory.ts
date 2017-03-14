@@ -20,23 +20,19 @@ export class LogFactory {
 
         ConfigContainer.registerConfig(loggerConfig);
 
+
         if (ConfigContainer.get(`logger.${env}`)) {
 
             const envLoggerConfig: any = ConfigContainer.get(`logger.${env}`);
 
             const transports: any[] = [];
 
-            envLoggerConfig.transports.forEach(transport => {
-
-                Object.keys(transport).forEach(key => {
-
-                    if (Winston.transports.hasOwnProperty(key)) {
-                        const transportConfig = Object.assign({}, transport[key], {dirname: logDir});
-                        const transportInstance = new (Winston.transports[key])(transportConfig);
-                        transports.push(transportInstance);
-                    }
-                });
-
+            Object.keys(envLoggerConfig.transports).forEach(key => {
+                if (Winston.transports.hasOwnProperty(key)) {
+                    const transportConfig = Object.assign({}, envLoggerConfig.transports[key], {dirname: logDir});
+                    const transportInstance = new (Winston.transports[key])(transportConfig);
+                    transports.push(transportInstance);
+                }
             });
 
             this.logger = new (Winston.Logger)({
