@@ -146,7 +146,7 @@ export class ApplicationLoader {
 
     private init() {
 
-        LogFactory.init(this.logDir, this.env);
+        LogFactory.init(this.configDir, this.logDir, this.env);
         ConnectionFactory.init(this.configDir, this.env);
     }
 

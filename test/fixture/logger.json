@@ -1,0 +1,24 @@
+{
+  "development": {
+    "level": "debug",
+    "transports": {
+
+      "Console": {
+        "colorize": true,
+        "prettyPrint": true,
+        "timestamp": true,
+        "showLevel": true
+      },
+
+      "File": {
+        "filename": "development.log",
+        "timestamp": true,
+        "maxFiles": "30"
+      }
+
+    }
+  },
+
+  "production": {
+  }
+}

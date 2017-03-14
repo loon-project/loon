@@ -1,4 +1,6 @@
 import * as Winston from "winston";
+import * as Path from 'path';
+import {ConfigContainer} from "../config/ConfigContainer";
 
 /**
  *
@@ -12,36 +14,36 @@ export class LogFactory {
 
     private static logger: Winston.LoggerInstance;
 
-    public static init(logDir: string, env: string) {
+    public static init(configDir: string, logDir: string, env: string) {
 
-        let defaultLogLevel = 'debug';
-        const consoleTransport: Winston.TransportInstance = new (Winston.transports.Console)({
-            colorize: true,
-            prettyPrint: true,
-            timestamp: true,
-            showLevel: true
-        });
+        const loggerConfig = Path.join(configDir, 'logger.json');
 
-        const fileLogOptions = {
-            level: 'debug',
-            filename: `${env}.log`,
-            dirname: logDir,
-            timestamp: true,
-            maxFiles: 30
-        };
+        ConfigContainer.registerConfig(loggerConfig);
 
-        if (env === 'production') {
-            defaultLogLevel = 'info';
-            fileLogOptions.level = 'info';
+        if (ConfigContainer.get(`logger.${env}`)) {
+
+            const envLoggerConfig: any = ConfigContainer.get(`logger.${env}`);
+
+            const transports: any[] = [];
+
+            envLoggerConfig.transports.forEach(transport => {
+
+                Object.keys(transport).forEach(key => {
+
+                    if (Winston.transports.hasOwnProperty(key)) {
+                        const transportConfig = Object.assign({}, transport[key], {dirname: logDir});
+                        const transportInstance = new (Winston.transports[key])(transportConfig);
+                        transports.push(transportInstance);
+                    }
+                });
+
+            });
+
+            this.logger = new (Winston.Logger)({
+                level: envLoggerConfig.level,
+                transports
+            });
         }
-
-        const fileTransports: Winston.TransportInstance = new (Winston.transports.File)(fileLogOptions);
-
-
-        this.logger = new (Winston.Logger)({
-            level: defaultLogLevel,
-            transports: [consoleTransport, fileTransports]
-        });
     }
 
     public static getLogger() {

@@ -12,7 +12,7 @@ export class ConnectionFactory {
 
         ConfigContainer.registerConfig(databaseConfig);
 
-        if (ConfigContainer.get("database")) {
+        if (ConfigContainer.get(`database.${env}`)) {
             this.connection = Knex(ConfigContainer.get(`database.${env}`));
         }
 
