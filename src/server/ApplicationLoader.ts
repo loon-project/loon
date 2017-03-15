@@ -7,6 +7,7 @@ import {ControllerRegistry} from "../mvc/ControllerRegistry";
 import {HandlerTransformer} from "../mvc/HandlerTransformer";
 import {ControllerTransformer} from "../mvc/ControllerTransformer";
 import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
+import {DependencyRegistry} from "../di/DependencyRegistry";
 
 
 export class ApplicationLoader {
@@ -108,6 +109,8 @@ export class ApplicationLoader {
 
         this._components = settings.components || [];
         this._routes = settings.routes || {};
+
+        DependencyRegistry.set(ApplicationLoader, this);
     }
 
     public start(): Promise<any> {
