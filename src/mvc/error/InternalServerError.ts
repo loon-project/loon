@@ -4,6 +4,6 @@ export class InternalServerError extends HttpException {
 
     public code = 500;
 
-    public message = 'INTERNAL SERVER ERROR';
+    public message = 'INTERNAL_SERVER_ERROR';
 
 }
