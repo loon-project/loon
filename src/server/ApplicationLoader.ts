@@ -8,6 +8,8 @@ import {HandlerTransformer} from "../mvc/HandlerTransformer";
 import {ControllerTransformer} from "../mvc/ControllerTransformer";
 import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
 import {DependencyRegistry} from "../di/DependencyRegistry";
+import {InitializerRegistry} from "../initializer/InitializerRegistry";
+import {Klass} from "../core/Klass";
 
 
 export class ApplicationLoader {
@@ -148,6 +150,13 @@ export class ApplicationLoader {
 
 
     private init() {
+
+        InitializerRegistry
+            .getInitializers()
+            .forEach(initializer => {
+                const instance = DependencyRegistry.get(<Klass>initializer.type);
+                instance['init'].apply(instance);
+            });
 
         LogFactory.init(this.configDir, this.logDir, this.env);
         ConnectionFactory.init(this.configDir, this.env);
