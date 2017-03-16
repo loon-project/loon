@@ -1,9 +1,11 @@
 ## Future
-- [ ] winston logger json configuration support
 - [ ] add parameter options: required, defaultValue 
 - [ ] better documentation
 - [x] ApplicationLoader injectable
 - [x] Application initializer
+
+## v0.5.0
+- [x] winston logger json configuration support
 
 
 ## v0.4.0

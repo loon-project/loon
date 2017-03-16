@@ -217,6 +217,7 @@ export class HomeController {
 
 <h2 align="center">Quick start</h2>
 Quick start example: [link](https://github.com/typed-project/typed-framework/tree/master/wikis/start.md)
+Full feature example: [link](https://github.com/typed-project/example)
 
 
 <h2 align="center">Roadmap</h2>
