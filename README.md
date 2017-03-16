@@ -224,6 +224,7 @@ Full feature example: [link](https://github.com/typed-project/example)
 
 <h2 align="center">Roadmap</h2>
 
+for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-framework/projects/1)
 
 | Version Code |  Target Date   |  Release Date  | Description                            |
 | :----------: | :------------: | :------------: | -------------------------------------- |
