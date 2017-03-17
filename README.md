@@ -240,6 +240,7 @@ for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-frame
 
 ### v0.6.0 (2017-03-17)
 * add required parameter options
+* add @Head, @Options http request
 
 
 ### v0.5.0 (2017-03-14)
