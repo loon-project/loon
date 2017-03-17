@@ -1,4 +1,5 @@
 import {ParamType} from "./enum/ParamType";
+import {HandlerParamOptions} from "./HandlerParamOptions";
 
 export class HandlerParamMetadata {
 
@@ -60,6 +61,19 @@ export class HandlerParamMetadata {
 
         if (typeof expression !== 'undefined') {
             this._expression = expression;
+        }
+    }
+
+    public setOptions(options?: HandlerParamOptions) {
+
+        if (options && typeof options.required !== 'undefined') {
+            this._required = options.required;
+        } else {
+            this._required = false;
+        }
+
+        if (options && typeof options.defaultValue !== 'undefined') {
+            this._defaultValue = options.defaultValue;
         }
 
     }

@@ -2,8 +2,10 @@ import {HttpException} from "./HttpException";
 
 export class NotFound extends HttpException {
 
-    public code = 404;
+    public status = 404;
 
-    public message = 'NOT_FOUND';
+    public code = "ERR_RESOURCE_NOT_FOUND";
+
+    public message = 'resource not found';
 
 }

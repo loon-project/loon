@@ -2,7 +2,9 @@ import {HttpException} from "./HttpException";
 
 export class BadRequest extends HttpException {
 
-    public code = 400;
+    public status = 400;
 
-    public message = 'BAD_REQUEST';
+    public code = 'ERR_BAD_REQUEST';
+
+    public message = 'bad request';
 }

@@ -3,6 +3,7 @@ import {Reflection} from "../core/Reflection";
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
 import {ConvertUtil} from "../util/ConvertUtil";
 import {ParamType} from "./enum/ParamType";
+import {HandlerParamOptions} from "./HandlerParamOptions";
 
 export class HandlerRegistry {
 
@@ -14,7 +15,8 @@ export class HandlerRegistry {
                                 actionName: string,
                                 index: number,
                                 paramType: ParamType,
-                                expression: string) {
+                                expression: string,
+                                options?: HandlerParamOptions) {
 
         const handlerMetadata = this.getHandler(type, actionName);
 
@@ -22,6 +24,8 @@ export class HandlerRegistry {
         const returnType = params[index];
 
         const handlerParam = new HandlerParamMetadata(type, actionName, index, returnType, paramType, expression);
+
+        handlerParam.setOptions(options);
 
         handlerMetadata.params.set(index, handlerParam);
     }

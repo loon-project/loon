@@ -1,39 +1,40 @@
 import {ParamType} from "../enum/ParamType";
 import {HandlerRegistry} from "../HandlerRegistry";
+import {HandlerParamOptions} from "../HandlerParamOptions";
 
-export function PathParam(expression: string) {
+export function PathParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Path, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Path, actionName, index, expression, options);
     };
 }
 
-export function QueryParam(expression: string) {
+export function QueryParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Query, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Query, actionName, index, expression, options);
     };
 }
 
-export function BodyParam(expression: string) {
+export function BodyParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Body, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Body, actionName, index, expression, options);
     };
 }
 
-export function HeaderParam(expression: string) {
+export function HeaderParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Header, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Header, actionName, index, expression, options);
     };
 }
 
-export function CookieParam(expression: string) {
+export function CookieParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Cookie, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Cookie, actionName, index, expression, options);
     };
 }
 
-export function SessionParam(expression: string) {
+export function SessionParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Session, actionName, index, expression);
+        registerHelper(target.constructor, ParamType.Session, actionName, index, expression, options);
     };
 }
 
@@ -71,8 +72,9 @@ function registerHelper(type: Function,
                         paramType: ParamType,
                         actionName: string,
                         index: number,
-                        expression: string) {
+                        expression: string,
+                        options?: HandlerParamOptions) {
 
-    HandlerRegistry.registerParam(type, actionName, index, paramType, expression);
+    HandlerRegistry.registerParam(type, actionName, index, paramType, expression, options);
 }
 

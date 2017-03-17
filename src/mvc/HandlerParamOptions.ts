@@ -1,7 +1,7 @@
 
 export interface HandlerParamOptions {
 
-    isRequired?: boolean;
+    required?: boolean;
 
     defaultValue?: any;
 

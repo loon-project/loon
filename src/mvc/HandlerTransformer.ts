@@ -4,6 +4,7 @@ import {ParamType} from "./enum/ParamType";
 import {Klass} from "../core/Klass";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import * as _ from 'lodash';
+import {ParamRequired} from "./error/ParamRequired";
 
 export class HandlerTransformer {
 
@@ -25,17 +26,9 @@ export class HandlerTransformer {
 
             return (err: any, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
 
-                return new Promise((resolve, reject) => {
-
-                        const result = this.invokeMethod(req, res, next, err);
-
-                        if (result && result.then) {
-                            result.then(resolve, reject);
-                        } else {
-                            resolve(result);
-                        }
-
-                    })
+                return Promise
+                    .resolve()
+                    .then(() => this.invokeMethod(req, res, next, err))
                     .catch(err => next(err));
             };
 
@@ -43,17 +36,9 @@ export class HandlerTransformer {
 
             return (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
 
-                return new Promise((resolve, reject) => {
-
-                        const result = this.invokeMethod(req, res, next);
-
-                        if (result && result.then) {
-                            result.then(resolve, reject);
-                        } else {
-                            resolve(result);
-                        }
-
-                    })
+                return Promise
+                    .resolve()
+                    .then(() => this.invokeMethod(req, res, next))
                     .catch(err => next(err));
             };
         }
@@ -77,35 +62,83 @@ export class HandlerTransformer {
 
             switch (param.paramType) {
                 case ParamType.Body:
-                    args.push(_.get(request.body, param.expression));
+
+                    const body = _.get(request.body, param.expression);
+
+                    if (param.required && typeof body === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    args.push(body);
                     return;
                 case ParamType.Cookie:
-                    args.push(_.get(request.cookies, param.expression));
+
+                    const cookie = _.get(request.cookies, param.expression);
+
+                    if (param.required && typeof cookie === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    args.push(cookie);
                     return;
                 case ParamType.Path:
-                    args.push(_.get(request.params, param.expression));
+
+                    const path = _.get(request.params, param.expression);
+
+                    if (param.required && typeof path === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    args.push(path);
                     return;
+
                 case ParamType.Query:
-                    args.push(_.get(request.query, param.expression));
+
+                    const query = _.get(request.query, param.expression);
+
+                    if (param.required && typeof query === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    args.push(query);
                     return;
+
                 case ParamType.Header:
-                    args.push(request.header(param.expression ? param.expression : ""));
+
+                    const header = request.header(param.expression);
+
+                    if (param.required && typeof header === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    args.push(header);
                     return;
+
                 case ParamType.Error:
+
                     args.push(error);
                     return;
+
                 case ParamType.Request:
+
                     args.push(request);
                     return;
+
                 case ParamType.Response:
+
                     args.push(response);
                     return;
+
                 case ParamType.Next:
+
                     args.push(next);
                     return;
+
                 case ParamType.Data:
+
                     args.push(response.locals);
                     return;
+
                 default:
                     args.push(undefined);
                     return;
