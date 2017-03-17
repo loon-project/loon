@@ -30,6 +30,19 @@ export function Delete(route: string|RegExp) {
     };
 }
 
+export function Options(route: string|RegExp) {
+     return (target: any, actionName: string) => {
+        registerHelper(target, actionName, "options", route);
+    };
+}
+
+// head request should not return anything
+export function Head(route: string|RegExp) {
+    return (target: any, actionName: string) => {
+        registerHelper(target, actionName, "head", route);
+    };
+}
+
 function registerHelper(target, actionName, method, route) {
     ControllerRegistry.registerAction(target.constructor, actionName, method, route);
 }
