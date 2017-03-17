@@ -104,6 +104,8 @@ Support Http request method:
 @Put
 @Patch
 @Delete
+@Head
+@Options
 ```
 
 > <h3>Use a filter, pass data across filter and controller</h3>
