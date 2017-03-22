@@ -16,8 +16,6 @@ import {Klass} from "../core/Klass";
  */
 export class Converter {
 
-    private _from: any;
-
     private _returnType: Function;
 
     private _template: ConvertTemplate;
@@ -26,11 +24,10 @@ export class Converter {
 
     private _validate: boolean;
 
-    constructor(from: any, options?: ConvertOptions) {
+    constructor(options?: ConvertOptions) {
 
-        this._from = from;
-
-        this.initializeDefault();
+        this._silent = true;
+        this._validate = false;
 
         if (options) {
 
@@ -59,27 +56,23 @@ export class Converter {
         return this;
     }
 
-    public convert() {
+    public convert(from: any) {
 
         const result = this._returnType ? new (<Klass> this._returnType)() : {};
 
-        Object.keys(this._template).forEach(key => {
-            const targetKey = this._template[key];
-            const targetValue = this._from[key];
+        const defaultTemplate = {};
+        Object.keys(from).forEach(key => defaultTemplate[key] = key);
+        const template = Object.assign({}, defaultTemplate, this._template);
+
+
+        Object.keys(template).forEach(key => {
+            const targetKey = template[key];
+            const targetValue = from[key];
 
             result[targetKey] = targetValue;
         });
 
         return result;
-    }
-
-    private initializeDefault() {
-        this._silent = true;
-        this._validate = false;
-
-        const defaultTemplate = {};
-        Object.keys(this._from).forEach(key => defaultTemplate[key] = key);
-        this._template = defaultTemplate;
     }
 }
 

@@ -41,8 +41,8 @@ describe("Converter", () => {
 
 
     it('should successfully convert js object to class', () => {
-        const converter = new Converter(data1, {returnType: User});
-        const user = converter.convert();
+        const converter = new Converter({returnType: User});
+        const user = converter.convert(data1);
 
         user.id.should.be.equal(1);
         user.name.should.be.equal('Jack');
@@ -50,12 +50,12 @@ describe("Converter", () => {
     });
 
     it('should successfully convert js object to class with template', () => {
-        const converter = new Converter(data2, {
+        const converter = new Converter({
             returnType: User,
             template: template
         });
 
-        const user = converter.convert();
+        const user = converter.convert(data2);
 
         user.id.should.be.equal(1);
         user.name.should.be.equal('Jack');
@@ -63,9 +63,9 @@ describe("Converter", () => {
     });
 
     it('should successfully convert class to js object', () => {
-        const converter = new Converter(user);
+        const converter = new Converter();
 
-        const ret = converter.convert();
+        const ret = converter.convert(user);
 
         ret.id.should.be.equal(1);
         ret.name.should.be.equal('Jack');
@@ -73,11 +73,11 @@ describe("Converter", () => {
     });
 
     it('should successfully convert class to js object with template', () => {
-        const converter = new Converter(user, {
+        const converter = new Converter({
             template: classTemplate
         });
 
-        const ret = converter.convert();
+        const ret = converter.convert(user);
 
         ret.uuid.should.be.equal(1);
         ret.name.should.be.equal('Jack');
