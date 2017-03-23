@@ -1,3 +1,6 @@
+> I'm working hard to test this against production, once it's ready, I will release the 1.0.0, please stay tuned.
+
+
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
