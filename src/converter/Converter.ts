@@ -44,7 +44,7 @@ export class Converter {
             }
 
             if (typeof options.template !== 'undefined') {
-                this._template = Object.assign({}, this._template, options.template);
+                this._template = options.template;
             }
 
         }
@@ -60,10 +60,13 @@ export class Converter {
 
         const result = this._returnType ? new (<Klass> this._returnType)() : {};
 
-        const defaultTemplate = {};
-        Object.keys(from).forEach(key => defaultTemplate[key] = key);
-        const template = Object.assign({}, defaultTemplate, this._template);
+        let template = {};
 
+        if (this._template) {
+            template = this._template;
+        } else {
+            Object.keys(from).forEach(key => template[key] = key);
+        }
 
         Object.keys(template).forEach(key => {
             const targetKey = template[key];

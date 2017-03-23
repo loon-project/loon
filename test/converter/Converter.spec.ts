@@ -58,7 +58,7 @@ describe("Converter", () => {
         const user = converter.convert(data2);
 
         user.id.should.be.equal(1);
-        user.name.should.be.equal('Jack');
+        (typeof user.name === 'undefined').should.be.true;
         user.isAdmin.should.be.true;
     });
 
@@ -80,7 +80,7 @@ describe("Converter", () => {
         const ret = converter.convert(user);
 
         ret.uuid.should.be.equal(1);
-        ret.name.should.be.equal('Jack');
+        (typeof ret.name === 'undefined').should.be.true;
         ret.is_admin.should.be.true;
     });
 
