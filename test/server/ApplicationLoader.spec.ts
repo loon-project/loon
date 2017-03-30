@@ -22,7 +22,7 @@ describe("ApplicationLoader", () => {
     it("should return the rootDir value", () => {
 
         const options = <SettingOptions>{rootDir: 'value1'};
-        ApplicationRegistry.registerWithOptions(options);
+        ApplicationRegistry.registerWithOptions(TestApplication, options);
 
         const applicationLoader = new ApplicationLoader();
 
@@ -32,7 +32,7 @@ describe("ApplicationLoader", () => {
     it('should set default value', () => {
 
         const options = <SettingOptions>{rootDir: 'value2'};
-        ApplicationRegistry.registerWithOptions(options);
+        ApplicationRegistry.registerWithOptions(TestApplication, options);
 
         const applicationLoader = new ApplicationLoader();
 
@@ -53,7 +53,7 @@ describe("ApplicationLoader", () => {
     it('should call $onInit method', () => {
 
         const options = <SettingOptions>{rootDir: 'value2'};
-        ApplicationRegistry.registerWithOptions(options);
+        ApplicationRegistry.registerWithOptions(TestApplication, options);
 
         const application = new TestApplication();
         application
