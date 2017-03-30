@@ -112,6 +112,8 @@ export class ApplicationLoader {
         this._components = settings.components || [];
         this._routes = settings.routes || {};
 
+        DependencyRegistry.set(ApplicationLoader, this);
+
         this.init()
             .invokeApplicationInitHook()
             .loadExternalMiddlewares()
@@ -119,8 +121,6 @@ export class ApplicationLoader {
             .loadMiddlewares()
             .loadRoutes()
             .loadErrorMiddlewares();
-
-        DependencyRegistry.set(ApplicationLoader, this);
     }
 
     public start(): Promise<any> {
