@@ -112,6 +112,14 @@ export class ApplicationLoader {
         this._components = settings.components || [];
         this._routes = settings.routes || {};
 
+        this.init()
+            .invokeApplicationInitHook()
+            .loadExternalMiddlewares()
+            .loadComponents()
+            .loadMiddlewares()
+            .loadRoutes()
+            .loadErrorMiddlewares();
+
         DependencyRegistry.set(ApplicationLoader, this);
     }
 
@@ -119,33 +127,40 @@ export class ApplicationLoader {
 
         return Promise
             .resolve()
-            .then(() => this.init())
-            .then(() => this.invokeApplicationInitHook())
-            .then(() => {
-
-                const logger = LogFactory.getLogger();
-
-                this.server.use(require('morgan')("combined", {
-                    stream: {
-                        write: message => logger.info(message)
-                    }
-                }));
-
-                this.server.use(require('body-parser').json());
-                this.server.use(require('body-parser').urlencoded({ extended: true }));
-                this.server.use(require('cookie-parser')());
-                this.server.use(require('method-override')());
-                this.server.use(require('serve-static')(this.publicDir));
-
-            })
-            .then(() => this.loadComponents())
-            .then(() => this.loadMiddlewares())
-            .then(() => this.loadRoutes())
-            .then(() => this.loadErrorMiddlewares())
             .then(() => this.run())
             .catch(e => {
                 throw e;
             });
+
+        // return Promise
+        //     .resolve()
+        //     .then(() => this.init())
+        //     .then(() => this.invokeApplicationInitHook())
+        //     .then(() => {
+        //
+        //         const logger = LogFactory.getLogger();
+        //
+        //         this.server.use(require('morgan')("combined", {
+        //             stream: {
+        //                 write: message => logger.info(message)
+        //             }
+        //         }));
+        //
+        //         this.server.use(require('body-parser').json());
+        //         this.server.use(require('body-parser').urlencoded({ extended: true }));
+        //         this.server.use(require('cookie-parser')());
+        //         this.server.use(require('method-override')());
+        //         this.server.use(require('serve-static')(this.publicDir));
+        //
+        //     })
+        //     .then(() => this.loadComponents())
+        //     .then(() => this.loadMiddlewares())
+        //     .then(() => this.loadRoutes())
+        //     .then(() => this.loadErrorMiddlewares())
+        //     .then(() => this.run())
+        //     .catch(e => {
+        //         throw e;
+        //     });
     }
 
 
@@ -160,10 +175,31 @@ export class ApplicationLoader {
 
         LogFactory.init(this.configDir, this.logDir, this.env);
         ConnectionFactory.init(this.configDir, this.env);
+
+        return this;
     }
 
     private invokeApplicationInitHook() {
         '$onInit' in this ? (<any> this).$onInit() : null;
+        return this;
+    }
+
+    private loadExternalMiddlewares() {
+        const logger = LogFactory.getLogger();
+
+        this.server.use(require('morgan')("combined", {
+            stream: {
+                write: message => logger.info(message)
+            }
+        }));
+
+        this.server.use(require('body-parser').json());
+        this.server.use(require('body-parser').urlencoded({ extended: true }));
+        this.server.use(require('cookie-parser')());
+        this.server.use(require('method-override')());
+        this.server.use(require('serve-static')(this.publicDir));
+
+        return this;
     }
 
     private loadComponents() {
@@ -173,6 +209,8 @@ export class ApplicationLoader {
             excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
             recursive   : true
         });
+
+        return this;
     }
 
     private loadMiddlewares() {
@@ -184,6 +222,8 @@ export class ApplicationLoader {
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
             });
+
+        return this;
     }
 
     private loadRoutes() {
@@ -193,6 +233,8 @@ export class ApplicationLoader {
             const router = transformer.transform();
             this._server.use(controllerMetadata.baseUrl, router);
         });
+
+        return this;
     }
 
     private loadErrorMiddlewares() {
@@ -204,6 +246,8 @@ export class ApplicationLoader {
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
             });
+
+        return this;
     }
 
     private run() {
