@@ -43,6 +43,10 @@ export class HandlerParamMetadata {
         return this._actionName;
     }
 
+    get returnType() {
+        return this._returnType;
+    }
+
     constructor(type: Function,
                 actionName: string,
                 index: number,

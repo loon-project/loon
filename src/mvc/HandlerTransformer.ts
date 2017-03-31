@@ -5,6 +5,7 @@ import {Klass} from "../core/Klass";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import * as _ from 'lodash';
 import {ParamRequired} from "./error/ParamRequired";
+import {Caster} from "../caster/Caster";
 
 export class HandlerTransformer {
 
@@ -69,8 +70,11 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    args.push(body);
+                    const castedBody = Caster.cast(body, param.returnType);
+
+                    args.push(castedBody);
                     return;
+
                 case ParamType.Cookie:
 
                     const cookie = _.get(request.cookies, param.expression);
@@ -79,8 +83,11 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    args.push(cookie);
+                    const castedCookie = Caster.cast(cookie, param.returnType);
+
+                    args.push(castedCookie);
                     return;
+
                 case ParamType.Path:
 
                     const path = _.get(request.params, param.expression);
@@ -89,7 +96,8 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    args.push(path);
+                    const castedPath = Caster.cast(path, param.returnType);
+                    args.push(castedPath);
                     return;
 
                 case ParamType.Query:
@@ -100,7 +108,8 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    args.push(query);
+                    const castedQuery = Caster.cast(query, param.returnType);
+                    args.push(castedQuery);
                     return;
 
                 case ParamType.Header:
@@ -111,7 +120,8 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    args.push(header);
+                    const castedHeader = Caster.cast(header, param.returnType);
+                    args.push(castedHeader);
                     return;
 
                 case ParamType.Error:
