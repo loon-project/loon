@@ -4,33 +4,39 @@ export class Caster {
 
     public static cast(value: any, returnType: Function) {
 
-        if (TypeUtil.isSimpleType(returnType)) {
+        try {
+            if (TypeUtil.isSimpleType(returnType)) {
 
-            switch (returnType.name) {
+                switch (returnType.name) {
 
-                case "String":
-                    return value.toString();
+                    case "String":
+                        return value.toString();
 
-                case "Boolean":
-                    if (value === 'true') {
-                        return true;
-                    } else if (value === 'false') {
-                        return false;
-                    } else {
-                        throw new Error(`[TYPED] cast ${value} to boolean error`);
-                    }
+                    case "Boolean":
+                        if (value === 'true') {
+                            return true;
+                        } else if (value === 'false') {
+                            return false;
+                        } else {
+                            throw new Error(`[TYPED] cast ${value} to boolean error`);
+                        }
 
-                case "Number":
-                    return parseInt(value, 10);
+                    case "Number":
+                        return parseInt(value, 10);
 
-                case "Object":
-                    return value;
+                    case "Object":
+                        return value;
 
+                }
+
+            } else {
+                throw new Error(`[TYPED] not support cast to type: ${returnType.name}`);
             }
 
-        } else {
-            throw new Error(`[TYPED] not support cast to type: ${returnType.name}`);
+        } catch (e) {
+            return value;
         }
+
     }
 
 }
