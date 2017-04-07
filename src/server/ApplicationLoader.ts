@@ -11,6 +11,18 @@ import {DependencyRegistry} from "../di/DependencyRegistry";
 import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
 
+process.on('uncaughtException', (err) => {
+
+    const connection = ConnectionFactory.getConnection();
+
+    if (connection) {
+        connection.destroy();
+    }
+
+    throw err;
+});
+
+
 
 export class ApplicationLoader {
 
@@ -131,36 +143,6 @@ export class ApplicationLoader {
             .catch(e => {
                 throw e;
             });
-
-        // return Promise
-        //     .resolve()
-        //     .then(() => this.init())
-        //     .then(() => this.invokeApplicationInitHook())
-        //     .then(() => {
-        //
-        //         const logger = LogFactory.getLogger();
-        //
-        //         this.server.use(require('morgan')("combined", {
-        //             stream: {
-        //                 write: message => logger.info(message)
-        //             }
-        //         }));
-        //
-        //         this.server.use(require('body-parser').json());
-        //         this.server.use(require('body-parser').urlencoded({ extended: true }));
-        //         this.server.use(require('cookie-parser')());
-        //         this.server.use(require('method-override')());
-        //         this.server.use(require('serve-static')(this.publicDir));
-        //
-        //     })
-        //     .then(() => this.loadComponents())
-        //     .then(() => this.loadMiddlewares())
-        //     .then(() => this.loadRoutes())
-        //     .then(() => this.loadErrorMiddlewares())
-        //     .then(() => this.run())
-        //     .catch(e => {
-        //         throw e;
-        //     });
     }
 
 
