@@ -1,5 +1,4 @@
 import {Service} from "../mvc/decorator/Service";
-import {ConvertServiceOptions} from "./ConvertServiceOptions";
 
 @Service()
 export class ConverterService {
@@ -10,9 +9,7 @@ export class ConverterService {
     }
 
     // used to convert plain js object to class
-    public deserialize(data: any, returnType: Function, customConverter?: Function|Function[]) {
-
+    public deserialize(data: any, klass: Function) {
     }
-
 
 }
