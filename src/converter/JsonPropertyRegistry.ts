@@ -1,14 +1,15 @@
 import {JsonPropertyMetadata} from "./JsonPropertyMetadata";
 import {JsonPropertyOptions} from "./JsonPropertyOptions";
 import {Reflection} from "../core/Reflection";
+import {JsonSourceMetadata} from "./JsonSourceMetadata";
 
 export class JsonPropertyRegistry {
 
-    private static _jsonProperties: Map<Function, JsonPropertyMetadata[]> = new Map();
+    private static _jsonSources: Map<Function, JsonSourceMetadata> = new Map();
 
     public static registerJsonProperty(type: Function, propertyName: string, nameOrOptions?: string|JsonPropertyOptions) {
 
-        const jsonProperties: JsonPropertyMetadata[] = this.findJsonProperties(type);
+        const jsonSource: JsonSourceMetadata = this.findJsonSource(type);
 
         let name = propertyName;
         let returnType = Reflection.getType(type, propertyName);
@@ -41,19 +42,19 @@ export class JsonPropertyRegistry {
 
         const jsonProperty = new JsonPropertyMetadata(type, name, returnType, converter);
 
-        jsonProperties.push(jsonProperty);
+        jsonSource.properties.set(name, jsonProperty);
     }
 
-    private static findJsonProperties(type: Function) {
+    private static findJsonSource(type: Function) {
 
-        let jsonProperties = this._jsonProperties.get(type);
+        let jsonSource = this._jsonSources.get(type);
 
-        if (typeof jsonProperties === 'undefined') {
-            jsonProperties = [];
-            this._jsonProperties.set(type, jsonProperties);
+        if (typeof jsonSource === 'undefined') {
+            jsonSource = new JsonSourceMetadata();
+            this._jsonSources.set(type, jsonSource);
         }
 
-        return jsonProperties;
+        return jsonSource;
     }
 
 }
