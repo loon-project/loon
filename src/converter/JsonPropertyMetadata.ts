@@ -10,6 +10,22 @@ export class JsonPropertyMetadata {
     private _converter: Function;
 
 
+    get type(): Function {
+        return this._type;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get returnType(): Function {
+        return this._returnType;
+    }
+
+    get converter(): Function {
+        return this._converter;
+    }
+
     constructor(type: Function, name: string, returnType: Function, converter?: Function) {
         this._type = type;
         this._name = name;

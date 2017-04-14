@@ -14,7 +14,7 @@ export class JsonPropertyRegistry {
         const jsonSource: JsonSourceMetadata = this.findJsonSource(type);
 
         let name = propertyName;
-        let returnType = Reflection.getType(type, propertyName);
+        let returnType = Reflection.getType(type.prototype, propertyName);
         let converter;
 
         if (typeof nameOrOptions !== 'undefined') {
