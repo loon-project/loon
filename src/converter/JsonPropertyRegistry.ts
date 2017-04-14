@@ -7,6 +7,8 @@ export class JsonPropertyRegistry {
 
     private static _jsonSources: Map<Function, JsonSourceMetadata> = new Map();
 
+    public static jsonSources = JsonPropertyRegistry._jsonSources;
+
     public static registerJsonProperty(type: Function, propertyName: string, nameOrOptions?: string|JsonPropertyOptions) {
 
         const jsonSource: JsonSourceMetadata = this.findJsonSource(type);
@@ -15,7 +17,7 @@ export class JsonPropertyRegistry {
         let returnType = Reflection.getType(type, propertyName);
         let converter;
 
-        if (nameOrOptions !== 'undefined') {
+        if (typeof nameOrOptions !== 'undefined') {
 
             if (nameOrOptions instanceof String) {
 
