@@ -5,6 +5,6 @@ export interface JsonPropertyOptions {
 
     converter?: Function;
 
-    returnType?: Function;
+    type?: Function;
 
 }

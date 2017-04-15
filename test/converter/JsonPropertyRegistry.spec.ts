@@ -2,6 +2,8 @@ import "../TestHelper";
 import {JsonPropertyRegistry} from "../../src/converter/JsonPropertyRegistry";
 import {JsonProperty} from "../../src/converter/decorator/JsonProperty";
 import {expect} from 'chai';
+import {JsonPropertyMetadata} from "../../src/converter/JsonPropertyMetadata";
+
 
 describe("JsonPropertyRegistry", () => {
 
@@ -16,25 +18,72 @@ describe("JsonPropertyRegistry", () => {
         @JsonProperty({name: "updated_at"})
         private updatedAt: Date;
 
-        @JsonProperty({name: "is_flag", returnType: String})
+        @JsonProperty({name: "is_flag", type: String})
         private isFlag: boolean;
 
     }
 
     it('should register json property', () => {
 
-        const jsonSource: any = JsonPropertyRegistry.jsonSources.get(JsonPropertyRegistryTestClass);
+        assertProperty({
+            propertyName: 'name',
+            propertyType: String,
+            jsonName: 'name',
+            jsonType: String
+        });
+    });
 
-        expect(jsonSource).not.be.undefined;
-        expect(jsonSource.properties).not.be.undefined;
+    it('should register json property with different name', () => {
 
-        const jsonProperty: any = jsonSource.properties.get('name');
+        assertProperty({
+            propertyName: 'createdAt',
+            propertyType: Date,
+            jsonName: 'created_at',
+            jsonType: Date
+        });
+    });
+
+    it('should register json property with name options', () => {
+
+        assertProperty({
+            propertyName: 'updatedAt',
+            propertyType: Date,
+            jsonName: 'updated_at',
+            jsonType: Date
+        });
+    });
+
+    it('should register json property with returnType options', () => {
+
+        assertProperty({
+            propertyName: 'isFlag',
+            propertyType: Boolean,
+            jsonName: 'is_flag',
+            jsonType: String
+        });
+    });
+
+    interface JsonPropertyAssertResult {
+        propertyName: string;
+        propertyType: Function;
+        jsonName: string;
+        jsonType: Function;
+    }
+
+    function assertProperty(result: JsonPropertyAssertResult) {
+
+        const jsonProperties: any = JsonPropertyRegistry.jsonProperties.get(JsonPropertyRegistryTestClass);
+
+        expect(jsonProperties).not.be.undefined;
+
+        const jsonProperty: any = (<JsonPropertyMetadata[]> jsonProperties).find(item => item.propertyName === result.propertyName);
 
         expect(jsonProperty).not.be.undefined;
         expect(jsonProperty.type).to.equal(JsonPropertyRegistryTestClass);
-        expect(jsonProperty.name).to.equal('name');
-        expect(jsonProperty.returnType).to.equal(String);
-    });
-
+        expect(jsonProperty.propertyName).to.equal(result.propertyName);
+        expect(jsonProperty.propertyType).to.equal(result.propertyType);
+        expect(jsonProperty.jsonName).to.equal(result.jsonName);
+        expect(jsonProperty.jsonType).to.equal(result.jsonType);
+    }
 });
 

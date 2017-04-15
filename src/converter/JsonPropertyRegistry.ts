@@ -1,38 +1,43 @@
 import {JsonPropertyMetadata} from "./JsonPropertyMetadata";
 import {JsonPropertyOptions} from "./JsonPropertyOptions";
 import {Reflection} from "../core/Reflection";
-import {JsonSourceMetadata} from "./JsonSourceMetadata";
+import * as _ from "lodash";
+
+const JsonSupportType = [Number, String, Boolean, Array, null, Object];
 
 export class JsonPropertyRegistry {
 
-    private static _jsonSources: Map<Function, JsonSourceMetadata> = new Map();
+    private static _jsonProperties: Map<Function, JsonPropertyMetadata[]> = new Map();
 
-    public static jsonSources = JsonPropertyRegistry._jsonSources;
+    public static jsonProperties = JsonPropertyRegistry._jsonProperties;
 
     public static registerJsonProperty(type: Function, propertyName: string, nameOrOptions?: string|JsonPropertyOptions) {
 
-        const jsonSource: JsonSourceMetadata = this.findJsonSource(type);
+        const jsonProperties: JsonPropertyMetadata[] = this.findJsonProperties(type);
 
-        let name = propertyName;
-        let returnType = Reflection.getType(type.prototype, propertyName);
+        const propertyType = Reflection.getType(type.prototype, propertyName);
+
+        let jsonName = propertyName;
+        let jsonType = propertyType;
         let converter;
+
 
         if (typeof nameOrOptions !== 'undefined') {
 
-            if (nameOrOptions instanceof String) {
+            if (_.isString(nameOrOptions)) {
 
-                name = nameOrOptions;
+                jsonName = nameOrOptions;
 
             } else {
 
                 const options = <JsonPropertyOptions> nameOrOptions;
 
                 if (typeof options.name !== 'undefined') {
-                    name = options.name;
+                    jsonName = options.name;
                 }
 
-                if (typeof options.returnType !== 'undefined') {
-                    returnType = options.returnType;
+                if (typeof options.type !== 'undefined') {
+                    jsonType = options.type;
                 }
 
                 if (typeof options.converter !== 'undefined') {
@@ -42,21 +47,25 @@ export class JsonPropertyRegistry {
             }
         }
 
-        const jsonProperty = new JsonPropertyMetadata(type, name, returnType, converter);
+        const jsonProperty = new JsonPropertyMetadata(type, jsonName, jsonType, propertyName, propertyType);
 
-        jsonSource.properties.set(name, jsonProperty);
-    }
-
-    private static findJsonSource(type: Function) {
-
-        let jsonSource = this._jsonSources.get(type);
-
-        if (typeof jsonSource === 'undefined') {
-            jsonSource = new JsonSourceMetadata();
-            this._jsonSources.set(type, jsonSource);
+        if (typeof converter !== 'undefined') {
+            jsonProperty.converter = converter;
         }
 
-        return jsonSource;
+        jsonProperties.push(jsonProperty);
     }
 
+    private static findJsonProperties(type: Function) {
+
+        let jsonProperties = this._jsonProperties.get(type);
+
+        if (typeof jsonProperties === 'undefined') {
+
+            jsonProperties = [];
+            this._jsonProperties.set(type, jsonProperties);
+        }
+
+        return jsonProperties;
+    }
 }

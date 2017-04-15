@@ -3,9 +3,13 @@ export class JsonPropertyMetadata {
 
     private _type: Function;
 
-    private _name: string;
+    private _jsonName: string;
 
-    private _returnType: Function;
+    private _jsonType: Function;
+
+    private _propertyName: string;
+
+    private _propertyType: Function;
 
     private _converter: Function;
 
@@ -14,25 +18,35 @@ export class JsonPropertyMetadata {
         return this._type;
     }
 
-    get name(): string {
-        return this._name;
+    get jsonName(): string {
+        return this._jsonName;
     }
 
-    get returnType(): Function {
-        return this._returnType;
+    get jsonType(): Function {
+        return this._jsonType;
+    }
+
+    get propertyName(): string {
+        return this._propertyName;
+    }
+
+    get propertyType(): Function {
+        return this._propertyType;
     }
 
     get converter(): Function {
         return this._converter;
     }
 
-    constructor(type: Function, name: string, returnType: Function, converter?: Function) {
-        this._type = type;
-        this._name = name;
-        this._returnType = returnType;
+    set converter(value: Function) {
+        this._converter = value;
+    }
 
-        if (typeof converter !== 'undefined') {
-            this._converter = converter;
-        }
+    constructor(type: Function, jsonName: string, jsonType: Function, propertyName: string, propertyType: Function) {
+        this._type = type;
+        this._jsonName = jsonName;
+        this._jsonType = jsonType;
+        this._propertyName = propertyName;
+        this._propertyType = propertyType;
     }
 }
