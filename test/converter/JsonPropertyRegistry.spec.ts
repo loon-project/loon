@@ -1,11 +1,15 @@
 import "../TestHelper";
+import {expect} from "chai";
 import {JsonPropertyRegistry} from "../../src/converter/JsonPropertyRegistry";
 import {JsonProperty} from "../../src/converter/decorator/JsonProperty";
-import {expect} from 'chai';
 import {JsonPropertyMetadata} from "../../src/converter/JsonPropertyMetadata";
 
 
 describe("JsonPropertyRegistry", () => {
+
+    class ATestConverter {
+
+    }
 
     class JsonPropertyRegistryTestClass {
 
@@ -21,6 +25,8 @@ describe("JsonPropertyRegistry", () => {
         @JsonProperty({name: "is_flag", type: String})
         private isFlag: boolean;
 
+        @JsonProperty({converter: ATestConverter})
+        private converter: string;
     }
 
     it('should register json property', () => {

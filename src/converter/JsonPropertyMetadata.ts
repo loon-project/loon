@@ -1,3 +1,4 @@
+import {IConverter} from "./interface/IConverter";
 
 export class JsonPropertyMetadata {
 
@@ -11,7 +12,7 @@ export class JsonPropertyMetadata {
 
     private _propertyType: Function;
 
-    private _converter: Function;
+    private _converter: IConverter;
 
 
     get type(): Function {
@@ -34,11 +35,11 @@ export class JsonPropertyMetadata {
         return this._propertyType;
     }
 
-    get converter(): Function {
+    get converter(): IConverter {
         return this._converter;
     }
 
-    set converter(value: Function) {
+    set converter(value: IConverter) {
         this._converter = value;
     }
 
