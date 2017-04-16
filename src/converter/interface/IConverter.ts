@@ -1,8 +1,8 @@
 
 export interface IConverter {
 
-    serialize?(data: any, jsonType: Function): any;
+    serialize?(data: any, klassProperty: string, objectProperty: string): any;
 
-    deserialize?(data: any): any;
+    deserialize?(data: any, klassProperty: string, objectProperty: string): any;
 
 }

@@ -5,12 +5,11 @@ import * as _ from 'lodash';
 
 export class PropertyRegistry {
 
-    public static objectProperties: Map<Function, Map<string, PropertyMetadata>> = new Map();
-    public static klassProperties: Map<Function, Map<string, PropertyMetadata>> = new Map();
+    public static properties: Map<Function, PropertyMetadata[]> = new Map();
 
 
     public static registerObjectProperty(type: Function, klassProperty: string, nameOrOptions?: string|PropertyOptions) {
-        this.initProperties(type);
+        const properties = this.findProperties(type);
 
         const propertyType = Reflection.getType(type.prototype, klassProperty);
 
@@ -44,25 +43,17 @@ export class PropertyRegistry {
             propertyMetadata.converter = converter;
         }
 
-        (<any> this.objectProperties.get(type)).set(objectProperty, propertyMetadata);
-        (<any> this.klassProperties.get(type)).set(klassProperty, propertyMetadata);
+        properties.push(propertyMetadata);
     }
 
-    public static initProperties(type: Function) {
+    public static findProperties(type: Function) {
+        let properties = this.properties.get(type);
 
-        let objectProperties = this.objectProperties.get(type);
-
-        if (typeof objectProperties === 'undefined') {
-            objectProperties = new Map();
-            this.objectProperties.set(type, objectProperties);
+        if (typeof properties === 'undefined') {
+            properties = [];
+            this.properties.set(type, properties);
         }
 
-        let klassProperties = this.klassProperties.get(type);
-
-        if (typeof klassProperties === 'undefined') {
-            klassProperties = new Map();
-            this.klassProperties.set(type, klassProperties);
-        }
-
+        return properties;
     }
 }

@@ -86,25 +86,20 @@ describe("PropertyRegistry", () => {
 
     function assertProperty(result: PropertyAssertResult) {
 
-        const objectProperties: any = PropertyRegistry.objectProperties.get(JsonPropertyRegistryTestClass);
+        const properties: any = PropertyRegistry.properties.get(JsonPropertyRegistryTestClass);
 
-        expect(objectProperties).not.to.be.undefined;
+        expect(properties).not.to.be.undefined;
 
-        const klassProperties: any = PropertyRegistry.klassProperties.get(JsonPropertyRegistryTestClass);
+        const metadata = properties.find(metadata => metadata.klassProperty === result.klassProperty);
 
-        expect(klassProperties).not.to.be.undefined;
+        expect(metadata).not.to.be.undefined;
 
-        const objectMetadata = objectProperties.get(result.objectProperty);
-        const klassMetadata = klassProperties.get(result.klassProperty);
-
-        expect(objectMetadata === klassMetadata).to.be.true;
-
-        expect(objectMetadata.klassProperty).to.be.equal(result.klassProperty);
-        expect(objectMetadata.objectProperty).to.be.equal(result.objectProperty);
-        expect(objectMetadata.propertyType).to.be.equal(result.propertyType);
+        expect(metadata.klassProperty).to.be.equal(result.klassProperty);
+        expect(metadata.objectProperty).to.be.equal(result.objectProperty);
+        expect(metadata.propertyType).to.be.equal(result.propertyType);
 
         if (typeof result.converter !== 'undefined') {
-            expect(objectMetadata.converter).to.be.equal(result.converter);
+            expect(metadata.converter).to.be.equal(result.converter);
         }
     }
 });
