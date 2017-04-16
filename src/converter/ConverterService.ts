@@ -1,6 +1,8 @@
 import {Service} from "../mvc/decorator/Service";
 import {PropertyRegistry} from "./PropertyRegistry";
 import {PropertyMetadata} from "./PropertyMetadata";
+import * as _ from "lodash";
+import {TypeUtil} from "../util/TypeUtil";
 import {Klass} from "../core/Klass";
 
 /**
@@ -9,126 +11,108 @@ import {Klass} from "../core/Klass";
 @Service()
 export class ConverterService {
 
-    // used to convert class to plain js object
-    public serialize(data: any, returnType: Function, baseType?: Function) {
-
-        switch (returnType.name) {
-
-            case "String":
-                return "" + data;
-
-            case "Number":
-                return +data;
-
-            case "Boolean":
-                if (data === 'true') return true;
-                if (data === 'false') return false;
-
-                return !!data;
-
-            case "Date":
-                return new Date(data);
-
-            case "Array":
-                return data.map(item => this.serialize(item, <Function> baseType));
-
-            default:
-                const type = data.constructor;
-
-                if (type.name === 'Map') {
-                    const result = {};
-
-                    data.forEach((value, key) => {
-                        result[key] = this.serialize(value, <Function> baseType);
-                    });
-
-                    return result;
-                }
-
-                const properties = PropertyRegistry.properties.get(type);
-
-                if (typeof properties !== 'undefined') {
-
-                    const result = {};
-
-                    properties.forEach((metadata: PropertyMetadata) => {
-
-                        let value = data[metadata.klassProperty];
-
-                        if (metadata.converter && metadata.converter.serialize) {
-                            value = metadata.converter.serialize(data, metadata.klassProperty, metadata.objectProperty);
-                        }
-
-                        result[metadata.objectProperty] = value;
-                    });
-
-                    return result;
-                }
-
-                return data;
-        }
-
-
-    }
-
-    // used to convert plain js object to class
-    public deserialize(data: any, returnType: Function, baseType?: Function) {
+    public convert(data: any, returnType: Function, baseType?: Function) {
 
         const type = data.constructor;
+        let properties;
 
-        switch (returnType.name) {
-            case 'String':
-                return "" + data;
-
-            case 'Number':
-                return +data;
-
-            case 'Boolean':
-                if (data === 'true') return true;
-                if (data === 'false') return false;
-
-                return !!data;
-
-            case 'Date':
-                return new Date(data);
-
-            case 'Array':
-                return data.map(item => this.deserialize(item, <Function> baseType));
-
-            default:
-
-                if (type.name === 'Map') {
-                    const result = {};
-
-                    data.forEach((value, key) => {
-                        result[key] = this.deserialize(value, <Function> baseType);
-                    });
-
-                    return result;
-                }
-
-                const properties = PropertyRegistry.properties.get(type);
-
-                if (typeof properties !== 'undefined') {
-                    const klass = <Klass> type;
-                    const instance = new klass();
-
-                    properties.forEach((metadata: PropertyMetadata) => {
-                        let value = data[metadata.objectProperty];
-
-                        if (metadata.converter && metadata.converter.deserialize) {
-                            value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);
-                        }
-
-                        instance[metadata.klassProperty] = value;
-                    });
-
-                    return instance;
-                }
-
-                return data;
-
+        if (returnType === type && typeof baseType === 'undefined') {
+            return data;
         }
-    }
 
+        if (_.isUndefined(data) || _.isNull(data)) {
+            return data;
+        }
+
+        if (returnType === String) {
+            return "" + data;
+        }
+
+        if (returnType === Number) {
+            return +data;
+        }
+
+        if (returnType === Boolean) {
+            if (data === 'true') return true;
+            if (data === 'false') return false;
+
+            return !!data;
+        }
+
+        if (returnType === Date) {
+            return new Date(data);
+        }
+
+        if (returnType === Array && type === Array && baseType) {
+            return data.map(item => this.convert(item, baseType));
+        }
+
+        if (returnType === Map && type === Map && baseType) {
+            const result = new Map();
+
+            data.forEach((value, key) => {
+                result.set(key, this.convert(value, baseType));
+            });
+
+            return result;
+        }
+
+        /*
+         *
+         * Convert class instance to object
+         * If provide a converter, and implement serialize function
+         * it will use serialize function result as the property value
+         *
+         */
+
+        properties = PropertyRegistry.properties.get(type);
+        if (returnType === Object && !TypeUtil.isSimpleType(type) && properties) {
+
+            const result = {};
+
+            properties.forEach((metadata: PropertyMetadata) => {
+                let value = data[metadata.klassProperty];
+
+                value = this.convert(value, metadata.propertyType);
+
+                if (metadata.converter && metadata.converter.serialize) {
+                    value = metadata.converter.serialize(data, metadata.klassProperty, metadata.objectProperty);
+                }
+
+                result[metadata.objectProperty] = value;
+            });
+
+            return result;
+        }
+
+        /*
+         *
+         * Convert object to class instance
+         * If provide a converter, and implement deserialize function
+         * it will use deserialize function result as the property value
+         *
+         */
+        properties = PropertyRegistry.properties.get(returnType);
+        if (type === Object && !TypeUtil.isSimpleType(returnType) && properties) {
+
+            const klass = <Klass> returnType;
+            const ins = new klass();
+
+            properties.forEach((metadata: PropertyMetadata) => {
+                let value = data[metadata.objectProperty];
+
+                value = this.convert(value, metadata.propertyType);
+
+                if (metadata.converter && metadata.converter.deserialize) {
+                    value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);
+                }
+
+                ins[metadata.klassProperty] = value;
+            });
+
+            return ins;
+        }
+
+        throw new Error(`not support convert data`);
+    }
 }
