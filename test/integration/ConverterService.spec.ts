@@ -1,62 +1,119 @@
 import "../TestHelper";
-import {JsonProperty} from "../../src/converter/decorator/JsonProperty";
-import {Convert} from "../../src/converter/decorator/Convert";
-import {IConverter} from "../../src/converter/interface/IConverter";
-import {ConverterService} from "../../src/converter/ConverterService";
+import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
+import {BodyParam, PathParam, QueryParam, Res} from "../../src/mvc/decorator/Params";
+import {Get, Post} from "../../src/mvc/decorator/Method";
+import {ServerHelper} from "../helper/ServerHelper";
+import {RestController} from "../../src/mvc/decorator/Controller";
+import * as Express from "express";
+import {HttpHelper} from "../helper/HttpHelper";
+import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
 
 
-describe('ConverterService', () => {
+describe('[Integration] ConverterService', () => {
 
-    const converterService = new ConverterService();
+    const d1 = new Date();
+    const d2 = new Date();
 
-    @Convert(String)
-    class StringConvertTestClass implements IConverter {
+    class Filter {
+
+        @ObjectProperty()
+        public name: string;
+
+        @ObjectProperty({baseType: Number})
+        public ids: number[];
     }
 
-    class Member {
+    class User {
 
-    }
-
-
-    class ConverterServiceTargetTestClass {
-
-        @JsonProperty()
-        private a: number;
-
-        @JsonProperty("created_at")
-        private createdAt: Date;
-
-
-        @JsonProperty({name: "updated_at", returnType: String})
-        private updatedAt: Date;
-
-        @JsonProperty({converter: StringConvertTestClass})
-        private testName: string;
-
-
-        @JsonProperty()
-        private members: Member[];
+        public name: string;
 
     }
 
-    it('should successfully convert class to target class', () => {
+    @RestController()
+    class UserController {
 
-        const data = {
-            "created_at": new Date()
-        };
+        @Get("/users")
+        public indexAction(@QueryParam("filter") filter: Filter,
+                           @Res() res: Express.Response) {
 
-        const result: any = converterService.deserialize(data, ConverterServiceTargetTestClass);
+            if (!(filter instanceof Filter)) {
+                return res.send('1');
+            }
 
-        (result instanceof ConverterServiceTargetTestClass).should.be.true;
+            if (filter.name !== 'abc') {
+                return res.send('2');
+            }
 
-        (result.a instanceof Number).should.be.true;
-        (result.createdAt instanceof Date).should.be.true;
-        (result.updatedAt instanceof String).should.be.true;
-        (result.members instanceof Array).should.be.true;
-        (result.testName instanceof String).should.be.true;
+            if (!(filter.ids instanceof Array)) {
+                return res.send('3');
+            }
 
+            if (filter.ids[0] !== 1) {
+                return res.send('4');
+            }
+
+            return res.send(true);
+        }
+
+        @Get("/users/:id")
+        public showAction(@PathParam("id") id: number,
+                          @Res() res: Express.Response) {
+
+            const flag = id === 1;
+            res.send(flag);
+        }
+
+        @Post("/users")
+        public createAction(@BodyParam('user') user: User,
+                            @Res() res: Express.Response) {
+
+            const flag = user instanceof User;
+            res.send(flag);
+        }
+    }
+
+
+    const app = ServerHelper.simpleServer();
+    let server;
+
+    before(done => {
+
+        const routes = ControllerRegistry.getRoutes(UserController);
+
+        routes.forEach((router, baseUrl) => {
+            app.use(baseUrl, router);
+        });
+
+        server = app.listen(4444, done);
     });
 
+    after(done => {
+        server.close(done);
+    });
+
+
+    it('should convert a QueryParam', () => {
+
+        const options = {
+            qs: {
+                filter: {
+                    name: "abc",
+                    ids: [1, 2, 3]
+                }
+            }
+        };
+
+        return HttpHelper.sendRequest("get", "http://localhost:4444/users", options, (response) => {
+            response.statusCode.should.be.equal(200);
+            response.body.should.be.equal(true);
+        });
+    });
+
+
+
+    it('should convert in QueryParam', () => {
+
+    });
 
 
 

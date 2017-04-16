@@ -5,4 +5,6 @@ export interface PropertyOptions {
     name?: string;
 
     converter?: IConverter;
+
+    baseType?: Function;
 }

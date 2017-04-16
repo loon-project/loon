@@ -8,7 +8,7 @@ import {Get} from "../../src/mvc/decorator/Method";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
 
-describe("Filter integration", () => {
+describe("[Integration] Filter", () => {
 
     @Filter()
     class UserFilter implements IMiddleware {

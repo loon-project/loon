@@ -5,7 +5,7 @@ import {DependencyRegistry} from "../../src/di/DependencyRegistry";
 import {DIException} from "../../src/di/error/DIException";
 
 
-describe('Dependency Injection', () => {
+describe('[Integration] Dependency Injection', () => {
 
     @Component()
     class AComponent {

@@ -73,7 +73,7 @@ export class ConverterService {
             properties.forEach((metadata: PropertyMetadata) => {
                 let value = data[metadata.klassProperty];
 
-                value = this.convert(value, metadata.propertyType);
+                value = this.convert(value, metadata.propertyType, metadata.baseType);
 
                 if (metadata.converter && metadata.converter.serialize) {
                     value = metadata.converter.serialize(data, metadata.klassProperty, metadata.objectProperty);
@@ -101,7 +101,7 @@ export class ConverterService {
             properties.forEach((metadata: PropertyMetadata) => {
                 let value = data[metadata.objectProperty];
 
-                value = this.convert(value, metadata.propertyType);
+                value = this.convert(value, metadata.propertyType, metadata.baseType);
 
                 if (metadata.converter && metadata.converter.deserialize) {
                     value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);

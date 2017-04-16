@@ -6,7 +6,14 @@ import {DependencyRegistry} from "../di/DependencyRegistry";
 import * as _ from 'lodash';
 import {ParamRequired} from "./error/ParamRequired";
 import {Caster} from "../caster/Caster";
+import {ConverterService} from "../converter/ConverterService";
 
+/**
+ * Transform a handler to a express handler
+ *
+ * Support required param check, and param convert for PathParam, BodyParam, QueryParam
+ *
+ */
 export class HandlerTransformer {
 
     private _handlerMetadata: HandlerMetadata;
@@ -59,20 +66,53 @@ export class HandlerTransformer {
 
         const args: any[] = [];
 
+        let converter;
+
+        try {
+            converter = DependencyRegistry.get(ConverterService);
+        } catch (e) {
+            converter = new ConverterService();
+            DependencyRegistry.set(ConverterService, converter);
+        }
+
         this.handlerMetadata.params.forEach(param => {
 
             switch (param.paramType) {
+                case ParamType.Path:
+
+                    let path = _.get(request.params, param.expression);
+
+                    if (param.required && typeof path === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    path = converter.convert(path, param.returnType);
+                    args.push(path);
+                    return;
+
                 case ParamType.Body:
 
-                    const body = _.get(request.body, param.expression);
+                    let body = _.get(request.body, param.expression);
 
                     if (param.required && typeof body === 'undefined') {
                         throw new ParamRequired(param.expression);
                     }
 
-                    const castedBody = Caster.cast(body, param.returnType);
+                    body = converter.convert(body, param.returnType);
 
-                    args.push(castedBody);
+                    args.push(body);
+                    return;
+
+                case ParamType.Query:
+
+                    let query = _.get(request.query, param.expression);
+
+                    if (param.required && typeof query === 'undefined') {
+                        throw new ParamRequired(param.expression);
+                    }
+
+                    query = converter.convert(query, param.returnType);
+                    args.push(query);
                     return;
 
                 case ParamType.Cookie:
@@ -88,30 +128,6 @@ export class HandlerTransformer {
                     args.push(castedCookie);
                     return;
 
-                case ParamType.Path:
-
-                    const path = _.get(request.params, param.expression);
-
-                    if (param.required && typeof path === 'undefined') {
-                        throw new ParamRequired(param.expression);
-                    }
-
-                    const castedPath = Caster.cast(path, param.returnType);
-                    args.push(castedPath);
-                    return;
-
-                case ParamType.Query:
-
-                    const query = _.get(request.query, param.expression);
-
-                    if (param.required && typeof query === 'undefined') {
-                        throw new ParamRequired(param.expression);
-                    }
-
-                    const castedQuery = Caster.cast(query, param.returnType);
-                    args.push(castedQuery);
-                    return;
-
                 case ParamType.Header:
 
                     const header = request.header(param.expression);
@@ -120,8 +136,7 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    const castedHeader = Caster.cast(header, param.returnType);
-                    args.push(castedHeader);
+                    args.push(header);
                     return;
 
                 case ParamType.Error:

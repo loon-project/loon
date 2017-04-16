@@ -6,7 +6,7 @@ import {DIContainer} from "../../src/di/DIContainer";
 import {ConfigException} from "../../src/config/error/ConfigException";
 
 
-describe("Config integration", () => {
+describe("[Integration] Config", () => {
 
     const path = Path.resolve(process.cwd(), "test/fixture/application.json");
 

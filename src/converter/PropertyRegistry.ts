@@ -15,6 +15,7 @@ export class PropertyRegistry {
 
         let objectProperty = klassProperty;
         let converter;
+        let baseType;
 
         if (typeof nameOrOptions !== 'undefined') {
 
@@ -34,13 +35,21 @@ export class PropertyRegistry {
                     converter = options.converter;
                 }
 
+                if (typeof options.baseType !== 'undefined') {
+                    baseType = options.baseType;
+                }
+
             }
         }
 
         const propertyMetadata = new PropertyMetadata(type, klassProperty, objectProperty, propertyType);
 
-        if (typeof converter !== 'undefined') {
+        if (converter) {
             propertyMetadata.converter = converter;
+        }
+
+        if (baseType) {
+            propertyMetadata.baseType = baseType;
         }
 
         properties.push(propertyMetadata);

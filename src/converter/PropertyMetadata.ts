@@ -12,6 +12,7 @@ export class PropertyMetadata {
 
     private _converter: IConverter;
 
+    private _baseType: Function;
 
     get type(): Function {
         return this._type;
@@ -37,6 +38,13 @@ export class PropertyMetadata {
         this._converter = value;
     }
 
+    get baseType(): Function {
+        return this._baseType;
+    }
+
+    set baseType(value: Function) {
+        this._baseType = value;
+    }
 
     constructor(type: Function, klassProperty: string, objectProperty: string, propertyType: Function) {
         this._type = type;
