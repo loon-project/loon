@@ -1,11 +1,10 @@
 import {HandlerMetadata} from "./HandlerMetadata";
-import * as Express from 'express';
+import * as Express from "express";
 import {ParamType} from "./enum/ParamType";
 import {Klass} from "../core/Klass";
 import {DependencyRegistry} from "../di/DependencyRegistry";
-import * as _ from 'lodash';
+import * as _ from "lodash";
 import {ParamRequired} from "./error/ParamRequired";
-import {Caster} from "../caster/Caster";
 import {ConverterService} from "../converter/ConverterService";
 
 /**
@@ -123,9 +122,7 @@ export class HandlerTransformer {
                         throw new ParamRequired(param.expression);
                     }
 
-                    const castedCookie = Caster.cast(cookie, param.returnType);
-
-                    args.push(castedCookie);
+                    args.push(cookie);
                     return;
 
                 case ParamType.Header:
