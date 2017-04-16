@@ -1,6 +1,9 @@
 import {Service} from "../mvc/decorator/Service";
 import * as _ from 'lodash';
 
+/**
+ * ConverterService used to convert class to object and vice-versa.
+ */
 @Service()
 export class ConverterService {
 
@@ -9,7 +12,9 @@ export class ConverterService {
     private cachedJsonToKlassTemplates: Map<Function, any> = new Map();
 
     // used to convert class to plain js object
-    public serialize(data: any) {
+    public serialize<T>(data: T) {
+
+
     }
 
     // used to convert plain js object to class

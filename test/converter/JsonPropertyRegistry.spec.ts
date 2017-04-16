@@ -86,9 +86,9 @@ describe("JsonPropertyRegistry", () => {
 
         expect(jsonProperty).not.be.undefined;
         expect(jsonProperty.type).to.equal(JsonPropertyRegistryTestClass);
-        expect(jsonProperty.propertyName).to.equal(result.propertyName);
+        expect(jsonProperty.klassProperty).to.equal(result.propertyName);
         expect(jsonProperty.propertyType).to.equal(result.propertyType);
-        expect(jsonProperty.jsonName).to.equal(result.jsonName);
+        expect(jsonProperty.objectProperty).to.equal(result.jsonName);
         expect(jsonProperty.jsonType).to.equal(result.jsonType);
     }
 });

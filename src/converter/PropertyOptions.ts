@@ -1,10 +1,8 @@
 import {IConverter} from "./interface/IConverter";
 
-export interface JsonPropertyOptions {
+export interface PropertyOptions {
 
     name?: string;
 
     converter?: IConverter;
-
-    type?: Function;
 }
