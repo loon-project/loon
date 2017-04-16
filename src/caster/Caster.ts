@@ -10,19 +10,18 @@ export class Caster {
                 switch (returnType.name) {
 
                     case "String":
-                        return value.toString();
+
+                        return "" + value;
 
                     case "Boolean":
-                        if (value === 'true') {
-                            return true;
-                        } else if (value === 'false') {
-                            return false;
-                        } else {
-                            throw new Error(`[TYPED] cast ${value} to boolean error`);
-                        }
+
+                        if (value === 'true') return true;
+                        if (value === 'false') return false;
+
+                        return !!value;
 
                     case "Number":
-                        return parseInt(value, 10);
+                        return +value;
 
                     case "Object":
                         return value;
@@ -30,6 +29,7 @@ export class Caster {
                 }
 
             } else {
+
                 throw new Error(`[TYPED] not support cast to type: ${returnType.name}`);
             }
 

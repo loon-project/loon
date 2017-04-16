@@ -1,6 +1,6 @@
 export class Reflection {
 
-    public static getType(type: Function, key?: string) {
+    public static getType(type: any, key?: string) {
         return (<any> Reflect).getMetadata("design:type", type, key);
     }
 

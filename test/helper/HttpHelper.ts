@@ -1,8 +1,9 @@
 import * as Chakram from "chakram";
 
 export interface RequestOption {
-    body: any;
+    body?: any;
     headers?: any;
+    qs?: any;
 }
 
 export class HttpHelper {
