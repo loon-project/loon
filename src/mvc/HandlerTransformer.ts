@@ -65,14 +65,7 @@ export class HandlerTransformer {
 
         const args: any[] = [];
 
-        let converter;
-
-        try {
-            converter = DependencyRegistry.get(ConverterService);
-        } catch (e) {
-            converter = new ConverterService();
-            DependencyRegistry.set(ConverterService, converter);
-        }
+        const converter = DependencyRegistry.get(ConverterService);
 
         this.handlerMetadata.params.forEach(param => {
 
