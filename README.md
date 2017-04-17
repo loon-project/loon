@@ -218,17 +218,23 @@ export class HomeController {
 }
 ```
 
-> <h3>Use converter service</h3>
+> <h3>Type convert in parameters</h3>
 
 ```typescript
 
 class User {
 
-    @ObjectProperty() // <= the property you want to convert
+    // decorate the property you want to convert
+    @ObjectProperty()
     public name: string;
 
-    @ObjectProperty({baseType: Number}) // <= if it is an array or an map, you need to provide the baseType
+    // if it is an array or an map, you need to provide the baseType
+    @ObjectProperty({baseType: Number})
     public ids: number[];
+
+    // provide an alias name, or pass in {name: "created_at"} is also valid
+    @ObjectProperty("created_at")
+    public createdAt: Date;
 
 }
 
@@ -248,6 +254,29 @@ the converter service will automatic convert the data from user to the type.
 !! Must use @ObjectProperty to decorate the property you want to convert
 
 
+> <h3>Use convert service</h3>
+
+```typescript
+const userObj = {
+    name: "tester",
+    ids: [1, 2, 3],
+    created_at: "2017-04-17T00:59:56.729Z"
+}
+
+class UserService {
+    constructor(private converter: ConverterService) {}
+
+    public findUser() {
+
+        // first parameter is the data need to convert
+        // second parameter is the target type
+        // if second parameter is Array or Map, you need provide the baseType in the third parameter
+        const user = this.converter.convert(userObj, User);
+
+        user instanceof User // true
+    }
+}
+```
 
 <h2 align="center">Quick start</h2>
 
