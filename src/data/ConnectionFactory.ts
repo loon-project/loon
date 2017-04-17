@@ -16,7 +16,7 @@ export class ConnectionFactory {
             this.connection = Knex(ConfigContainer.get(`database.${env}`));
         } else {
             const knexfile = Path.join(dbDir, 'knexfile.js');
-            this.connection(require(knexfile)[env]);
+            this.connection = Knex(require(knexfile)[env]);
         }
 
     }
