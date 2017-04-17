@@ -156,7 +156,7 @@ export class ApplicationLoader {
             });
 
         LogFactory.init(this.configDir, this.logDir, this.env);
-        ConnectionFactory.init(this.configDir, this.env);
+        ConnectionFactory.init(this.configDir, this.dbDir, this.env);
 
         return this;
     }

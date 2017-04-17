@@ -6,7 +6,7 @@ export class ConnectionFactory {
 
     private static connection: Knex;
 
-    public static init(configDir: string, env: string) {
+    public static init(configDir: string, dbDir: string, env: string) {
 
         const databaseConfig = Path.join(configDir, 'database.json');
 
@@ -14,6 +14,9 @@ export class ConnectionFactory {
 
         if (ConfigContainer.get(`database.${env}`)) {
             this.connection = Knex(ConfigContainer.get(`database.${env}`));
+        } else {
+            const knexfile = Path.join(dbDir, 'knexfile.js');
+            this.connection(require(knexfile)[env]);
         }
 
     }
