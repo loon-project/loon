@@ -1,6 +1,6 @@
 {
   "name": "typed-framework",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "engines": {
     "node": ">=6.0.0"
