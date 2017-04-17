@@ -302,6 +302,10 @@ for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-frame
 
 <h2 align="center">Release note</h2>
 
+### v0.7.0 (2017-04-17)
+* add type convert in controller parameters
+* add ConverterService to convert data
+
 ### v0.6.0 (2017-03-17)
 * add required parameter options
 * add @Head, @Options http request
