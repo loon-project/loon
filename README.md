@@ -244,7 +244,8 @@ export class UserController {
 
     @Post("/users")
     public createAction(@BodyParam("user") user: User) {
-      ...
+        user instanceof User // true
+        ...
     }
 }
 ```
