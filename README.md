@@ -250,8 +250,8 @@ export class UserController {
 }
 ```
 
-Support @BodyParam, @PathParam, @QueryParam, based on the type you provided,
-the converter service will automatic convert the data from user to the type.
+Support @BodyParam, @PathParam, @QueryParam, based on the type you provided, <br>
+the converter service will automatic convert the data from user to the type. <br>
 !! Must use @ObjectProperty to decorate the property you want to convert
 
 
