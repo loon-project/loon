@@ -2,11 +2,26 @@ import "../TestHelper";
 import {expect} from 'chai';
 import {ConverterService} from "../../src/converter/ConverterService";
 import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
+import {IConverter} from "../../src/converter/interface/IConverter";
+import {Service} from "../../src/mvc/decorator/Service";
 
 
 describe('ConverterService', () => {
 
     const converter = new ConverterService();
+
+    @Service()
+    class ATestClassImplementIConverter implements IConverter {
+
+
+        public serialize(data: ATestConverterClassTarget, klassProperty: string, objectProperty: string): any {
+            return data.updatedAt.toISOString();
+        }
+
+        public deserialize(data: any, klassProperty: string, objectProperty: string): any {
+            return data.name;
+        }
+    }
 
     class ATestConverterClassTarget {
 
@@ -18,6 +33,9 @@ describe('ConverterService', () => {
 
         @ObjectProperty("updated_at")
         public updatedAt: Date;
+
+        @ObjectProperty({converter: ATestClassImplementIConverter})
+        public converter: string;
     }
 
     const d1 = new Date();
@@ -116,6 +134,21 @@ describe('ConverterService', () => {
 
         const obj = convertedMap.get('key');
         assertObject(obj);
+    });
+
+    it('should convert an object to an class instance with converter deserialize', () => {
+
+        const ins = converter.convert(objExample, ATestConverterClassTarget);
+
+        assertInstance(ins);
+        expect(ins.converter).to.be.equal(objExample.name);
+    });
+
+    it('should convert a class instance to an object with converter serialize', () => {
+
+        const obj = converter.convert(insExample, Object);
+        assertObject(obj);
+        expect(obj.converter).to.be.equal(insExample.updatedAt.toISOString());
     });
 
 

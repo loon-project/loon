@@ -13,6 +13,10 @@ export class ConverterService {
 
     public convert(data: any, returnType: Function, baseType?: Function) {
 
+        if (_.isUndefined(data) || _.isNull(data)) {
+            return data;
+        }
+
         const type = data.constructor;
         let properties;
 
@@ -20,9 +24,6 @@ export class ConverterService {
             return data;
         }
 
-        if (_.isUndefined(data) || _.isNull(data)) {
-            return data;
-        }
 
         if (returnType === String) {
             return "" + data;

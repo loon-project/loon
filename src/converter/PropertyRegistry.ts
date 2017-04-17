@@ -2,6 +2,8 @@ import {PropertyMetadata} from "./PropertyMetadata";
 import {PropertyOptions} from "./PropertyOptions";
 import {Reflection} from "../core/Reflection";
 import * as _ from 'lodash';
+import {DependencyRegistry} from "../di/DependencyRegistry";
+import {Klass} from "../core/Klass";
 
 export class PropertyRegistry {
 
@@ -32,7 +34,7 @@ export class PropertyRegistry {
                 }
 
                 if (typeof options.converter !== 'undefined') {
-                    converter = options.converter;
+                    converter = DependencyRegistry.get(<Klass> options.converter);
                 }
 
                 if (typeof options.baseType !== 'undefined') {

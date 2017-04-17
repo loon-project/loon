@@ -3,13 +3,18 @@ import {expect} from "chai";
 import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
 import {PropertyRegistry} from "../../src/converter/PropertyRegistry";
 import {IConverter} from "../../src/converter/interface/IConverter";
+import {Service} from "../../src/mvc/decorator/Service";
+import {DependencyRegistry} from "../../src/di/DependencyRegistry";
 
 
 describe("PropertyRegistry", () => {
 
+    @Service()
     class ATestConverter {
 
     }
+
+    const converter = DependencyRegistry.get(ATestConverter);
 
     class JsonPropertyRegistryTestClass {
 
@@ -62,7 +67,7 @@ describe("PropertyRegistry", () => {
             klassProperty: 'converter',
             objectProperty: 'converter',
             propertyType: String,
-            converter: ATestConverter
+            converter: converter
         });
     });
 
@@ -72,7 +77,7 @@ describe("PropertyRegistry", () => {
             klassProperty: 'isFlag',
             objectProperty: 'is_flag',
             propertyType: Boolean,
-            converter: ATestConverter
+            converter: converter
         });
     });
 
