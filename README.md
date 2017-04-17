@@ -218,6 +218,35 @@ export class HomeController {
 }
 ```
 
+> <h3>Use converter service</h3>
+
+```typescript
+
+class User {
+
+    @ObjectProperty() // <= the property you want to convert
+    public name: string;
+
+    @ObjectProperty({baseType: Number}) // <= if it is an array or an map, you need to provide the baseType
+    public ids: number[];
+
+}
+
+
+@RestController()
+export class UserController {
+
+    @Post("/users")
+    public createAction(@BodyParam("user") user: User) {
+      ...
+    }
+}
+```
+
+Support @BodyParam, @PathParam, @QueryParam, based on the type you provided,
+the converter service will automatic convert the data from user to the type.
+!! Must use @ObjectProperty to decorate the property you want to convert
+
 
 
 <h2 align="center">Quick start</h2>
