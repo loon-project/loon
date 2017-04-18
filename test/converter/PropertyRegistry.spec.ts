@@ -1,6 +1,6 @@
 import "../TestHelper";
 import {expect} from "chai";
-import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
+import {Property} from "../../src/converter/decorator/Property";
 import {PropertyRegistry} from "../../src/converter/PropertyRegistry";
 import {IConverter} from "../../src/converter/interface/IConverter";
 import {Service} from "../../src/mvc/decorator/Service";
@@ -18,19 +18,19 @@ describe("PropertyRegistry", () => {
 
     class JsonPropertyRegistryTestClass {
 
-        @ObjectProperty()
+        @Property()
         private name: string;
 
-        @ObjectProperty("created_at")
+        @Property("created_at")
         private createdAt: Date;
 
-        @ObjectProperty({name: "updated_at"})
+        @Property({name: "updated_at"})
         private updatedAt: Date;
 
-        @ObjectProperty({converter: ATestConverter})
+        @Property({converter: ATestConverter})
         private converter: string;
 
-        @ObjectProperty({name: "is_flag", converter: ATestConverter})
+        @Property({name: "is_flag", converter: ATestConverter})
         private isFlag: boolean;
     }
 

@@ -1,7 +1,7 @@
 import {PropertyRegistry} from "../PropertyRegistry";
 import {PropertyOptions} from "../PropertyOptions";
 
-export function ObjectProperty(nameOrOptions?: string|PropertyOptions) {
+export function Property(nameOrOptions?: string|PropertyOptions) {
 
     return (target: any, propertyName: string) => {
 

@@ -6,7 +6,7 @@ import {ServerHelper} from "../helper/ServerHelper";
 import {RestController} from "../../src/mvc/decorator/Controller";
 import * as Express from "express";
 import {HttpHelper} from "../helper/HttpHelper";
-import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
+import {Property} from "../../src/converter/decorator/Property";
 import {bootstrap} from "../../src/testing/bootstrap";
 
 
@@ -17,16 +17,16 @@ describe('[Integration] ConverterService', () => {
 
     class Filter {
 
-        @ObjectProperty()
+        @Property()
         public name: string;
 
-        @ObjectProperty({baseType: Number})
+        @Property({baseType: Number})
         public ids: number[];
 
-        @ObjectProperty("created_at")
+        @Property("created_at")
         public createdAt: Date;
 
-        @ObjectProperty("is_draft")
+        @Property("is_draft")
         public isDraft: boolean;
     }
 

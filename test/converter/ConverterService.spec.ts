@@ -1,9 +1,10 @@
 import "../TestHelper";
 import {expect} from 'chai';
 import {ConverterService} from "../../src/converter/ConverterService";
-import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
+import {Property} from "../../src/converter/decorator/Property";
 import {IConverter} from "../../src/converter/interface/IConverter";
 import {Service} from "../../src/mvc/decorator/Service";
+import {PropertyInherited} from "../../src/converter/decorator/PropertyInherited";
 
 
 describe('ConverterService', () => {
@@ -23,18 +24,26 @@ describe('ConverterService', () => {
         }
     }
 
-    class ATestConverterClassTarget {
+    class ATestConverterBaseClass {
 
-        @ObjectProperty()
+        @Property()
+        public id: number;
+
+    }
+
+    @PropertyInherited(ATestConverterBaseClass)
+    class ATestConverterClassTarget extends ATestConverterBaseClass {
+
+        @Property()
         public name: string;
 
-        @ObjectProperty("created_at")
+        @Property("created_at")
         public createdAt: String;
 
-        @ObjectProperty("updated_at")
+        @Property("updated_at")
         public updatedAt: Date;
 
-        @ObjectProperty({converter: ATestClassImplementIConverter})
+        @Property({converter: ATestClassImplementIConverter})
         public converter: string;
     }
 
@@ -42,12 +51,14 @@ describe('ConverterService', () => {
     const d2 = new Date();
 
     const objExample = {
+        id: 1,
         name: "aName",
         created_at: d1.toISOString(),
         updated_at: d2.toISOString()
     };
 
     const insExample = new ATestConverterClassTarget();
+    insExample.id = 2;
     insExample.name = "FFF";
     insExample.createdAt = d1.toISOString();
     insExample.updatedAt = d2;
@@ -168,12 +179,14 @@ describe('ConverterService', () => {
 
     function assertInstance(ins) {
         expect(ins).not.to.be.undefined;
+        expect(ins.id).to.be.equal(1);
         expect(ins.name).to.be.equal('aName');
         expect(ins.createdAt).to.be.equal(d1.toISOString());
         expect(ins.updatedAt.getTime()).to.be.equal(d2.getTime());
     }
 
     function assertObject(obj) {
+        expect(obj.id).to.be.equal(2);
         expect(obj.name).to.be.equal('FFF');
         expect(obj.created_at).to.be.equal(d1.toISOString());
         expect(obj.updated_at.getTime()).to.be.equal(d2.getTime());

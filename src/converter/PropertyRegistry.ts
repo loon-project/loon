@@ -57,6 +57,19 @@ export class PropertyRegistry {
         properties.push(propertyMetadata);
     }
 
+    public static registerInherited(type: Function, inherited: Function) {
+        const inheritedProperties = this.findProperties(inherited);
+        const properties = this.findProperties(type);
+
+        inheritedProperties.forEach((property: PropertyMetadata) => {
+            const foundProperty = properties.find(item => item.klassProperty === property.klassProperty);
+
+            if (typeof foundProperty === 'undefined') {
+                properties.push(property);
+            }
+        });
+    }
+
     public static findProperties(type: Function) {
         let properties = this.properties.get(type);
 
