@@ -7,6 +7,7 @@ import {RestController} from "../../src/mvc/decorator/Controller";
 import * as Express from "express";
 import {HttpHelper} from "../helper/HttpHelper";
 import {ObjectProperty} from "../../src/converter/decorator/ObjectProperty";
+import {bootstrap} from "../../src/testing/bootstrap";
 
 
 describe('[Integration] ConverterService', () => {
@@ -115,24 +116,7 @@ describe('[Integration] ConverterService', () => {
         }
     }
 
-
-    const app = ServerHelper.simpleServer();
-    let server;
-
-    before(done => {
-
-        const routes = ControllerRegistry.getRoutes(UserController);
-
-        routes.forEach((router, baseUrl) => {
-            app.use(baseUrl, router);
-        });
-
-        server = app.listen(4444, done);
-    });
-
-    after(done => {
-        server.close(done);
-    });
+    bootstrap(UserController, 4444);
 
     const filter = {
         name: "abc",

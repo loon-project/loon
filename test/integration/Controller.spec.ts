@@ -5,6 +5,7 @@ import {Get, Post, Put, Patch, Delete, Head, Options} from "../../src/mvc/decora
 import {Res} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
+import {bootstrap} from "../../src/testing/bootstrap";
 
 describe("[Integration] Controller", () => {
 
@@ -43,23 +44,7 @@ describe("[Integration] Controller", () => {
         }
     }
 
-    const app: Express.Application = Express();
-    let server;
-
-    before(done => {
-
-        const routes = ControllerRegistry.getRoutes(User1Controller);
-
-        routes.forEach((route, baseUrl) => {
-            app.use(baseUrl, route);
-        });
-
-        server = app.listen(4444, done);
-    });
-
-    after(done => {
-        server.close(done);
-    });
+    bootstrap(User1Controller, 4444);
 
     it("should respond get request", () => {
         return HttpHelper.sendRequest("get", "http://localhost:4444/1/users", undefined, (response) => {

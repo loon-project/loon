@@ -7,6 +7,7 @@ import * as Express from 'express';
 import {Get} from "../../src/mvc/decorator/Method";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
+import {bootstrap} from "../../src/testing/bootstrap";
 
 describe("[Integration] Filter", () => {
 
@@ -85,28 +86,7 @@ describe("[Integration] Filter", () => {
 
     }
 
-
-    const app: Express.Application = Express();
-    let server;
-
-    before(done => {
-
-        [UsersController, Users2Controller, Users3Controller].map(controller => {
-
-            const routes = ControllerRegistry.getRoutes(controller);
-
-            routes.forEach((route, baseUrl) => {
-                app.use(baseUrl, route);
-            });
-        });
-
-
-        server = app.listen(4444, done);
-    });
-
-    after(done => {
-        server.close(done);
-    });
+    bootstrap([UsersController, Users2Controller, Users3Controller], 4444);
 
     it('should successfully use BeforeFilter', () => {
         return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
