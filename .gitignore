@@ -48,3 +48,4 @@ test/**/*.js
 test/**/*.js.map
 dts
 
+**/*/.DS_Store
