@@ -17,7 +17,9 @@
       "node",
       "express",
       "reflect-metadata",
-      "winston"
+      "winston",
+      "chai",
+      "mocha"
     ]
   },
 
