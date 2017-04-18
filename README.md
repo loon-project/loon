@@ -225,15 +225,15 @@ export class HomeController {
 class User {
 
     // decorate the property you want to convert
-    @ObjectProperty()
+    @Property()
     public name: string;
 
     // if it is an array or an map, you need to provide the baseType
-    @ObjectProperty({baseType: Number})
+    @Property({baseType: Number})
     public ids: number[];
 
     // provide an alias name, or pass in {name: "created_at"} is also valid
-    @ObjectProperty("created_at")
+    @Property("created_at")
     public createdAt: Date;
 
 }
@@ -252,7 +252,7 @@ export class UserController {
 
 Support @BodyParam, @PathParam, @QueryParam, based on the type you provided, <br>
 the converter service will automatic convert the data from user to the type. <br>
-!! Must use @ObjectProperty to decorate the property you want to convert
+!! Must use @Property to decorate the property you want to convert
 
 
 > <h3>Use convert service</h3>
@@ -302,9 +302,14 @@ for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-frame
 
 <h2 align="center">Release note</h2>
 
+### v0.8.0 (2017-04-18)
+* add test solution: use bootstrap function
+* add PropertyInherited decorator
+
 ### v0.7.0 (2017-04-17)
 * add type convert in controller parameters
 * add ConverterService to convert data
+* add Property decorator
 
 ### v0.6.0 (2017-03-17)
 * add required parameter options
