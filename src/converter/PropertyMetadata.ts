@@ -14,6 +14,10 @@ export class PropertyMetadata {
 
     private _baseType: Function;
 
+    private _serialize: boolean;
+
+    private _deserialize: boolean;
+
     get type(): Function {
         return this._type;
     }
@@ -38,6 +42,14 @@ export class PropertyMetadata {
         this._converter = value;
     }
 
+    get serialize(): boolean {
+        return this._serialize;
+    }
+
+    get deserialize(): boolean {
+        return this._deserialize;
+    }
+
     get baseType(): Function {
         return this._baseType;
     }
@@ -46,10 +58,12 @@ export class PropertyMetadata {
         this._baseType = value;
     }
 
-    constructor(type: Function, klassProperty: string, objectProperty: string, propertyType: Function) {
+    constructor(type: Function, klassProperty: string, objectProperty: string, propertyType: Function, serialize: boolean, deserialize: boolean) {
         this._type = type;
         this._objectProperty = objectProperty;
         this._klassProperty = klassProperty;
         this._propertyType = propertyType;
+        this._serialize = serialize;
+        this._deserialize = deserialize;
     }
 }

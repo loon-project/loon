@@ -18,6 +18,8 @@ export class PropertyRegistry {
         let objectProperty = klassProperty;
         let converter;
         let baseType;
+        let serialize = true;
+        let deserialize = true;
 
         if (typeof nameOrOptions !== 'undefined') {
 
@@ -41,10 +43,18 @@ export class PropertyRegistry {
                     baseType = options.baseType;
                 }
 
+                if (typeof options.serialize !== 'undefined') {
+                    serialize = options.serialize;
+                }
+
+                if (typeof options.deserialize !== 'undefined') {
+                    deserialize = options.deserialize;
+                }
+
             }
         }
 
-        const propertyMetadata = new PropertyMetadata(type, klassProperty, objectProperty, propertyType);
+        const propertyMetadata = new PropertyMetadata(type, klassProperty, objectProperty, propertyType, serialize, deserialize);
 
         if (converter) {
             propertyMetadata.converter = converter;

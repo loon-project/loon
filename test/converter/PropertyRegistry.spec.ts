@@ -32,6 +32,12 @@ describe("PropertyRegistry", () => {
 
         @Property({name: "is_flag", converter: ATestConverter})
         private isFlag: boolean;
+
+        @Property({serialize: false})
+        private serializeFalse: boolean;
+
+        @Property({deserialize: false})
+        private deserializeFalse: boolean;
     }
 
     it('should register json property', () => {
@@ -39,7 +45,9 @@ describe("PropertyRegistry", () => {
         assertProperty({
             klassProperty: 'name',
             objectProperty: 'name',
-            propertyType: String
+            propertyType: String,
+            serialize: true,
+            deserialize: true
         });
     });
 
@@ -48,7 +56,9 @@ describe("PropertyRegistry", () => {
         assertProperty({
             klassProperty: 'createdAt',
             objectProperty: 'created_at',
-            propertyType: Date
+            propertyType: Date,
+            serialize: true,
+            deserialize: true
         });
     });
 
@@ -57,7 +67,9 @@ describe("PropertyRegistry", () => {
         assertProperty({
             klassProperty: 'updatedAt',
             objectProperty: 'updated_at',
-            propertyType: Date
+            propertyType: Date,
+            serialize: true,
+            deserialize: true
         });
     });
 
@@ -67,7 +79,9 @@ describe("PropertyRegistry", () => {
             klassProperty: 'converter',
             objectProperty: 'converter',
             propertyType: String,
-            converter: converter
+            converter: converter,
+            serialize: true,
+            deserialize: true
         });
     });
 
@@ -77,7 +91,31 @@ describe("PropertyRegistry", () => {
             klassProperty: 'isFlag',
             objectProperty: 'is_flag',
             propertyType: Boolean,
-            converter: converter
+            converter: converter,
+            serialize: true,
+            deserialize: true
+        });
+    });
+
+    it('should register property with serialize options', () => {
+
+        assertProperty({
+            klassProperty: 'serializeFalse',
+            objectProperty: 'serializeFalse',
+            propertyType: Boolean,
+            serialize: false,
+            deserialize: true
+        });
+    });
+
+    it('should register property with deserialize options', () => {
+
+        assertProperty({
+            klassProperty: 'deserializeFalse',
+            objectProperty: 'deserializeFalse',
+            propertyType: Boolean,
+            serialize: true,
+            deserialize: false
         });
     });
 
@@ -86,6 +124,8 @@ describe("PropertyRegistry", () => {
         klassProperty: string;
         objectProperty: string;
         propertyType: Function;
+        serialize: boolean;
+        deserialize: boolean;
         converter?: IConverter;
     }
 
@@ -102,6 +142,8 @@ describe("PropertyRegistry", () => {
         expect(metadata.klassProperty).to.be.equal(result.klassProperty);
         expect(metadata.objectProperty).to.be.equal(result.objectProperty);
         expect(metadata.propertyType).to.be.equal(result.propertyType);
+        expect(metadata.serialize).to.be.equal(result.serialize);
+        expect(metadata.deserialize).to.be.equal(result.deserialize);
 
         if (typeof result.converter !== 'undefined') {
             expect(metadata.converter).to.be.equal(result.converter);

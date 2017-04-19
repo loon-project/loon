@@ -72,6 +72,9 @@ export class ConverterService {
             const result = {};
 
             properties.forEach((metadata: PropertyMetadata) => {
+
+                if (metadata.serialize === false) return;
+
                 let value = data[metadata.klassProperty];
 
                 value = this.convert(value, metadata.propertyType, metadata.baseType);
@@ -100,6 +103,9 @@ export class ConverterService {
             const ins = new klass();
 
             properties.forEach((metadata: PropertyMetadata) => {
+
+                if (metadata.deserialize === false) return;
+
                 let value = data[metadata.objectProperty];
 
                 value = this.convert(value, metadata.propertyType, metadata.baseType);

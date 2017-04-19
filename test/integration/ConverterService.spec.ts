@@ -28,6 +28,12 @@ describe('[Integration] ConverterService', () => {
 
         @Property("is_draft")
         public isDraft: boolean;
+
+        @Property({serialize: false})
+        public uuid1: string;
+
+        @Property({deserialize: false})
+        public uuid2: string;
     }
 
     @RestController()
@@ -65,6 +71,14 @@ describe('[Integration] ConverterService', () => {
 
             if (filter.isDraft !== true) {
                 return res.send('7');
+            }
+
+            if (filter.uuid1 !== '111') {
+                return res.send('8');
+            }
+
+            if (typeof filter.uuid2 !== 'undefined') {
+                return res.send('9');
             }
 
             return res.send(true);
@@ -112,6 +126,15 @@ describe('[Integration] ConverterService', () => {
                 return res.send('7');
             }
 
+            if (filter.uuid1 !== '111') {
+                return res.send('8');
+            }
+
+            if (typeof filter.uuid2 !== 'undefined') {
+                return res.send('9');
+            }
+
+
             return res.send(true);
         }
     }
@@ -122,7 +145,9 @@ describe('[Integration] ConverterService', () => {
         name: "abc",
         ids: [1, 2, 3],
         created_at: d1,
-        is_draft: true
+        is_draft: true,
+        uuid2: '222',
+        uuid1: '111'
     };
 
     it('should convert a QueryParam', () => {

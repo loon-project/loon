@@ -7,4 +7,8 @@ export interface PropertyOptions {
     converter?: IConverter;
 
     baseType?: Function;
+
+    serialize?: boolean;
+
+    deserialize?: boolean;
 }
