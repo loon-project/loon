@@ -58,14 +58,13 @@ export class ConverterService {
             return result;
         }
 
-        /*
+        /**
          *
          * Convert class instance to object
          * If provide a converter, and implement serialize function
          * it will use serialize function result as the property value
          *
          */
-
         properties = PropertyRegistry.properties.get(type);
         if (returnType === Object && !TypeUtil.isSimpleType(type) && properties) {
 
@@ -89,7 +88,7 @@ export class ConverterService {
             return result;
         }
 
-        /*
+        /**
          *
          * Convert object to class instance
          * If provide a converter, and implement deserialize function
@@ -114,6 +113,28 @@ export class ConverterService {
                     value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);
                 }
 
+                ins[metadata.klassProperty] = value;
+            });
+
+            return ins;
+        }
+
+        /**
+         *
+         * Convert a class instance to another class instance
+         * based on the class property name, convert, ignore converter and serialize and deserialize options
+         *
+         */
+        const returnProperties = PropertyRegistry.properties.get(returnType);
+        properties = PropertyRegistry.properties.get(type);
+        if (!TypeUtil.isSimpleType(type) && !TypeUtil.isSimpleType(returnType) && properties && returnProperties) {
+
+            const klass = <Klass> returnType;
+
+            const ins = new klass();
+
+            returnProperties.forEach((metadata: PropertyMetadata) => {
+                const value = this.convert(data[metadata.klassProperty], metadata.propertyType, metadata.baseType);
                 ins[metadata.klassProperty] = value;
             });
 

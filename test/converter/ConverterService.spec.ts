@@ -47,6 +47,16 @@ describe('ConverterService', () => {
         public converter: string;
     }
 
+    class AnotherTestConverterClassTarget {
+
+        @Property('created_at')
+        public createdAt: Date;
+
+        @Property('updated_at')
+        public updatedAt: String;
+
+    }
+
     const d1 = new Date();
     const d2 = new Date();
 
@@ -160,6 +170,14 @@ describe('ConverterService', () => {
         const obj = converter.convert(insExample, Object);
         assertObject(obj);
         expect(obj.converter).to.be.equal(insExample.updatedAt.toISOString());
+    });
+
+    it('should convert a class instance to another class instance', () => {
+
+        const anotherIns: AnotherTestConverterClassTarget = converter.convert(insExample, AnotherTestConverterClassTarget);
+        expect(anotherIns.createdAt.toISOString()).to.be.equal(insExample.createdAt);
+        expect(anotherIns.updatedAt).to.be.equal(insExample.updatedAt.toString());
+
     });
 
 
