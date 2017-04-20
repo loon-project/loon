@@ -24,7 +24,11 @@ export function bootstrap(klass: any, port?: number) {
 
         after(done => {
             const connection = ConnectionFactory.getConnection();
-            connection.destroy(done);
+
+            if (typeof connection !== 'undefined') {
+                connection.destroy();
+            }
+
             server.close(done);
         });
 
@@ -71,7 +75,7 @@ export function bootstrap(klass: any, port?: number) {
             const connection = ConnectionFactory.getConnection();
 
             if (typeof connection !== 'undefined') {
-                connection.destroy(done);
+                connection.destroy();
             }
 
             server.close(done);
