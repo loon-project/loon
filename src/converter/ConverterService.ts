@@ -74,12 +74,16 @@ export class ConverterService {
 
                 if (metadata.serialize === false) return;
 
-                let value = data[metadata.klassProperty];
-
-                value = this.convert(value, metadata.propertyType, metadata.baseType);
+                let value;
 
                 if (metadata.converter && metadata.converter.serialize) {
+
                     value = metadata.converter.serialize(data, metadata.klassProperty, metadata.objectProperty);
+
+                } else {
+
+                    value = data[metadata.klassProperty];
+                    value = this.convert(value, metadata.propertyType, metadata.baseType);
                 }
 
                 result[metadata.objectProperty] = value;
@@ -105,12 +109,17 @@ export class ConverterService {
 
                 if (metadata.deserialize === false) return;
 
-                let value = data[metadata.objectProperty];
-
-                value = this.convert(value, metadata.propertyType, metadata.baseType);
+                let value;
 
                 if (metadata.converter && metadata.converter.deserialize) {
+
                     value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);
+
+                } else {
+
+                    value = data[metadata.objectProperty];
+                    value = this.convert(value, metadata.propertyType, metadata.baseType);
+
                 }
 
                 ins[metadata.klassProperty] = value;
