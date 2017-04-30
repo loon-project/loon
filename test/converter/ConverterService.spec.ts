@@ -57,6 +57,13 @@ describe('ConverterService', () => {
 
     }
 
+    class ANestTestConverterClass {
+
+        @Property({baseType: AnotherTestConverterClassTarget})
+        public arr: AnotherTestConverterClassTarget[];
+
+    }
+
     const d1 = new Date();
     const d2 = new Date();
 
@@ -72,6 +79,7 @@ describe('ConverterService', () => {
     insExample.name = "FFF";
     insExample.createdAt = d1.toISOString();
     insExample.updatedAt = d2;
+
 
 
     it('should convert data to String', () => {
@@ -180,6 +188,45 @@ describe('ConverterService', () => {
 
     });
 
+
+    it('should convert a class with array of property', () => {
+
+        const date = new Date();
+
+        const testNestObj1 = {
+            arr: [
+                {
+                    created_at: date,
+                    updated_at: "123"
+                },
+                {
+                    created_at: date,
+                    updated_at: "456"
+                }
+            ]
+        };
+
+        const result1: ANestTestConverterClass = converter.convert(testNestObj1, ANestTestConverterClass);
+
+        result1.arr.forEach((item, i) => {
+            expect(item instanceof AnotherTestConverterClassTarget).to.be.true;
+            expect(item.createdAt).to.be.equal(date);
+
+            if (i === 0) {
+                expect(item.updatedAt).to.be.equal("123");
+            } else {
+                expect(item.updatedAt).to.be.equal("456");
+            }
+        });
+
+        const testNestObj2 = {
+            arr: []
+        };
+
+        const result2: ANestTestConverterClass = converter.convert(testNestObj2, ANestTestConverterClass);
+
+        expect(Array.isArray(result2.arr)).to.be.true;
+    });
 
 
     function assertConverterResult(type: Function, data: any, target?: any) {

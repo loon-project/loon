@@ -1,8 +1,6 @@
 import "../TestHelper";
-import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {BodyParam, PathParam, QueryParam, Res} from "../../src/mvc/decorator/Params";
 import {Get, Post} from "../../src/mvc/decorator/Method";
-import {ServerHelper} from "../helper/ServerHelper";
 import {RestController} from "../../src/mvc/decorator/Controller";
 import * as Express from "express";
 import {HttpHelper} from "../helper/HttpHelper";

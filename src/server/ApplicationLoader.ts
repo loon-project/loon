@@ -109,7 +109,7 @@ export class ApplicationLoader {
         this._components = settings.components || [];
         this._routes = settings.routes || {};
 
-        DependencyRegistry.set(ApplicationLoader, this);
+        DependencyRegistry.set(<Klass> ApplicationLoader, this);
 
         this.init()
             .invokeApplicationInitHook()
