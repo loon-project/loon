@@ -1,7 +1,5 @@
 import {ApplicationRegistry} from "./ApplicationRegistry";
 import * as Express from "express";
-import {LogFactory} from "../logger/LogFactory";
-import {ConnectionFactory} from "../data/ConnectionFactory";
 import * as Fs from "fs";
 import {ControllerRegistry} from "../mvc/ControllerRegistry";
 import {HandlerTransformer} from "../mvc/HandlerTransformer";
@@ -10,19 +8,6 @@ import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
-
-process.on('uncaughtException', (err) => {
-
-    const connection = ConnectionFactory.getConnection();
-
-    if (connection) {
-        connection.destroy();
-    }
-
-    throw err;
-});
-
-
 
 export class ApplicationLoader {
 
@@ -155,9 +140,6 @@ export class ApplicationLoader {
                 instance['init'].apply(instance);
             });
 
-        LogFactory.init(this.configDir, this.logDir, this.env);
-        ConnectionFactory.init(this.configDir, this.dbDir, this.env);
-
         return this;
     }
 
@@ -167,14 +149,6 @@ export class ApplicationLoader {
     }
 
     private loadExternalMiddlewares() {
-        const logger = LogFactory.getLogger();
-
-        this.server.use(require('morgan')("combined", {
-            stream: {
-                write: message => logger.info(message)
-            }
-        }));
-
         this.server.use(require('body-parser').json());
         this.server.use(require('body-parser').urlencoded({ extended: true }));
         this.server.use(require('cookie-parser')());
@@ -234,8 +208,7 @@ export class ApplicationLoader {
 
     private run() {
         this.server.listen(this.port, () => {
-            const logger = LogFactory.getLogger();
-            logger.info(`Application is listening on port ${this.port}`);
+            console.log(`Application is listening on port ${this.port}`);
         });
     }
 

@@ -1,5 +1,0 @@
-import "../TestHelper";
-
-describe("DataRegistry", () => {
-
-});

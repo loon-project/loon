@@ -1,5 +1,4 @@
 import {ApplicationLoader} from "../server/ApplicationLoader";
-import {ConnectionFactory} from "../data/ConnectionFactory";
 import {ControllerRegistry} from "../mvc/ControllerRegistry";
 import {Klass} from "../core/Klass";
 import {DependencyRegistry} from "../di/DependencyRegistry";
@@ -23,12 +22,6 @@ export function bootstrap(klass: any, port?: number) {
         });
 
         after(done => {
-            const connection = ConnectionFactory.getConnection();
-
-            if (typeof connection !== 'undefined') {
-                connection.destroy();
-            }
-
             server.close(done);
         });
 
@@ -72,12 +65,6 @@ export function bootstrap(klass: any, port?: number) {
         });
 
         after(done => {
-            const connection = ConnectionFactory.getConnection();
-
-            if (typeof connection !== 'undefined') {
-                connection.destroy();
-            }
-
             server.close(done);
         });
     }
