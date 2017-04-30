@@ -1,7 +1,6 @@
 import {ControllerMetadata} from "./ControllerMetadata";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {Klass} from "../core/Klass";
-import {ArgumentError} from "../core/error/ArgumentError";
 import {ControllerTransformer} from "./ControllerTransformer";
 import {HandlerRegistry} from "./HandlerRegistry";
 import {BeforeAfterFilterType} from "./enum/BeforeAfterFilterType";
@@ -146,7 +145,7 @@ export class ControllerRegistry {
                 controllerMetadata.afterFilters.push(controllerFilterMetadata);
                 return;
             default:
-                throw new ArgumentError("not valid arguments");
+                throw new Error("not valid arguments");
         }
     }
 
