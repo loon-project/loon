@@ -1,6 +1,6 @@
 {
-  "name": "typed-framework",
-  "version": "0.8.7",
+  "name": "loon",
+  "version": "1.0.0-0",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "engines": {
     "node": ">=6.0.0"
@@ -18,7 +18,7 @@
     "typed-project"
   ],
   "repository": {
-    "url": "https://github.com/typed-project/typed-framework",
+    "url": "https://github.com/loon-project/loon",
     "type": "git"
   },
   "author": "vincent178 <vincent.007.cn@gmail.com>",
@@ -48,15 +48,13 @@
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "find-up": "^2.1.0",
-    "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
     "morgan": "^1.7.0",
     "pkg-dir": "^1.0.0",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",
-    "source-map-support": "^0.4.8",
-    "winston": "^2.3.0"
+    "source-map-support": "^0.4.8"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
