@@ -16,7 +16,9 @@
     "types":[
       "node",
       "express",
-      "reflect-metadata"
+      "reflect-metadata",
+      "chai",
+      "mocha"
     ]
   },
 
