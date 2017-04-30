@@ -9,7 +9,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 
-<h1 align="center">Typed Framework</h1>
+<h1 align="center">Loon</h1>
 
 > Enterprise ready spring like framework build on Typescript and Express
 
