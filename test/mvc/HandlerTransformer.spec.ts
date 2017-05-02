@@ -8,6 +8,7 @@ import {
 import * as Express from 'express';
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HandlerTransformer} from "../../src/mvc/HandlerTransformer";
+import {expect} from 'chai';
 
 describe('HandlerTransformer', () => {
 
@@ -33,14 +34,13 @@ describe('HandlerTransformer', () => {
     it('should convert to router handler', () => {
 
         const controllerMetadata: any = ControllerRegistry.controllers.get(ATestRestControllerClass);
-        controllerMetadata.should.not.be.undefined;
-
         const handlerMetadata: any = controllerMetadata.handlers.get('indexAction');
-        handlerMetadata.should.not.be.undefined;
-        handlerMetadata.params.size.should.be.equal(8);
-        handlerMetadata.actionName.should.be.equal('indexAction');
+
+        expect(handlerMetadata.params.size).to.be.equal(8);
+        expect(handlerMetadata.actionName).to.be.equal('indexAction');
 
         const transformer = new HandlerTransformer(handlerMetadata);
-        (typeof transformer.transform()).should.be.equal('function');
+
+        expect(typeof transformer.transform()).to.be.equal('function');
     });
 });

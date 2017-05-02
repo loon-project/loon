@@ -3,6 +3,7 @@ import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {HandlerRegistry} from "../../src/mvc/HandlerRegistry";
 import {Filter} from "../../src/mvc/decorator/Filter";
+import {expect} from 'chai';
 
 describe("HandlerRegistry", () => {
 
@@ -42,13 +43,9 @@ describe("HandlerRegistry", () => {
 
     const middlewareShouldPass = (type: Function) => {
         const handlerStore: any = HandlerRegistry.handlers.get(type);
-
-        handlerStore.should.not.be.undefined;
-
         const handlerMetadata = handlerStore.get('use');
 
-        handlerMetadata.should.not.be.undefined;
-        handlerMetadata.type.should.be.equal(type);
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+        expect(handlerMetadata.type).to.be.equal(type);
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(0);
     };
 });

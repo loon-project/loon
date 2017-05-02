@@ -72,8 +72,8 @@ describe("[Integration] Controller", () => {
 
     it('should respond delete request', async () => {
         const response = await HttpHelper.request("delete", "http://localhost:4444/1/users/1");
-        response.statusCode.should.be.equal(200);
-        response.body.should.be.equal("delete user");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal("delete user");
     });
 
     it('should respond head request', async () => {

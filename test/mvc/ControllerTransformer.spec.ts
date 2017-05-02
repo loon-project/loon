@@ -4,6 +4,7 @@ import {Get} from "../../src/mvc/decorator/Method";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {ControllerTransformer} from "../../src/mvc/ControllerTransformer";
 import * as Express from 'express';
+import {expect} from 'chai';
 
 describe('ControllerTransformer', () => {
 
@@ -17,10 +18,9 @@ describe('ControllerTransformer', () => {
 
     it('should convert to router', () => {
         const controllerMetadata: any = ControllerRegistry.controllers.get(ATestRestControllerForControllerTransformerClass);
-        controllerMetadata.should.not.be.undefined;
-
         const transformer = new ControllerTransformer(controllerMetadata);
-        transformer.controllerMetadata.should.be.equal(controllerMetadata);
-        transformer.transform().name.should.be.equal(Express.Router().name);
+
+        expect(transformer.controllerMetadata).to.be.equal(controllerMetadata);
+        expect(transformer.transform().name).to.be.equal(Express.Router().name);
     });
 });

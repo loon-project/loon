@@ -2,6 +2,7 @@ import "../TestHelper";
 import {Filter} from "../../src/mvc/decorator/Filter";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {FilterRegistry} from "../../src/mvc/FilterRegistry";
+import {expect} from 'chai';
 
 describe("FilterRegistry", () => {
 
@@ -16,8 +17,7 @@ describe("FilterRegistry", () => {
 
         const filterMetadata: any = FilterRegistry.filters.get(CurrentUserFilter);
 
-        filterMetadata.should.not.be.undefined;
-        filterMetadata.type.should.be.equal(CurrentUserFilter);
-        filterMetadata.handler.should.not.undefined;
+        expect(filterMetadata.type).to.be.equal(CurrentUserFilter);
+        expect(filterMetadata.handler).to.not.be.undefined;
     });
 });

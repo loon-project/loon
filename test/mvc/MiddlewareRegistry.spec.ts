@@ -1,7 +1,8 @@
 import "../TestHelper";
-import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
+import {ErrorMiddleware, Middleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {MiddlewareRegistry} from "../../src/mvc/MiddlewareRegistry";
+import {expect} from 'chai';
 import {MiddlewareMetadata} from "../../src/mvc/MiddlewareMetadata";
 
 describe("MiddlewareRegistry", () => {
@@ -65,79 +66,94 @@ describe("MiddlewareRegistry", () => {
     it('should successfully register a Middleware', () => {
         const middlewareMetadata: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryMiddlewareClass);
 
-        middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(ATestMiddlewareRegistryMiddlewareClass);
-        middlewareMetadata.isErrorMiddleware.should.be.false;
-        middlewareMetadata.handler.should.not.be.undefined;
-        middlewareMetadata.handler.isErrorHandler.should.be.false;
+        expectMiddleware(middlewareMetadata, {
+            type: ATestMiddlewareRegistryMiddlewareClass,
+            isErrorMiddleware: false
+        });
     });
 
     it('should successfully register a ErrorMiddleware', () => {
         const middlewareMetadata: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryErrorMiddlewareClass);
 
-        middlewareMetadata.should.not.be.undefined;
-        middlewareMetadata.type.should.be.equal(ATestMiddlewareRegistryErrorMiddlewareClass);
-        middlewareMetadata.isErrorMiddleware.should.be.true;
-        middlewareMetadata.handler.should.not.be.undefined;
-        middlewareMetadata.handler.isErrorHandler.should.be.true;
+        expectMiddleware(middlewareMetadata, {
+            type: ATestMiddlewareRegistryErrorMiddlewareClass,
+            isErrorMiddleware: true
+        });
     });
 
     it('should successfully register a Middleware with order', () => {
         const middlewares = MiddlewareRegistry.getMiddlewares({isErrorMiddleware: false});
 
-        middlewares.should.not.be.undefined;
-
         const firstMiddleware = middlewares[0];
 
-        firstMiddleware.type.should.be.equal(ATestMiddlewareRegistryMiddlewareWithOrderClass2);
-        firstMiddleware.handler.should.not.be.undefined;
-        firstMiddleware.order.should.be.equal(2);
-        firstMiddleware.isErrorMiddleware.should.be.false;
+        expectMiddleware(firstMiddleware, {
+            type: ATestMiddlewareRegistryMiddlewareWithOrderClass2,
+            isErrorMiddleware: false,
+            order: 2
+        });
 
         const secondMiddleware = middlewares[1];
 
-        secondMiddleware.type.should.be.equal(ATestMiddlewareRegistryMiddlewareWithOrderClass1);
-        secondMiddleware.handler.should.not.be.undefined;
-        secondMiddleware.order.should.be.equal(19);
-        secondMiddleware.isErrorMiddleware.should.be.false;
-
+        expectMiddleware(secondMiddleware, {
+            type: ATestMiddlewareRegistryMiddlewareWithOrderClass1,
+            isErrorMiddleware: false,
+            order: 19
+        });
     });
 
     it('should successfully register a ErrorMiddleware with order', () => {
         const middlewares = MiddlewareRegistry.getMiddlewares({isErrorMiddleware: true});
 
-        middlewares.should.not.be.undefined;
-
         const firstMiddleware = middlewares[0];
 
-        firstMiddleware.type.should.be.equal(ATestMiddlewareRegistryErrorMiddlewareWithOrderClass2);
-        firstMiddleware.handler.should.not.be.undefined;
-        firstMiddleware.order.should.be.equal(2);
-        firstMiddleware.isErrorMiddleware.should.be.true;
+        expectMiddleware(firstMiddleware, {
+            type: ATestMiddlewareRegistryErrorMiddlewareWithOrderClass2,
+            isErrorMiddleware: true,
+            order: 2
+        });
 
         const secondMiddleware = middlewares[1];
 
-        secondMiddleware.type.should.be.equal(ATestMiddlewareRegistryErrorMiddlewareWithOrderClass1);
-        secondMiddleware.handler.should.not.be.undefined;
-        secondMiddleware.order.should.be.equal(19);
-        secondMiddleware.isErrorMiddleware.should.be.true;
+        expectMiddleware(secondMiddleware, {
+            type: ATestMiddlewareRegistryErrorMiddlewareWithOrderClass1,
+            isErrorMiddleware: true,
+            order: 19
+        });
+
     });
 
     it('should successfully register a middleware with base url', () => {
         const middleware: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryMiddlewareWithBaseUrlClass);
 
-        middleware.type.should.be.equal(ATestMiddlewareRegistryMiddlewareWithBaseUrlClass);
-        middleware.handler.should.not.be.undefined;
-        middleware.isErrorMiddleware.should.be.false;
-        middleware.baseUrl.should.be.equal("/test");
+        expectMiddleware(middleware, {
+            type: ATestMiddlewareRegistryMiddlewareWithBaseUrlClass,
+            isErrorMiddleware: false,
+            baseUrl: "/test"
+        });
     });
 
     it('should successfully register a error middleware with base url', () => {
         const middleware: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryErrorMiddlewareWithBaseUrlClass);
 
-        middleware.type.should.be.equal(ATestMiddlewareRegistryErrorMiddlewareWithBaseUrlClass);
-        middleware.handler.should.not.be.undefined;
-        middleware.isErrorMiddleware.should.be.true;
-        middleware.baseUrl.should.be.equal("/test");
+        expectMiddleware(middleware, {
+            type: ATestMiddlewareRegistryErrorMiddlewareWithBaseUrlClass,
+            isErrorMiddleware: true,
+            baseUrl: "/test"
+        });
     });
+
+    function expectMiddleware(metadata: MiddlewareMetadata, result: any) {
+
+        expect(metadata.type).to.be.equal(result.type);
+        expect(metadata.handler).to.not.be.undefined;
+        expect(metadata.isErrorMiddleware).to.be.equal(result.isErrorMiddleware);
+
+        if (result.baseUrl) {
+            expect(metadata.baseUrl).to.be.equal(result.baseUrl);
+        }
+
+        if (result.order) {
+            expect(metadata.order).to.be.equal(result.order);
+        }
+    }
 });

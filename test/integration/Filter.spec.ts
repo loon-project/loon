@@ -7,6 +7,7 @@ import * as Express from "express";
 import {Get} from "../../src/mvc/decorator/Method";
 import {HttpHelper} from "../helper/HttpHelper";
 import {bootstrap} from "../../src/testing/bootstrap";
+import {expect} from 'chai';
 
 describe("[Integration] Filter", () => {
 
@@ -87,45 +88,39 @@ describe("[Integration] Filter", () => {
 
     bootstrap([UsersController, Users2Controller, Users3Controller], 4444);
 
-    it('should successfully use BeforeFilter', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("Jack");
-        });
+    it('should successfully use BeforeFilter', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('Jack');
     });
 
-    it('should successfully use AfterFilter', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.deep.equal({username: "Hill"});
-        });
+    it('should successfully use AfterFilter', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users/1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.deep.equal({username: "Hill"});
     });
 
-    it('should trigger Filter with action in the only FilterOptions', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/2/users1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.deep.equal({changed: true});
-        });
+    it('should trigger Filter with action in the only FilterOptions', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/2/users1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.deep.equal({changed: true});
     });
 
-    it('should not trigger Filter without action in the only FilterOptions', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/2/users2", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.deep.equal({});
-        });
+    it('should not trigger Filter without action in the only FilterOptions', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/2/users2");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.deep.equal({});
     });
 
-    it('should not trigger Filter with action in the except FilterOptions', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/3/users1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.deep.equal({changed: true});
-        });
+    it('should not trigger Filter with action in the except FilterOptions', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/3/users1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.deep.equal({changed: true});
     });
 
-    it('should trigger Filter without action in the except FilterOptions', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/3/users2", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.deep.equal({});
-        });
+    it('should trigger Filter without action in the except FilterOptions', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/3/users2");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.deep.equal({});
     });
 });

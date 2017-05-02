@@ -5,6 +5,7 @@ import {InternalServerError} from "../../src/mvc/error/InternalServerError";
 import {NotFound} from "../../src/mvc/error/NotFound";
 import {Unauthorized} from "../../src/mvc/error/Unauthorized";
 import {ParamRequired} from "../../src/mvc/error/ParamRequired";
+import {expect} from 'chai';
 
 describe('HttpException', () => {
 
@@ -12,50 +13,50 @@ describe('HttpException', () => {
 
         const badRequest = new BadRequest();
 
-        badRequest.status.should.be.equal(400);
-        badRequest.code.should.be.equal('ERR_BAD_REQUEST');
-        badRequest.message.should.be.equal('bad request');
-        badRequest.should.be.an.instanceof(HttpException);
+        expect(badRequest.status).to.be.equal(400);
+        expect(badRequest.code).to.be.equal('ERR_BAD_REQUEST');
+        expect(badRequest.message).to.be.equal('bad request');
+        expect(badRequest).be.an.instanceof(HttpException);
     });
 
     it('should successfully throw a InternalServerError', () => {
 
         const serverError = new InternalServerError();
 
-        serverError.status.should.be.equal(500);
-        serverError.code.should.be.equal('ERR_INTERNAL_ERROR');
-        serverError.message.should.be.equal('internal error occurs');
-        serverError.should.be.an.instanceof(HttpException);
+        expect(serverError.status).to.be.equal(500);
+        expect(serverError.code).to.be.equal('ERR_INTERNAL_ERROR');
+        expect(serverError.message).to.be.equal('internal error occurs');
+        expect(serverError).to.be.an.instanceof(HttpException);
     });
 
     it('should successfully throw a NotFound', () => {
 
         const notFound = new NotFound();
 
-        notFound.status.should.be.equal(404);
-        notFound.code.should.be.equal('ERR_RESOURCE_NOT_FOUND');
-        notFound.message.should.be.equal('resource not found');
-        notFound.should.be.an.instanceof(HttpException);
+        expect(notFound.status).to.be.equal(404);
+        expect(notFound.code).to.be.equal('ERR_RESOURCE_NOT_FOUND');
+        expect(notFound.message).to.be.equal('resource not found');
+        expect(notFound).to.be.an.instanceof(HttpException);
     });
 
     it('should successfully throw a Unauthorized', () => {
 
         const unauthorized = new Unauthorized();
 
-        unauthorized.status.should.be.equal(401);
-        unauthorized.code.should.be.equal('ERR_UNAUTHORIZED');
-        unauthorized.message.should.be.equal('unauthorized');
-        unauthorized.should.be.an.instanceof(HttpException);
+        expect(unauthorized.status).to.be.equal(401);
+        expect(unauthorized.code).to.be.equal('ERR_UNAUTHORIZED');
+        expect(unauthorized.message).to.be.equal('unauthorized');
+        expect(unauthorized).to.be.an.instanceof(HttpException);
     });
 
     it('should successfully throw a ParamRequired', () => {
 
         const paramRequired = new ParamRequired("name");
 
-        paramRequired.status.should.be.equal(400);
-        paramRequired.code.should.be.equal('ERR_PARAM_ABSENCE');
-        paramRequired.message.should.be.equal('parameter name is absence');
-        paramRequired.should.be.an.instanceof(HttpException);
+        expect(paramRequired.status).to.be.equal(400);
+        expect(paramRequired.code).to.be.equal('ERR_PARAM_ABSENCE');
+        expect(paramRequired.message).to.be.equal('parameter name is absence');
+        expect(paramRequired).to.be.an.instanceof(HttpException);
     });
 
 });

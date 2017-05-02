@@ -1,5 +1,6 @@
 import "../TestHelper";
 import {ConvertUtil} from "../../src/util/ConvertUtil";
+import {expect} from 'chai';
 
 
 describe('ConvertUtil', () => {
@@ -10,7 +11,7 @@ describe('ConvertUtil', () => {
         const result = ConvertUtil.convertArrayToMap(original);
 
         result.forEach((item, index) => {
-            (original[index] === item).should.be.true;
+            expect(original[index] === item).to.be.true;
         });
     });
 

@@ -4,6 +4,7 @@ import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {BeforeFilter, AfterFilter, Filter} from "../../src/mvc/decorator/Filter";
+import {expect} from 'chai';
 
 
 describe("ControllerRegistry", () => {
@@ -39,146 +40,113 @@ describe("ControllerRegistry", () => {
 
 
     it('should successfully register a rest controller', () => {
-
-        const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.type.should.be.equal(AControllerRegistryTestRestController);
-        controllerMetadata.baseUrl.should.be.equal("/test");
-        controllerMetadata.isRest.should.be.equal(true);
+        expectController(AControllerRegistryTestRestController, "/test", true);
     });
 
     it('should successfully register a controller', () => {
-
-        const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.type.should.be.equal(AControllerRegistryTestController);
-        controllerMetadata.baseUrl.should.be.equal("");
-        controllerMetadata.isRest.should.be.equal(false);
+        expectController(AControllerRegistryTestController, "", false);
     });
 
     it('should successfully register a handler for RestController', () => {
 
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.handlers.should.not.be.undefined;
-
         const handlerMetadata: any = controllerMetadata.handlers.get('indexAction');
 
-        handlerMetadata.should.not.be.undefined;
-        handlerMetadata.isErrorHandler.should.be.equal(false);
-        handlerMetadata.actionName.should.be.equal('indexAction');
-        handlerMetadata.type.should.be.equal(AControllerRegistryTestRestController);
-        handlerMetadata.httpMethodAndPaths.should.not.be.undefined;
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(1);
-        handlerMetadata.httpMethodAndPaths[0].method.should.be.equal('get');
-        handlerMetadata.httpMethodAndPaths[0].path.should.be.equal('/');
-        handlerMetadata.params.should.not.be.undefined;
+        expect(handlerMetadata.isErrorHandler).to.be.false;
+        expect(handlerMetadata.actionName).to.be.equal('indexAction');
+        expect(handlerMetadata.type).to.be.equal(AControllerRegistryTestRestController);
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(1);
+        expect(handlerMetadata.httpMethodAndPaths[0].method).to.be.equal('get');
+        expect(handlerMetadata.httpMethodAndPaths[0].path).to.be.equal('/');
 
         const handlerParamMetadata: any = handlerMetadata.params.get(0);
 
-        handlerParamMetadata.should.not.be.undefined;
-        handlerParamMetadata.type.should.be.equal(AControllerRegistryTestRestController);
-        handlerParamMetadata.index.should.be.equal(0);
-        handlerParamMetadata.actionName.should.be.equal('indexAction');
+        expect(handlerParamMetadata).to.not.be.undefined;
+        expect(handlerParamMetadata.type).to.be.equal(AControllerRegistryTestRestController);
+        expect(handlerParamMetadata.index).to.be.equal(0);
+        expect(handlerParamMetadata.actionName).to.be.equal('indexAction');
     });
 
     it('should successfully register a handler for Controller', () => {
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.handlers.should.not.be.undefined;
-
         const handlerMetadata: any = controllerMetadata.handlers.get('createAction');
 
-        handlerMetadata.should.not.be.undefined;
-        handlerMetadata.isErrorHandler.should.be.equal(false);
-        handlerMetadata.actionName.should.be.equal('createAction');
-        handlerMetadata.type.should.be.equal(AControllerRegistryTestController);
-        handlerMetadata.params.should.not.be.undefined;
-        handlerMetadata.httpMethodAndPaths.should.not.be.undefined;
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(1);
-        handlerMetadata.httpMethodAndPaths[0].method.should.be.equal('post');
-        handlerMetadata.httpMethodAndPaths[0].path.should.be.equal("/:id");
+        expect(handlerMetadata.isErrorHandler).to.be.false;
+        expect(handlerMetadata.actionName).to.be.equal('createAction');
+        expect(handlerMetadata.type).to.be.equal(AControllerRegistryTestController);
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(1);
+        expect(handlerMetadata.httpMethodAndPaths[0].method).to.be.equal('post');
+        expect(handlerMetadata.httpMethodAndPaths[0].path).to.be.equal("/:id");
 
         const handlerParamMetadata: any = handlerMetadata.params.get(0);
 
-        handlerParamMetadata.should.not.be.undefined;
-        handlerParamMetadata.type.should.be.equal(AControllerRegistryTestController);
-        handlerParamMetadata.index.should.be.equal(0);
-        handlerParamMetadata.actionName.should.be.equal('createAction');
+        expect(handlerParamMetadata.type).to.be.equal(AControllerRegistryTestController);
+        expect(handlerParamMetadata.index).to.be.equal(0);
+        expect(handlerParamMetadata.actionName).to.be.equal('createAction');
     });
 
     it('should successfully register a handler with multiple http method and path', () => {
 
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.handlers.should.not.be.undefined;
-
         const handlerMetadata: any = controllerMetadata.handlers.get('updateAction');
 
-        handlerMetadata.should.not.be.undefined;
-        handlerMetadata.isErrorHandler.should.be.equal(false);
-        handlerMetadata.actionName.should.be.equal('updateAction');
-        handlerMetadata.type.should.be.equal(AControllerRegistryTestRestController);
-        handlerMetadata.params.should.not.be.undefined;
+        expect(handlerMetadata.isErrorHandler).to.be.false;
+        expect(handlerMetadata.actionName).to.be.equal('updateAction');
+        expect(handlerMetadata.type).to.be.equal(AControllerRegistryTestRestController);
+        expect(handlerMetadata.params).to.be.not.undefined;
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(2);
 
-        handlerMetadata.httpMethodAndPaths.should.not.be.undefined;
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(2);
-        const putRequest = handlerMetadata.httpMethodAndPaths.find(item => item.path === '/api/:id/' && item.method === 'put');
-        putRequest.should.not.be.undefined;
-        const patchRequest = handlerMetadata.httpMethodAndPaths.find(item => item.path === '/api/:id/2' && item.method === 'patch');
-        patchRequest.should.not.be.undefined;
+
+
+        const putRequest = handlerMetadata
+            .httpMethodAndPaths
+            .find(item => item.path === '/api/:id/' && item.method === 'put');
+
+        const patchRequest = handlerMetadata
+            .httpMethodAndPaths
+            .find(item => item.path === '/api/:id/2' && item.method === 'patch');
+
+        expect(putRequest).to.be.not.undefined;
+        expect(patchRequest).to.be.not.undefined;
 
         const handlerParamMetadata: any = handlerMetadata.params.get(0);
-        (typeof handlerParamMetadata === 'undefined').should.be.true;
+
+        expect(handlerParamMetadata).to.be.undefined;
     });
 
     it('should successfully register a BeforeFilter filter', () => {
 
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.beforeFilters.should.not.be.undefined;
-        controllerMetadata.beforeFilters.length.should.be.equal(1);
-
         const controllerFilterMetadata: any = controllerMetadata.beforeFilters[0];
-
-        controllerFilterMetadata.should.not.be.undefined;
-
         const filterMetadata: any = controllerFilterMetadata.filterMetadata;
-
-        filterMetadata.type.should.be.equal(ATestFilterClass);
-        filterMetadata.handler.should.not.be.undefined;
-
         const handlerMetadata: any = filterMetadata.handler;
-        handlerMetadata.type.should.be.equal(ATestFilterClass);
-        handlerMetadata.actionName.should.be.equal('use');
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+
+        expect(handlerMetadata.type).to.be.equal(ATestFilterClass);
+        expect(handlerMetadata.actionName).to.be.equal('use');
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(0);
+
     });
 
     it('should successfully register a AfterFilter filter', () => {
         const controllerMetadata: any = ControllerRegistry.controllers.get(AControllerRegistryTestRestController);
-
-        controllerMetadata.should.not.be.undefined;
-        controllerMetadata.afterFilters.should.not.be.undefined;
-        controllerMetadata.afterFilters.length.should.be.equal(1);
-
         const controllerFilterMetadata: any = controllerMetadata.afterFilters[0];
-
-        controllerFilterMetadata.should.not.be.undefined;
-
         const filterMetadata = controllerFilterMetadata.filterMetadata;
-
-        filterMetadata.type.should.be.equal(ATestFilterClass);
-        filterMetadata.handler.should.not.be.undefined;
-
         const handlerMetadata: any = filterMetadata.handler;
-        handlerMetadata.type.should.be.equal(ATestFilterClass);
-        handlerMetadata.actionName.should.be.equal('use');
-        handlerMetadata.httpMethodAndPaths.length.should.be.equal(0);
+
+        expect(handlerMetadata.type).to.be.equal(ATestFilterClass);
+        expect(handlerMetadata.actionName).to.be.equal('use');
+        expect(handlerMetadata.httpMethodAndPaths.length).to.be.equal(0);
     });
+
+    function expectController(type: Function, baseUrl: string, isRest: boolean) {
+
+        const controllerMetadata: any = ControllerRegistry.controllers.get(type);
+
+        expect(controllerMetadata).to.not.be.undefined;
+        expect(controllerMetadata.type).to.be.equal(type);
+        expect(controllerMetadata.baseUrl).to.be.equal(baseUrl);
+        expect(controllerMetadata.isRest).to.be.equal(isRest);
+
+        return controllerMetadata;
+    }
 });

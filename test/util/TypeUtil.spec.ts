@@ -1,5 +1,6 @@
 import "../TestHelper";
 import {TypeUtil} from "../../src/util/TypeUtil";
+import {expect} from 'chai';
 
 
 describe('TypeUtil', () => {
@@ -8,10 +9,10 @@ describe('TypeUtil', () => {
 
         class ATestComplexClass {}
 
-        TypeUtil.isSimpleType(String).should.be.true;
-        TypeUtil.isSimpleType(Number).should.be.true;
-        TypeUtil.isSimpleType(Boolean).should.be.true;
-        TypeUtil.isSimpleType(Object).should.be.true;
-        TypeUtil.isSimpleType(ATestComplexClass).should.be.false;
+        expect(TypeUtil.isSimpleType(String)).to.be.true;
+        expect(TypeUtil.isSimpleType(Number)).to.be.true;
+        expect(TypeUtil.isSimpleType(Boolean)).to.be.true;
+        expect(TypeUtil.isSimpleType(Object)).to.be.true;
+        expect(TypeUtil.isSimpleType(ATestComplexClass)).to.be.false;
     });
 });

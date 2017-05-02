@@ -9,6 +9,7 @@ import {MiddlewareRegistry} from "../../src/mvc/MiddlewareRegistry";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HandlerTransformer} from "../../src/mvc/HandlerTransformer";
 import {HttpHelper} from "../helper/HttpHelper";
+import {expect} from 'chai';
 
 describe("[Integration] Middleware", () => {
 
@@ -92,25 +93,22 @@ describe("[Integration] Middleware", () => {
         server.close(done);
     });
 
-    it("should use global middleware", () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal('global');
-        });
+    it("should use global middleware", async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('global');
     });
 
-    it('should use global error middleware', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("no user found");
-        });
+    it('should use global error middleware', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('no user found');
     });
 
-    it('should use baseUrl option for middleware', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/user/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("partial");
-        });
+    it('should use baseUrl option for middleware', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/user/1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal("partial");
     });
 
 });

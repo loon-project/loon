@@ -7,6 +7,7 @@ import {ServerHelper} from "../helper/ServerHelper";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
 import {HttpException} from "../../src/mvc/error/HttpException";
+import {expect} from 'chai';
 
 
 describe("[Integration] Param", () => {
@@ -98,75 +99,58 @@ describe("[Integration] Param", () => {
         }
     };
 
-    it('should get HeaderParam in the action', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", options, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal(123);
-        });
+    it('should get HeaderParam in the action', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal(123);
     });
 
-    it('should return error without required field in header', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", undefined, (response) => {
-            response.statusCode.should.be.equal(400);
-            response.body.status.should.be.equal(400);
-            response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter Authorization is absence');
-        });
+    it('should return error without required field in header', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users");
+        expect(response.statusCode).to.be.equal(400);
+        expect(response.body.status).to.be.equal(400);
+        expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
+        expect(response.body.message).to.be.equal('parameter Authorization is absence');
     });
 
-    it("should get PathParam in the action", () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users/1", options, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal(1);
-        });
+    it("should get PathParam in the action", async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users/1", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal(1);
     });
 
-    it("should return error without required field in path", () => {
-        // return HttpHelper.sendRequest("get", "http://localhost:4444/users/1", undefined, (response) => {
-        //     response.statusCode.should.be.equal(400);
-        //     response.body.status.should.be.equal(400);
-        //     response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-        //     response.body.message.should.be.equal('parameter id is absence');
-        // });
+    it('should get BodyParam in the action', async () => {
+        const response = await HttpHelper.request("post", "http://localhost:4444/users", options);
+        expect(response.statusCode).to.be.equal(201);
+        expect(response.body).to.be.equal(1);
     });
 
-
-    it('should get BodyParam in the action', () => {
-        return HttpHelper.sendRequest("post", "http://localhost:4444/users", options, (response) => {
-            response.statusCode.should.be.equal(201);
-            response.body.should.be.equal(1);
-        });
+    it('should return error without required field in body', async () => {
+        const response = await HttpHelper.request("post", "http://localhost:4444/users");
+        expect(response.statusCode).to.be.equal(400);
+        expect(response.body.status).to.be.equal(400);
+        expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
+        expect(response.body.message).to.be.equal('parameter id is absence');
     });
 
-    it('should return error without required field in body', () => {
-        return HttpHelper.sendRequest("post", "http://localhost:4444/users", undefined, (response) => {
-            response.statusCode.should.be.equal(400);
-            response.body.status.should.be.equal(400);
-            response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter id is absence');
-        });
+    it('should get QueryParam in the action', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users/active", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('abc');
     });
 
-    it('should get QueryParam in the action', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users/active", options, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal('abc');
-        });
+    it('should return error without required field in query', async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/users/active");
+        expect(response.statusCode).to.be.equal(400);
+        expect(response.body.status).to.be.equal(400);
+        expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
+        expect(response.body.message).to.be.equal('parameter status is absence');
     });
 
-    it('should return error without required field in query', () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users/active", undefined, (response) => {
-            response.statusCode.should.be.equal(400);
-            response.body.status.should.be.equal(400);
-            response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter status is absence');
-        });
-    });
-
-    it('should get complex object in the action', () => {
-        return HttpHelper.sendRequest("patch", "http://localhost:4444/users/1", {body: {user: {name: 'tester'}}}, response => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("tester");
-        });
+    it('should get complex object in the action', async () => {
+        const options = {body: {user: {name: 'tester'}}};
+        const response = await HttpHelper.request("patch", "http://localhost:4444/users/1", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('tester');
     });
 });
