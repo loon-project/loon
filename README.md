@@ -281,14 +281,14 @@ class UserService {
 
 <h2 align="center">Quick start</h2>
 
-Quick start example: [link](https://github.com/typed-project/typed-framework/tree/master/wikis/start.md)
+Quick start example: [link](https://github.com/loon-project/loon/tree/master/wikis/start.md)
 
-Full feature example: [link](https://github.com/typed-project/example)
+Full feature example: [link](https://github.com/loon-project/example)
 
 
 <h2 align="center">Roadmap</h2>
 
-for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-framework/projects/1)
+for 2.0, please go to [2.0 Roadmap](https://github.com/loon-project/loon/projects/1)
 
 | Version Code |  Target Date   |  Release Date  | Description                            |
 | :----------: | :------------: | :------------: | -------------------------------------- |
@@ -355,7 +355,7 @@ for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-frame
         <img width="150" height="150" src="https://github.com/vincent178.png?s=150">
         <br>
         <a href="https://github.com/vincent178">Vincent</a>
-        <p>Founder of typed-framework</p>
+        <p>Founder of loon</p>
       </td>
      </tr>
   </tbody>
@@ -365,14 +365,14 @@ for 2.0, please go to [2.0 Roadmap](https://github.com/typed-project/typed-frame
 
 
 
-[npm-url]: https://npmjs.org/package/typed-framework
-[downloads-image]: http://img.shields.io/npm/dm/typed-framework.svg
-[npm-image]: http://img.shields.io/npm/v/typed-framework.svg
-[travis-url]: https://travis-ci.org/typed-project/typed-framework
-[travis-image]: http://img.shields.io/travis/typed-project/typed-framework.svg
-[david-dm-url]:https://david-dm.org/typed-project/typed-framework
-[david-dm-image]:https://david-dm.org/typed-project/typed-framework.svg
-[david-dm-dev-url]:https://david-dm.org/typed-project/typed-framework#info=devDependencies
-[david-dm-dev-image]:https://david-dm.org/typed-project/typed-framework/dev-status.svg
-[coveralls-url]:https://coveralls.io/r/typed-project/typed-framework
-[coveralls-image]:https://coveralls.io/repos/typed-project/typed-framework/badge.svg
+[npm-url]: https://npmjs.org/package/loon
+[downloads-image]: http://img.shields.io/npm/dm/loon.svg
+[npm-image]: http://img.shields.io/npm/v/loon.svg
+[travis-url]: https://travis-ci.org/loon-project/loon
+[travis-image]: http://img.shields.io/travis/loon-project/loon.svg
+[david-dm-url]:https://david-dm.org/loon-project/loon
+[david-dm-image]:https://david-dm.org/loon-project/loon.svg
+[david-dm-dev-url]:https://david-dm.org/loon-project/loon#info=devDependencies
+[david-dm-dev-image]:https://david-dm.org/loon-project/loon/dev-status.svg
+[coveralls-url]: https://coveralls.io/github/loon-project/loon
+[coveralls-image]:https://coveralls.io/repos/loon-project/loon/badge.svg
