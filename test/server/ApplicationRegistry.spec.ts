@@ -1,20 +1,21 @@
 import "../TestHelper";
 import {ApplicationRegistry} from "../../src/server/ApplicationRegistry";
 import {SettingOptions} from "../../src/server/SettingOptions";
+import {expect} from 'chai';
 
 describe("ApplicationRegistry", () => {
 
-    class TestApplication {
-
-    }
-
     it('should register application with SettingOptions', () => {
+
+        class Test1Application {
+
+        }
 
         const options = <SettingOptions>{rootDir: 'value'};
 
-        ApplicationRegistry.registerWithOptions(TestApplication, options);
+        ApplicationRegistry.registerWithOptions(Test1Application, options);
 
-        ApplicationRegistry.settings.should.be.equal(options);
+        expect(ApplicationRegistry.settings).to.be.equal(options);
     });
 
 });
