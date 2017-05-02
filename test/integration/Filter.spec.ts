@@ -1,11 +1,10 @@
 import "../TestHelper";
 import {RestController} from "../../src/mvc/decorator/Controller";
-import {Filter, BeforeFilter, AfterFilter} from "../../src/mvc/decorator/Filter";
+import {AfterFilter, BeforeFilter, Filter} from "../../src/mvc/decorator/Filter";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {Data, Next, Res} from "../../src/mvc/decorator/Params";
-import * as Express from 'express';
+import * as Express from "express";
 import {Get} from "../../src/mvc/decorator/Method";
-import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
 import {bootstrap} from "../../src/testing/bootstrap";
 

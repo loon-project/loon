@@ -1,11 +1,11 @@
 import "../TestHelper";
 import * as Express from "express";
 import {RestController} from "../../src/mvc/decorator/Controller";
-import {Get, Post, Put, Patch, Delete, Head, Options} from "../../src/mvc/decorator/Method";
+import {Delete, Get, Head, Options, Patch, Post, Put} from "../../src/mvc/decorator/Method";
 import {Res} from "../../src/mvc/decorator/Params";
-import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HttpHelper} from "../helper/HttpHelper";
 import {bootstrap} from "../../src/testing/bootstrap";
+import {expect} from "chai";
 
 describe("[Integration] Controller", () => {
 
@@ -46,53 +46,46 @@ describe("[Integration] Controller", () => {
 
     bootstrap(User1Controller, 4444);
 
-    it("should respond get request", () => {
-        return HttpHelper.sendRequest("get", "http://localhost:4444/1/users", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("all users");
-        });
+    it("should respond get request", async () => {
+        const response = await HttpHelper.request("get", "http://localhost:4444/1/users");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal("all users");
     });
 
-    it('should respond post request', () => {
-        return HttpHelper.sendRequest("post", "http://localhost:4444/1/users", undefined, (response) => {
-            response.statusCode.should.be.equal(201);
-            response.body.should.be.equal("create user");
-        });
+    it('should respond post request', async () => {
+        const response = await HttpHelper.request("post", "http://localhost:4444/1/users");
+        expect(response.statusCode).to.be.equal(201);
+        expect(response.body).to.be.equal("create user");
     });
 
-    it('should respond put request', () => {
-        return HttpHelper.sendRequest("put", "http://localhost:4444/1/users/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("update user");
-        });
+    it('should respond put request', async () => {
+        const response = await HttpHelper.request("put", "http://localhost:4444/1/users/1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal("update user");
     });
 
-    it('should respond patch request', () => {
-        return HttpHelper.sendRequest("patch", "http://localhost:4444/1/users/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("update user");
-        });
+    it('should respond patch request', async () => {
+        const response = await HttpHelper.request("patch", "http://localhost:4444/1/users/1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal("update user");
     });
 
-    it('should respond delete request', () => {
-        return HttpHelper.sendRequest("delete", "http://localhost:4444/1/users/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal("delete user");
-        });
+    it('should respond delete request', async () => {
+        const response = await HttpHelper.request("delete", "http://localhost:4444/1/users/1");
+        response.statusCode.should.be.equal(200);
+        response.body.should.be.equal("delete user");
     });
 
-    it('should respond head request', () => {
-        return HttpHelper.sendRequest('head', "http://localhost:4444/1/users/info", undefined, response => {
-            response.statusCode.should.be.equal(200);
-            (typeof response.body === 'undefined').should.be.true;
-        });
+    it('should respond head request', async () => {
+        const response = await HttpHelper.request('head', "http://localhost:4444/1/users/info");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.undefined;
     });
 
-    it('should respond options request', () => {
-        return HttpHelper.sendRequest('options', "http://localhost:4444/1/users/options", undefined, response => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal('options');
-        });
+    it('should respond options request', async () => {
+        const response = await HttpHelper.request('options', "http://localhost:4444/1/users/options");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal('options');
     });
 });
 

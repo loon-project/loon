@@ -2,6 +2,7 @@ import "../TestHelper";
 import {Initialize} from "../../src/initializer/decorator/Initialize";
 import {IInitializer} from "../../src/initializer/interface/IInitializer";
 import {InitializerRegistry} from "../../src/initializer/InitializerRegistry";
+import {expect} from 'chai';
 
 describe("InitializerRegistry", () => {
 
@@ -16,7 +17,7 @@ describe("InitializerRegistry", () => {
 
         const initializer: any = InitializerRegistry.initializers.get(ATestInitializerClass);
 
-        initializer.should.not.be.undefined;
-        initializer.type.should.be.equal(ATestInitializerClass);
+        expect(initializer).to.be.not.undefined;
+        expect(initializer.type).to.be.equal(ATestInitializerClass);
     });
 });

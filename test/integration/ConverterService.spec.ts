@@ -6,6 +6,7 @@ import * as Express from "express";
 import {HttpHelper} from "../helper/HttpHelper";
 import {Property} from "../../src/converter/decorator/Property";
 import {bootstrap} from "../../src/testing/bootstrap";
+import {expect} from 'chai';
 
 
 describe('[Integration] ConverterService', () => {
@@ -148,7 +149,7 @@ describe('[Integration] ConverterService', () => {
         uuid1: '111'
     };
 
-    it('should convert a QueryParam', () => {
+    it('should convert a QueryParam', async () => {
 
 
         const options = {
@@ -157,24 +158,21 @@ describe('[Integration] ConverterService', () => {
             }
         };
 
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users", options, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal(true);
-        });
+        const response = await HttpHelper.request("get", "http://localhost:4444/users", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.true;
     });
 
 
 
-    it('should convert a PathParam', () => {
+    it('should convert a PathParam', async () => {
 
-        return HttpHelper.sendRequest("get", "http://localhost:4444/users/1", undefined, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal(true);
-        });
-
+        const response = await HttpHelper.request("get", "http://localhost:4444/users/1");
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.true;
     });
 
-    it('should convert a BodyParam', () => {
+    it('should convert a BodyParam', async () => {
 
         const options = {
             body: {
@@ -182,13 +180,8 @@ describe('[Integration] ConverterService', () => {
             }
         };
 
-        return HttpHelper.sendRequest("post", "http://localhost:4444/users", options, (response) => {
-            response.statusCode.should.be.equal(200);
-            response.body.should.be.equal(true);
-        });
-
+        const response = await HttpHelper.request("post", "http://localhost:4444/users", options);
+        expect(response.statusCode).to.be.equal(200);
+        expect(response.body).to.be.equal(true);
     });
-
-
-
 });
