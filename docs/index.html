@@ -8,11 +8,18 @@
   <link rel="stylesheet" href="vendor/themes/vue.css">
 </head>
 <body>
+  <nav>
+    <a href="#/">EN</a>
+    <a href="#/zh-cn/">中文</a>
+  </nav>
   <div id="app"></div>
 </body>
 <script>
   window.$docsify = {
     name: 'loon',
+    loadSidebar: true,
+    subMaxLevel: 2,
+    loadNavbar: true,
     repo: 'https://github.com/loon-project/loon'
   }
 </script>
