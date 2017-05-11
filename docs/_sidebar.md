@@ -5,6 +5,9 @@
   - [Controller](controller.md)
   - [Filter](filter.md)
 
+- Services
+  - [Service](service.md)
+
 - Models
   - [Model](model.md)
   - [Converter](converter.md)
