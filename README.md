@@ -9,7 +9,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 
-<h1 align="center">Loon (similar pronunciation "龙" in Chinese)</h1>
+<h1 align="center">Loon (龙)</h1>
 
 > Enterprise ready spring like framework build on Typescript and Express
 
