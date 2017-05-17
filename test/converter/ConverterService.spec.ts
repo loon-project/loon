@@ -74,6 +74,13 @@ describe('ConverterService', () => {
         updated_at: d2.toISOString()
     };
 
+    const objWithPrefix = {
+        obj_id: 1,
+        obj_name: "aName",
+        obj_created_at: d1.toISOString(),
+        obj_updated_at: d2.toISOString()
+    };
+
     const insExample = new ATestConverterClassTarget();
     insExample.id = 2;
     insExample.name = "FFF";
@@ -123,7 +130,7 @@ describe('ConverterService', () => {
 
     it('should convert an array of objects to an array of class instance', () => {
         const objArr = [objExample, objExample, objExample];
-        const insArr = converter.convert(objArr, Array, ATestConverterClassTarget);
+        const insArr = converter.convert(objArr, Array, {baseType: ATestConverterClassTarget});
 
         expect(insArr instanceof Array).to.be.true;
         expect(insArr.length).to.be.equal(3);
@@ -133,7 +140,7 @@ describe('ConverterService', () => {
 
     it('should convert an array of class instance to an array of objects', () => {
         const insArr = [insExample, insExample, insExample];
-        const objArr = converter.convert(insArr, Array, Object);
+        const objArr = converter.convert(insArr, Array, {baseType: Object});
 
         expect(objArr instanceof Array).to.be.true;
         expect(objArr.length).to.be.equal(3);
@@ -145,7 +152,7 @@ describe('ConverterService', () => {
         const map = new Map();
         map.set('key', objExample);
 
-        const convertedMap = converter.convert(map, Map, ATestConverterClassTarget);
+        const convertedMap = converter.convert(map, Map, {baseType: ATestConverterClassTarget});
 
         expect(convertedMap instanceof Map).to.be.true;
 
@@ -157,7 +164,7 @@ describe('ConverterService', () => {
         const map = new Map();
         map.set('key', insExample);
 
-        const convertedMap = converter.convert(map, Map, Object);
+        const convertedMap = converter.convert(map, Map, {baseType: Object});
 
         expect(convertedMap instanceof Map).to.be.true;
 
@@ -186,6 +193,21 @@ describe('ConverterService', () => {
         expect(anotherIns.createdAt.toISOString()).to.be.equal(insExample.createdAt);
         expect(anotherIns.updatedAt).to.be.equal(insExample.updatedAt.toString());
 
+    });
+
+    it('should convert an object with prefix to a class instance', () => {
+
+        const ins: ATestConverterClassTarget = converter.convert(objWithPrefix, ATestConverterClassTarget, {prefix: "obj_"});
+        assertInstance(ins);
+    });
+
+    it('should convert a class instance to a object with prefix', () => {
+
+        const obj = converter.convert(insExample, Object, {prefix: "obj_"});
+        expect(obj.obj_id).to.be.equal(2);
+        expect(obj.obj_name).to.be.equal('FFF');
+        expect(obj.obj_created_at).to.be.equal(d1.toISOString());
+        expect(obj.obj_updated_at.getTime()).to.be.equal(d2.getTime());
     });
 
 
@@ -251,6 +273,7 @@ describe('ConverterService', () => {
     }
 
     function assertObject(obj) {
+
         expect(obj.id).to.be.equal(2);
         expect(obj.name).to.be.equal('FFF');
         expect(obj.created_at).to.be.equal(d1.toISOString());

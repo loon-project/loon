@@ -4,6 +4,7 @@ import {PropertyMetadata} from "./PropertyMetadata";
 import * as _ from "lodash";
 import {TypeUtil} from "../util/TypeUtil";
 import {Klass} from "../core/Klass";
+import {ConvertOptions} from "./ConvertOptions";
 
 /**
  * ConverterService used to convert class to object and vice-versa.
@@ -11,7 +12,7 @@ import {Klass} from "../core/Klass";
 @Service()
 export class ConverterService {
 
-    public convert(data: any, returnType: Function, baseType?: Function) {
+    public convert(data: any, returnType: Function, options?: ConvertOptions) {
 
         if (_.isUndefined(data) || _.isNull(data)) {
             return data;
@@ -20,8 +21,10 @@ export class ConverterService {
         const type = data.constructor;
         let properties;
 
-        if (returnType === type && typeof baseType === 'undefined') {
-            return data;
+        if (returnType === type) {
+            if (typeof options === 'undefined' || typeof options.baseType === 'undefined') {
+                return data;
+            }
         }
 
 
@@ -44,15 +47,15 @@ export class ConverterService {
             return new Date(data);
         }
 
-        if (returnType === Array && type === Array && baseType) {
-            return data.map(item => this.convert(item, baseType));
+        if (returnType === Array && type === Array && options && options.baseType) {
+            return data.map(item => this.convert(item, <Function> options.baseType));
         }
 
-        if (returnType === Map && type === Map && baseType) {
+        if (returnType === Map && type === Map && options && options.baseType) {
             const result = new Map();
 
             data.forEach((value, key) => {
-                result.set(key, this.convert(value, baseType));
+                result.set(key, this.convert(value, <Function> options.baseType));
             });
 
             return result;
@@ -74,6 +77,12 @@ export class ConverterService {
 
                 if (metadata.serialize === false) return;
 
+                let objectProperty = metadata.objectProperty;
+
+                if (options && options.prefix) {
+                    objectProperty = <string> options.prefix + objectProperty;
+                }
+
                 let value;
 
                 if (metadata.converter && metadata.converter.serialize) {
@@ -86,7 +95,7 @@ export class ConverterService {
                     value = this.convert(value, metadata.propertyType, metadata.baseType);
                 }
 
-                result[metadata.objectProperty] = value;
+                result[objectProperty] = value;
             });
 
             return result;
@@ -109,16 +118,22 @@ export class ConverterService {
 
                 if (metadata.deserialize === false) return;
 
+                let objectProperty = metadata.objectProperty;
+
+                if (options && options.prefix) {
+                    objectProperty = <string> options.prefix + objectProperty;
+                }
+
                 let value;
 
                 if (metadata.converter && metadata.converter.deserialize) {
 
-                    value = metadata.converter.deserialize(data, metadata.klassProperty, metadata.objectProperty);
+                    value = metadata.converter.deserialize(data, metadata.klassProperty, objectProperty);
 
                 } else {
 
-                    value = data[metadata.objectProperty];
-                    value = this.convert(value, metadata.propertyType, metadata.baseType);
+                    value = data[objectProperty];
+                    value = this.convert(value, metadata.propertyType, {baseType: metadata.baseType});
 
                 }
 
@@ -143,7 +158,7 @@ export class ConverterService {
             const ins = new klass();
 
             returnProperties.forEach((metadata: PropertyMetadata) => {
-                const value = this.convert(data[metadata.klassProperty], metadata.propertyType, metadata.baseType);
+                const value = this.convert(data[metadata.klassProperty], metadata.propertyType, {baseType: metadata.baseType});
                 ins[metadata.klassProperty] = value;
             });
 
