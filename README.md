@@ -22,6 +22,7 @@
 * Initializer
 
 Please refer to the [documentation](https://loon-project.github.io) for more details.
+[中文文档](https://loon-project.github.io/#/zh-cn/)
 
 <h2 align="center">Core Team</h2>
 <table>
