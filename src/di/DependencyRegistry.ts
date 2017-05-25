@@ -16,6 +16,10 @@ export class DependencyRegistry {
         this.instances.delete(klass);
     }
 
+    public static has(klass: Klass) {
+        return !!this.instances.get(klass);
+    }
+
     public static get(klass: Klass) {
         let instance = this.instances.get(klass);
         let params;

@@ -9,4 +9,5 @@ export * from './core';
 export * from './converter';
 export * from './initializer';
 export * from './testing';
+export * from './event';
 
