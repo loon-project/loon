@@ -112,8 +112,6 @@ export class ApplicationLoader {
         DependencyRegistry.set(<Klass> ApplicationLoader, this);
 
         this.init()
-            .invokeApplicationInitHook()
-            .loadExternalMiddlewares()
             .loadComponents()
             .loadMiddlewares()
             .loadRoutes()
@@ -143,21 +141,6 @@ export class ApplicationLoader {
         return this;
     }
 
-    private invokeApplicationInitHook() {
-        '$onInit' in this ? (<any> this).$onInit() : null;
-        return this;
-    }
-
-    private loadExternalMiddlewares() {
-        this.server.use(require('body-parser').json());
-        this.server.use(require('body-parser').urlencoded({ extended: true }));
-        this.server.use(require('cookie-parser')());
-        this.server.use(require('method-override')());
-        this.server.use(require('serve-static')(this.publicDir));
-
-        return this;
-    }
-
     private loadComponents() {
 
         require('require-all')({
@@ -171,6 +154,14 @@ export class ApplicationLoader {
 
     private loadMiddlewares() {
 
+        '$beforeLoadMiddlewares' in this ? (<any> this).$beforeLoadMiddlewares() : null;
+
+        this.server.use(require('body-parser').json());
+        this.server.use(require('body-parser').urlencoded({ extended: true }));
+        this.server.use(require('cookie-parser')());
+        this.server.use(require('method-override')());
+        this.server.use(require('serve-static')(this.publicDir));
+
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: false})
             .forEach(middlewareMetadata => {
@@ -179,10 +170,14 @@ export class ApplicationLoader {
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
             });
 
+
+        '$afterLoadMiddlewares' in this ? (<any> this).$afterLoadMiddlewares() : null;
         return this;
     }
 
     private loadRoutes() {
+
+        '$beforeLoadRoutes' in this ? (<any> this).$beforeLoadRoutes() : null;
 
         ControllerRegistry.controllers.forEach(controllerMetadata => {
             const transformer = new ControllerTransformer(controllerMetadata);
@@ -190,10 +185,14 @@ export class ApplicationLoader {
             this._server.use(controllerMetadata.baseUrl, router);
         });
 
+        '$afterLoadRoutes' in this ? (<any> this).$afterLoadRoutes() : null;
+
         return this;
     }
 
     private loadErrorMiddlewares() {
+
+        '$beforeLoadErrorMiddlewares' in this ? (<any> this).$beforeLoadErrorMiddlewares() : null;
 
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: true})
@@ -202,6 +201,8 @@ export class ApplicationLoader {
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
             });
+
+        '$afterLoadErrorMiddlewares' in this ? (<any> this).$afterLoadErrorMiddlewares() : null;
 
         return this;
     }
