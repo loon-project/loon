@@ -1,7 +1,7 @@
 import "../TestHelper";
 import * as Express from "express";
 import {RestController} from "../../src/mvc/decorator/Controller";
-import {Delete, Get, Head, Options, Patch, Post, Put} from "../../src/mvc/decorator/Method";
+import {All, Delete, Get, Head, Options, Patch, Post, Put} from "../../src/mvc/decorator/Method";
 import {Res} from "../../src/mvc/decorator/Params";
 import {HttpHelper} from "../helper/HttpHelper";
 import {bootstrap} from "../../src/testing/bootstrap";
@@ -41,6 +41,11 @@ describe("[Integration] Controller", () => {
         @Options("/users/options")
         public optionsAction(@Res() response: Express.Response) {
             response.send('options');
+        }
+
+        @All("/users/allRoutes")
+        public allAction(@Res() response: Express.Response) {
+            response.send("all");
         }
     }
 
@@ -86,6 +91,16 @@ describe("[Integration] Controller", () => {
         const response = await HttpHelper.request('options', "http://localhost:4444/1/users/options");
         expect(response.statusCode).to.be.equal(200);
         expect(response.body).to.be.equal('options');
+    });
+
+    it('should respond all request', async () => {
+        const r1 = await HttpHelper.request('get', "http://localhost:4444/1/users/allRoutes");
+        expect(r1.statusCode).to.be.equal(200);
+        expect(r1.body).to.be.equal('all');
+
+        const r2 = await HttpHelper.request('post', "http://localhost:4444/1/users/allRoutes");
+        expect(r2.statusCode).to.be.equal(200);
+        expect(r2.body).to.be.equal('all');
     });
 });
 

@@ -36,6 +36,12 @@ export function Options(route: string|RegExp) {
     };
 }
 
+export function All(route: string|RegExp) {
+    return (target: any, actionName: string) => {
+        registerHelper(target, actionName, "all", route);
+    };
+}
+
 // head request should not return anything
 export function Head(route: string|RegExp) {
     return (target: any, actionName: string) => {
