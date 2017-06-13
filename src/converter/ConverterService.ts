@@ -83,7 +83,7 @@ export class ConverterService {
                 } else {
 
                     value = data[metadata.klassProperty];
-                    value = this.convert(value, metadata.propertyType, metadata.baseType);
+                    value = this.convert(value, metadata.propertyType, Object);
                 }
 
                 result[metadata.objectProperty] = value;
