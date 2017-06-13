@@ -14,9 +14,12 @@ describe('ConverterService', () => {
     @Service()
     class ATestClassImplementIConverter implements IConverter {
 
-
         public serialize(data: ATestConverterClassTarget, klassProperty: string, objectProperty: string): any {
-            return data.updatedAt.toISOString();
+            try {
+                return data.updatedAt.toISOString();
+            } catch (e) {
+                return;
+            }
         }
 
         public deserialize(data: any, klassProperty: string, objectProperty: string): any {
@@ -28,7 +31,12 @@ describe('ConverterService', () => {
 
         @Property()
         public id: number;
+    }
 
+    class ABaseTestableClass {
+
+        @Property('_uuid')
+        public uuid: string;
     }
 
     @PropertyInherited(ATestConverterBaseClass)
@@ -45,6 +53,9 @@ describe('ConverterService', () => {
 
         @Property({converter: ATestClassImplementIConverter})
         public converter: string;
+
+        @Property({baseType: ABaseTestableClass})
+        public aTestableArr: ABaseTestableClass[];
     }
 
     class AnotherTestConverterClassTarget {
@@ -248,6 +259,19 @@ describe('ConverterService', () => {
         const result2: ANestTestConverterClass = converter.convert(testNestObj2, ANestTestConverterClass);
 
         expect(Array.isArray(result2.arr)).to.be.true;
+    });
+
+    it('should convert a class with array of data to obj', () => {
+        const aTarget = new ATestConverterClassTarget();
+        const aProperty1 = new ABaseTestableClass();
+        aProperty1.uuid = "123";
+        const aProperty2 = new ABaseTestableClass();
+        aProperty2.uuid = "456";
+        aTarget.aTestableArr = [aProperty1, aProperty2];
+
+        const targetObj = converter.convert(aTarget, Object);
+        expect(targetObj.aTestableArr[0]._uuid).to.be.equal("123");
+        expect(targetObj.aTestableArr[1]._uuid).to.be.equal("456");
     });
 
 
