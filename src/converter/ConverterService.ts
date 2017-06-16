@@ -80,10 +80,24 @@ export class ConverterService {
 
                     value = metadata.converter.serialize(data, metadata.klassProperty, metadata.objectProperty);
 
-                } else {
+                } else if (metadata.propertyType === Array || metadata.propertyType === Map) {
 
                     value = data[metadata.klassProperty];
-                    value = this.convert(value, metadata.propertyType, Object);
+
+                    if (TypeUtil.isSimpleType(metadata.baseType)) {
+                        value = this.convert(value, metadata.propertyType, metadata.baseType);
+                    } else {
+                        value = this.convert(value, metadata.propertyType, Object);
+                    }
+
+                } else {
+                    value = data[metadata.klassProperty];
+
+                    if (TypeUtil.isSimpleType(metadata.propertyType)) {
+                        value = this.convert(value, metadata.propertyType);
+                    } else {
+                        value = this.convert(value, Object);
+                    }
                 }
 
                 result[metadata.objectProperty] = value;

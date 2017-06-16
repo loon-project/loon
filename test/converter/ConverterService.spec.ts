@@ -56,6 +56,9 @@ describe('ConverterService', () => {
 
         @Property({baseType: ABaseTestableClass})
         public aTestableArr: ABaseTestableClass[];
+
+        @Property()
+        public aTestableClass: ABaseTestableClass;
     }
 
     class AnotherTestConverterClassTarget {
@@ -201,6 +204,17 @@ describe('ConverterService', () => {
         const targetObj = converter.convert(aTarget, Object);
         expect(targetObj.aTestableArr[0]._uuid).to.be.equal("123");
         expect(targetObj.aTestableArr[1]._uuid).to.be.equal("456");
+    });
+
+    it('should convert a class with a class property to obj', () => {
+        const aTarget = new ATestConverterClassTarget();
+        const aProperty = new ABaseTestableClass();
+        aProperty.uuid = "123";
+
+        aTarget.aTestableClass = aProperty;
+
+        const targetObj = converter.convert(aTarget, Object);
+        expect(targetObj.aTestableClass._uuid).to.be.equal("123");
     });
 
 
