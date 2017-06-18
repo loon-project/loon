@@ -70,7 +70,7 @@ export class ControllerRegistry {
      * @param baseUrl
      * @param isRest
      */
-    public static registerController(type: Function, baseUrl: string, isRest: boolean) {
+    public static registerController(type: Function, baseUrl: string|RegExp, isRest: boolean) {
 
         DependencyRegistry.registerComponent(<Klass>type);
 
