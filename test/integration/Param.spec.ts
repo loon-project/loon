@@ -110,7 +110,6 @@ describe("[Integration] Param", () => {
         expect(response.statusCode).to.be.equal(400);
         expect(response.body.status).to.be.equal(400);
         expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
-        expect(response.body.message).to.be.equal('parameter Authorization is absence');
     });
 
     it("should get PathParam in the action", async () => {
@@ -130,7 +129,6 @@ describe("[Integration] Param", () => {
         expect(response.statusCode).to.be.equal(400);
         expect(response.body.status).to.be.equal(400);
         expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
-        expect(response.body.message).to.be.equal('parameter id is absence');
     });
 
     it('should get QueryParam in the action', async () => {
@@ -144,7 +142,6 @@ describe("[Integration] Param", () => {
         expect(response.statusCode).to.be.equal(400);
         expect(response.body.status).to.be.equal(400);
         expect(response.body.code).to.be.equal('ERR_PARAM_ABSENCE');
-        expect(response.body.message).to.be.equal('parameter status is absence');
     });
 
     it('should get complex object in the action', async () => {

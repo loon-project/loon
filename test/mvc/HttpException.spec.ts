@@ -55,7 +55,6 @@ describe('HttpException', () => {
 
         expect(paramRequired.status).to.be.equal(400);
         expect(paramRequired.code).to.be.equal('ERR_PARAM_ABSENCE');
-        expect(paramRequired.message).to.be.equal('parameter name is absence');
         expect(paramRequired).to.be.an.instanceof(HttpException);
     });
 
