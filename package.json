@@ -1,6 +1,6 @@
 {
   "name": "loon",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "engines": {
     "node": ">=6.0.0"
