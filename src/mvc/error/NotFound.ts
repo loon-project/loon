@@ -2,10 +2,7 @@ import {HttpException} from "./HttpException";
 
 export class NotFound extends HttpException {
 
-    public status = 404;
-
-    public code = "ERR_RESOURCE_NOT_FOUND";
-
-    public message = 'resource not found';
-
+    constructor(message?: string, code?: string) {
+        super(404, code ? code : 'ERR_RESOURCE_NOT_FOUND', message ? message : 'resource not found');
+    }
 }

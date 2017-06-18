@@ -54,7 +54,6 @@ describe('HttpException', () => {
 
         paramRequired.status.should.be.equal(400);
         paramRequired.code.should.be.equal('ERR_PARAM_ABSENCE');
-        paramRequired.message.should.be.equal('parameter name is absence');
         paramRequired.should.be.an.instanceof(HttpException);
     });
 

@@ -110,7 +110,6 @@ describe("[Integration] Param", () => {
             response.statusCode.should.be.equal(400);
             response.body.status.should.be.equal(400);
             response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter Authorization is absence');
         });
     });
 
@@ -130,7 +129,6 @@ describe("[Integration] Param", () => {
         // });
     });
 
-
     it('should get BodyParam in the action', () => {
         return HttpHelper.sendRequest("post", "http://localhost:4444/users", options, (response) => {
             response.statusCode.should.be.equal(201);
@@ -143,7 +141,6 @@ describe("[Integration] Param", () => {
             response.statusCode.should.be.equal(400);
             response.body.status.should.be.equal(400);
             response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter id is absence');
         });
     });
 
@@ -159,7 +156,6 @@ describe("[Integration] Param", () => {
             response.statusCode.should.be.equal(400);
             response.body.status.should.be.equal(400);
             response.body.code.should.be.equal('ERR_PARAM_ABSENCE');
-            response.body.message.should.be.equal('parameter status is absence');
         });
     });
 

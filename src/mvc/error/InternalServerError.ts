@@ -2,10 +2,7 @@ import {HttpException} from "./HttpException";
 
 export class InternalServerError extends HttpException {
 
-    public status = 500;
-
-    public code = 'ERR_INTERNAL_ERROR';
-
-    public message = 'internal error occurs';
-
+    constructor(message?: string, code?: string) {
+        super(500, code ? code : 'ERR_INTERNAL_ERROR', message ? message : 'internal error occurs');
+    }
 }
