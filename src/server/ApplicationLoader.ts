@@ -8,6 +8,7 @@ import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
+import {Request} from "../mvc/interface/Request";
 
 export class ApplicationLoader {
 
@@ -105,7 +106,6 @@ export class ApplicationLoader {
 
 
         this._port = process.env.PORT || settings.port || 9000;
-
         this._components = settings.components || [];
         this._routes = settings.routes || {};
 
@@ -131,12 +131,16 @@ export class ApplicationLoader {
 
     private init() {
 
+        '$beforeInit' in this ? (<any> this).$beforeInit() : null;
+
         InitializerRegistry
             .getInitializers()
             .forEach(initializer => {
                 const instance = DependencyRegistry.get(<Klass>initializer.type);
                 instance['init'].apply(instance);
             });
+
+        '$afterInit' in this ? (<any> this).$afterInit() : null;
 
         return this;
     }
@@ -156,6 +160,11 @@ export class ApplicationLoader {
 
         '$beforeLoadMiddlewares' in this ? (<any> this).$beforeLoadMiddlewares() : null;
 
+        this.server.use((req: Request, res, next) => {
+          req.id = require('cuid')();
+          next();
+        });
+
         this.server.use(require('body-parser').json());
         this.server.use(require('body-parser').urlencoded({ extended: true }));
         this.server.use(require('cookie-parser')());
@@ -172,6 +181,7 @@ export class ApplicationLoader {
 
 
         '$afterLoadMiddlewares' in this ? (<any> this).$afterLoadMiddlewares() : null;
+
         return this;
     }
 
@@ -212,5 +222,4 @@ export class ApplicationLoader {
             console.log(`Application is listening on port ${this.port}`);
         });
     }
-
 }
