@@ -6,6 +6,10 @@ import {DependencyRegistry} from "../di/DependencyRegistry";
 import * as _ from "lodash";
 import {ParamRequired} from "./error/ParamRequired";
 import {ConverterService} from "../converter/ConverterService";
+import {NextFunction} from "./interface/NextFunction";
+import {Request} from './interface/Request';
+import {Response} from './interface/Response';
+
 
 /**
  * Transform a handler to a express handler
@@ -31,7 +35,7 @@ export class HandlerTransformer {
 
         if (isErrorHandler) {
 
-            return (err: any, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+            return (err: any, req: Request, res: Response, next: NextFunction) => {
 
                 return Promise
                     .resolve()
@@ -41,7 +45,7 @@ export class HandlerTransformer {
 
         } else {
 
-            return (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+            return (req: Request, res: Response, next: NextFunction) => {
 
                 return Promise
                     .resolve()
@@ -52,9 +56,9 @@ export class HandlerTransformer {
 
     }
 
-    private invokeMethod(request: Express.Request,
-                         response: Express.Response,
-                         next: Express.NextFunction,
+    private invokeMethod(request: Request,
+                         response: Response,
+                         next: NextFunction,
                          error?: Error) {
 
         if (response.headersSent) {

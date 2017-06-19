@@ -1,5 +1,5 @@
 import "../TestHelper";
-import {RestController, Controller, Get, Post, Put, Patch} from "../../src/index";
+import {RestController, Controller, Get, Post, Put, Patch, Request, Response, NextFunction} from "../../src/index";
 import {Req, PathParam} from "../../src/mvc/decorator/Params";
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
@@ -21,7 +21,7 @@ describe("ControllerRegistry", () => {
     class AControllerRegistryTestRestController {
 
         @Get("/")
-        public indexAction(@Req() request: Express.Request) {
+        public indexAction(@Req() request: Request) {
         }
 
         @Put("/api/:id/")

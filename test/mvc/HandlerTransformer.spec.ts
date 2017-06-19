@@ -5,6 +5,7 @@ import {
     BodyParam, CookieParam, PathParam, QueryParam, HeaderParam, Req,
     Res, Next
 } from "../../src/mvc/decorator/Params";
+import {Request, Response, NextFunction} from '../../src/mvc/index';
 import * as Express from 'express';
 import {ControllerRegistry} from "../../src/mvc/ControllerRegistry";
 import {HandlerTransformer} from "../../src/mvc/HandlerTransformer";
@@ -21,9 +22,9 @@ describe('HandlerTransformer', () => {
                            @PathParam("path_id") pathId: number,
                            @QueryParam("q") q: any,
                            @HeaderParam("Authorization") authorization: string,
-                           @Req() request: Express.Request,
-                           @Res() response: Express.Response,
-                           @Next() next: Express.NextFunction) {
+                           @Req() request: Request,
+                           @Res() response: Response,
+                           @Next() next: NextFunction) {
 
             return {
                 text: "Hello world"
