@@ -4,7 +4,7 @@ export interface PropertyOptions {
 
     name?: string;
 
-    converter?: IConverter;
+    converter?: new (...args) => IConverter;
 
     baseType?: Function;
 
