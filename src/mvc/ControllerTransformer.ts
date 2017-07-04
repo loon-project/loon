@@ -34,12 +34,12 @@ export class ControllerTransformer {
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
 
-                RouterLogger.push({
-                    "Verb": httpMethodAndPath.method,
-                    "Path": httpMethodAndPath.path,
-                    "Type": handlerMetadata.type.name,
-                    "ActionName": handlerMetadata.actionName
-                });
+                RouterLogger.push([
+                    httpMethodAndPath.method,
+                    httpMethodAndPath.path,
+                    handlerMetadata.type.name,
+                    handlerMetadata.actionName
+                ]);
 
                 this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);
             });
