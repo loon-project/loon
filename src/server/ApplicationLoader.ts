@@ -28,7 +28,7 @@ export class ApplicationLoader {
 
     private _dbDir: string;
 
-    private _port: number;
+    private _port: string | number;
 
     // TODO: add routes group support
     private _routes: {[key: string]: string};
