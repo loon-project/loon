@@ -36,6 +36,7 @@ export class ControllerTransformer {
 
                 RouterLogger.push([
                     httpMethodAndPath.method,
+                    this._controllerMetadata.baseUrl,
                     httpMethodAndPath.path,
                     handlerMetadata.type.name,
                     handlerMetadata.actionName
