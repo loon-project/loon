@@ -77,7 +77,7 @@ export class ApplicationLoader {
         return this._dbDir;
     }
 
-    get port(): number {
+    get port(): string | number {
         return this._port;
     }
 
