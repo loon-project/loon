@@ -110,42 +110,25 @@ export class ApplicationLoader {
         this._routes = settings.routes || {};
 
         DependencyRegistry.set(<Klass> ApplicationLoader, this);
-
-        this.init()
-            .loadComponents()
-            .loadMiddlewares()
-            .loadRoutes()
-            .loadErrorMiddlewares();
     }
 
-    public start(): Promise<any> {
+    private async init() {
 
-        return Promise
-            .resolve()
-            .then(() => this.run())
-            .catch(e => {
-                throw e;
-            });
-    }
-
-
-    private init() {
-
-        '$beforeInit' in this ? (<any> this).$beforeInit() : null;
+        '$beforeInit' in this ? await (<any> this).$beforeInit() : null;
 
         InitializerRegistry
             .getInitializers()
-            .forEach(initializer => {
+            .forEach(async initializer => {
                 const instance = DependencyRegistry.get(<Klass>initializer.type);
-                instance['init'].apply(instance);
+                await instance['init'].apply(instance);
             });
 
-        '$afterInit' in this ? (<any> this).$afterInit() : null;
+        '$afterInit' in this ? await (<any> this).$afterInit() : null;
 
         return this;
     }
 
-    private loadComponents() {
+    private async loadComponents() {
 
         require('require-all')({
             dirname     :  this.srcDir,
@@ -156,9 +139,9 @@ export class ApplicationLoader {
         return this;
     }
 
-    private loadMiddlewares() {
+    private async loadMiddlewares() {
 
-        '$beforeLoadMiddlewares' in this ? (<any> this).$beforeLoadMiddlewares() : null;
+        '$beforeLoadMiddlewares' in this ? await (<any> this).$beforeLoadMiddlewares() : null;
 
         this.server.use((req: Request, res, next) => {
           req.id = require('cuid')();
@@ -180,14 +163,14 @@ export class ApplicationLoader {
             });
 
 
-        '$afterLoadMiddlewares' in this ? (<any> this).$afterLoadMiddlewares() : null;
+        '$afterLoadMiddlewares' in this ? await (<any> this).$afterLoadMiddlewares() : null;
 
         return this;
     }
 
-    private loadRoutes() {
+    private async loadRoutes() {
 
-        '$beforeLoadRoutes' in this ? (<any> this).$beforeLoadRoutes() : null;
+        '$beforeLoadRoutes' in this ? await (<any> this).$beforeLoadRoutes() : null;
 
         ControllerRegistry.controllers.forEach(controllerMetadata => {
             const transformer = new ControllerTransformer(controllerMetadata);
@@ -195,14 +178,14 @@ export class ApplicationLoader {
             this._server.use(controllerMetadata.baseUrl, router);
         });
 
-        '$afterLoadRoutes' in this ? (<any> this).$afterLoadRoutes() : null;
+        '$afterLoadRoutes' in this ? await (<any> this).$afterLoadRoutes() : null;
 
         return this;
     }
 
-    private loadErrorMiddlewares() {
+    private async loadErrorMiddlewares() {
 
-        '$beforeLoadErrorMiddlewares' in this ? (<any> this).$beforeLoadErrorMiddlewares() : null;
+        '$beforeLoadErrorMiddlewares' in this ? await (<any> this).$beforeLoadErrorMiddlewares() : null;
 
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: true})
@@ -212,12 +195,23 @@ export class ApplicationLoader {
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
             });
 
-        '$afterLoadErrorMiddlewares' in this ? (<any> this).$afterLoadErrorMiddlewares() : null;
+        '$afterLoadErrorMiddlewares' in this ? await (<any> this).$afterLoadErrorMiddlewares() : null;
 
         return this;
     }
 
-    private run() {
+    private async run() {
+
+        try {
+            await this.init();
+            await this.loadComponents();
+            await this.loadMiddlewares();
+            await this.loadRoutes();
+            await this.loadErrorMiddlewares();
+        } catch (e) {
+          throw new Error('failed to run application');
+        }
+
         this.server.listen(this.port, () => {
             console.log(`Application is listening on port ${this.port}`);
         });
