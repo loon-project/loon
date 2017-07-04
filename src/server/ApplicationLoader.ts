@@ -9,6 +9,7 @@ import {DependencyRegistry} from "../di/DependencyRegistry";
 import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
 import {Request} from "../mvc/interface/Request";
+import {RouterLogger} from "../util/RouterLogger";
 
 export class ApplicationLoader {
 
@@ -215,6 +216,8 @@ export class ApplicationLoader {
         } catch (e) {
           throw new Error('failed to run application');
         }
+
+        console.log(RouterLogger.toString());
 
         this.server.listen(this.port, () => {
             console.log(`Application is listening on port ${this.port}`);

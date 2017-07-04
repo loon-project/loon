@@ -2,6 +2,7 @@ import {ControllerMetadata} from "./ControllerMetadata";
 import * as Express from "express";
 import {HandlerTransformer} from "./HandlerTransformer";
 import * as _ from "lodash";
+import {RouterLogger} from "../util/RouterLogger";
 
 export class ControllerTransformer {
 
@@ -32,6 +33,14 @@ export class ControllerTransformer {
                 afterFilters);
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
+
+                RouterLogger.push({
+                    "Verb": httpMethodAndPath.method,
+                    "Path": httpMethodAndPath.path,
+                    "Type": handlerMetadata.type.name,
+                    "ActionName": handlerMetadata.actionName
+                });
+
                 this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);
             });
         });
