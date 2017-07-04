@@ -159,7 +159,6 @@ export class ApplicationLoader {
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: false})
             .forEach(middlewareMetadata => {
-                console.log(`[LOON] loading middleware: ${middlewareMetadata.type.name}`);
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
@@ -176,7 +175,6 @@ export class ApplicationLoader {
         '$beforeLoadRoutes' in this ? await (<any> this).$beforeLoadRoutes() : null;
 
         ControllerRegistry.controllers.forEach(controllerMetadata => {
-            console.log(`[LOON] loading controller: ${controllerMetadata.type.name}`);
             const transformer = new ControllerTransformer(controllerMetadata);
             const router = transformer.transform();
             this._server.use(controllerMetadata.baseUrl, router);
@@ -194,7 +192,6 @@ export class ApplicationLoader {
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: true})
             .forEach(middlewareMetadata => {
-                console.log(`[LOON] loading middleware: ${middlewareMetadata.type.name}`);
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
                 this._server.use(middlewareMetadata.baseUrl, transformer.transform());
