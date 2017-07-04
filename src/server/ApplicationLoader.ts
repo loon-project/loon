@@ -204,7 +204,7 @@ export class ApplicationLoader {
         return this;
     }
 
-    private async run() {
+    public async start() {
 
         try {
             await this.init();
