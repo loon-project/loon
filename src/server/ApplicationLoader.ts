@@ -120,7 +120,6 @@ export class ApplicationLoader {
         InitializerRegistry
             .getInitializers()
             .forEach(async initializer => {
-                console.log(`[LOON] loading initializer: ${initializer.type.name}`);
                 const instance = DependencyRegistry.get(<Klass>initializer.type);
                 await instance['init'].apply(instance);
             });
