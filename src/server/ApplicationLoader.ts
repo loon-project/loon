@@ -204,8 +204,8 @@ export class ApplicationLoader {
     public async start() {
 
         try {
-            await this.init();
             await this.loadComponents();
+            await this.init();
             await this.loadMiddlewares();
             await this.loadRoutes();
             await this.loadErrorMiddlewares();
