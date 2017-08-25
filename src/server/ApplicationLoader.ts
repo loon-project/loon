@@ -175,8 +175,8 @@ export class ApplicationLoader {
             }
         }));
 
-        this.server.use(require('body-parser').json());
-        this.server.use(require('body-parser').urlencoded({ extended: true }));
+        this.server.use(require('body-parser').json({ limit: '1gb' }));
+        this.server.use(require('body-parser').urlencoded({ limit: '1gb', extended: true }));
         this.server.use(require('cookie-parser')());
         this.server.use(require('method-override')());
         this.server.use(require('serve-static')(this.publicDir));
