@@ -1,6 +1,6 @@
 {
   "name": "typed-framework",
-  "version": "0.8.11",
+  "version": "0.8.12",
   "description": "Enterprise ready spring like framework build on Typescript and Express",
   "engines": {
     "node": ">=6.0.0"
@@ -70,6 +70,6 @@
     "sinon-chai": "^2.8.0",
     "ts-node": "^3.0.2",
     "tslint": "^4.3.1",
-    "typescript": "^2.2.1"
+    "typescript": "2.3.0"
   }
 }
