@@ -36,12 +36,16 @@ export class HandlerTransformer {
         return this.transformHandler()
     }
 
-    public transformHandler(): (req, res, next) => any {
-        return (req, res, next) => {
-            return Promise
-                .resolve()
-                .then(() => this.invokeMethod(req, res, next))
-                .catch(err => next(err));
+    public transformHandler(): (req, res) => any {
+        return (req, res) => {
+            return new Promise((resolve, reject) => {
+                try {
+                    this.invokeMethod(req, res, noop)
+                    resolve()
+                } catch (e) {
+                    reject(e)
+                }
+            })
         }
     }
 
@@ -120,53 +124,36 @@ export class HandlerTransformer {
                     return;
 
                 case ParamType.Header:
-
                     const header = request.header(param.expression);
-
                     if (param.required && typeof header === 'undefined') {
                         throw new ParamRequired(param.expression);
                     }
-
                     args.push(header);
                     return;
-
                 case ParamType.Error:
-
                     args.push(error);
                     return;
-
                 case ParamType.Request:
-
                     args.push(request);
                     return;
-
                 case ParamType.Response:
-
                     args.push(response);
                     return;
-
                 case ParamType.Next:
-
                     args.push(next);
                     return;
-
                 case ParamType.Data:
-
                     args.push(response.locals);
                     return;
-
                 default:
                     args.push(undefined);
                     return;
             }
-
         });
 
 
         const handlerKlass = <Klass>this.handlerMetadata.type;
-
         const handlerInstance = DependencyRegistry.get(handlerKlass);
-
         return handlerInstance[methodName].apply(handlerInstance, args);
     }
 }

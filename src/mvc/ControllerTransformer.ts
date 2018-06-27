@@ -1,5 +1,6 @@
 import {ControllerMetadata} from "./ControllerMetadata";
 import * as Express from "express";
+import * as fastify from 'fastify'
 import {HandlerTransformer} from "./HandlerTransformer";
 import * as _ from "lodash";
 import {RouterLogger} from "../util/RouterLogger";
@@ -8,29 +9,23 @@ export class ControllerTransformer {
 
     private _controllerMetadata: ControllerMetadata;
 
-    private _router: Express.Router;
+    private _router: fastify.FastifyInstance;
 
     get controllerMetadata(): ControllerMetadata {
         return this._controllerMetadata;
     }
 
-    constructor(controllerMetadata: ControllerMetadata) {
+    constructor(controllerMetadata: ControllerMetadata, fastify: fastify.FastifyInstance) {
         this._controllerMetadata = controllerMetadata;
-        this._router = Express.Router();
+        this._router = fastify;
     }
 
     public transform() {
 
         this._controllerMetadata.handlers.forEach(handlerMetadata => {
-
             const handlerTransformer = new HandlerTransformer(handlerMetadata);
-            const handler = handlerTransformer.transform();
+            const handler = handlerTransformer.transformHandler();
             const [beforeFilters, afterFilters] = this.getFiltersForAction(handlerMetadata.actionName);
-
-            const actions = _.concat([],
-                beforeFilters,
-                <any>handler,
-                afterFilters);
 
             handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
 
@@ -42,7 +37,20 @@ export class ControllerTransformer {
                     handlerMetadata.actionName
                 ]);
 
-                this._router[httpMethodAndPath.method](httpMethodAndPath.path, actions);
+                this._router.register((fastify, opts, next) => {
+
+                    beforeFilters.forEach(filter => {
+                        fastify.addHook('preHandler', filter)
+                    })
+
+                    afterFilters.forEach(filter => {
+                        fastify.addHook('onSend', filter)
+                    })
+
+
+                    fastify[httpMethodAndPath.method](httpMethodAndPath.path, handler)
+                    next()
+                })
             });
         });
 

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "alwaysStrict": true,
+    "pretty": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "types":[
+      "node",
+      "express",
+      "reflect-metadata",
+      "chai",
+      "mocha"
+    ]
+  },
+
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}

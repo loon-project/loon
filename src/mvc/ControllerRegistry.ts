@@ -14,31 +14,31 @@ export class ControllerRegistry {
 
     public static controllers = ControllerRegistry._controllers;
 
-    public static getRoutes(type?: Function) {
+    // public static getRoutes(type?: Function) {
 
-        const result = new Map();
+    //     const result = new Map();
 
-        if (type) {
+    //     if (type) {
 
-            const controllerMetadata = ControllerRegistry._controllers.get(type);
+    //         const controllerMetadata = ControllerRegistry._controllers.get(type);
 
-            if (controllerMetadata) {
-                const transformer = new ControllerTransformer(controllerMetadata);
-                const router = transformer.transform();
-                result.set(controllerMetadata.baseUrl, router);
-            }
+    //         if (controllerMetadata) {
+    //             const transformer = new ControllerTransformer(controllerMetadata);
+    //             const router = transformer.transform();
+    //             result.set(controllerMetadata.baseUrl, router);
+    //         }
 
-        } else {
+    //     } else {
 
-            ControllerRegistry.controllers.forEach(controllerMetadata => {
-                const transformer = new ControllerTransformer(controllerMetadata);
-                const router = transformer.transform();
-                result.set(controllerMetadata.baseUrl, router);
-            });
-        }
+    //         ControllerRegistry.controllers.forEach(controllerMetadata => {
+    //             const transformer = new ControllerTransformer(controllerMetadata);
+    //             const router = transformer.transform();
+    //             result.set(controllerMetadata.baseUrl, router);
+    //         });
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 
 
     /**
