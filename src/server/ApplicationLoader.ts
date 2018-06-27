@@ -14,7 +14,6 @@ import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
 import {Request} from "../mvc/interface/Request";
 import {RouterLogger} from "../util/RouterLogger";
-const betas = require('../../beta')
 
 export class ApplicationLoader {
 
@@ -155,16 +154,16 @@ export class ApplicationLoader {
 
         '$beforeLoadMiddlewares' in this ? await (<any> this).$beforeLoadMiddlewares() : null;
 
-        MiddlewareRegistry
-            .getMiddlewares({isErrorMiddleware: false})
-            .forEach(middlewareMetadata => {
-                const handlerMetadata = middlewareMetadata.handler;
-                const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.register((ins, options, next) => {
-                    ins.use(transformer.transform())
-                    next()
-                }, {prefix: middlewareMetadata.baseUrl})
-           });
+        // MiddlewareRegistry
+        //     .getMiddlewares({isErrorMiddleware: false})
+        //     .forEach(middlewareMetadata => {
+        //         const handlerMetadata = middlewareMetadata.handler;
+        //         const transformer = new HandlerTransformer(handlerMetadata);
+        //         this._server.register((ins, options, next) => {
+        //             ins.use(transformer.transform())
+        //             next()
+        //         }, {prefix: middlewareMetadata.baseUrl})
+        //    });
 
 
         '$afterLoadMiddlewares' in this ? await (<any> this).$afterLoadMiddlewares() : null;
@@ -177,13 +176,17 @@ export class ApplicationLoader {
         '$beforeLoadRoutes' in this ? await (<any> this).$beforeLoadRoutes() : null;
 
         ControllerRegistry.controllers.forEach(controllerMetadata => {
-            const transformer = new ControllerTransformer(controllerMetadata);
-            const router = transformer.transform();
-            this._server.use(controllerMetadata.baseUrl, router);
+            function controller(fasifyInstance, opts, next) {
+                const transformer = new ControllerTransformer(controllerMetadata, fasifyInstance)
+                transformer.transform()
+                next()
+            }
+            const opts = {prefix: controllerMetadata.baseUrl}
+            this._server
+                .register(controller, opts)
         });
 
         '$afterLoadRoutes' in this ? await (<any> this).$afterLoadRoutes() : null;
-
         return this;
     }
 
@@ -191,16 +194,16 @@ export class ApplicationLoader {
 
         '$beforeLoadErrorMiddlewares' in this ? await (<any> this).$beforeLoadErrorMiddlewares() : null;
 
-        MiddlewareRegistry
-            .getMiddlewares({isErrorMiddleware: true})
-            .forEach(middlewareMetadata => {
-                const handlerMetadata = middlewareMetadata.handler;
-                const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.register((ins, options, next) => {
-                    ins.setErrorHandler(transformer.transformErrorHandler())
-                    next()
-                }, {prefix: middlewareMetadata.baseUrl})
-            });
+        // MiddlewareRegistry
+        //     .getMiddlewares({isErrorMiddleware: true})
+        //     .forEach(middlewareMetadata => {
+        //         const handlerMetadata = middlewareMetadata.handler;
+        //         const transformer = new HandlerTransformer(handlerMetadata);
+        //         this._server.register((ins, options, next) => {
+        //             ins.setErrorHandler(transformer.transformErrorHandler())
+        //             next()
+        //         }, {prefix: middlewareMetadata.baseUrl})
+        //     });
 
         '$afterLoadErrorMiddlewares' in this ? await (<any> this).$afterLoadErrorMiddlewares() : null;
 
@@ -219,11 +222,12 @@ export class ApplicationLoader {
             throw new Error('failed to run application');
         }
 
-        console.log(RouterLogger.toString());
-
-        this.server.listen(this.port, () => {
-            console.log(`Application is listening on port ${this.port}`);
-        });
+        this._server
+            .listen(this.port, err => {
+                if (err) console.log(err)
+                console.log(RouterLogger.toString());
+                console.log('server is start')
+            })
     }
 }
 
