@@ -9,7 +9,6 @@
     "pretty": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    // "allowJs": true,
     "types":[
       "node",
       "express",

@@ -10,6 +10,7 @@ import {NextFunction} from "./interface/NextFunction";
 import {Request} from './interface/Request';
 import {Response} from './interface/Response';
 
+function noop() {}
 
 /**
  * Transform a handler to a express handler
@@ -30,30 +31,26 @@ export class HandlerTransformer {
     }
 
     public transform() {
-
         const isErrorHandler = this.handlerMetadata.isErrorHandler;
+        if (isErrorHandler) return this.transformErrorHandler()
+        return this.transformHandler()
+    }
 
-        if (isErrorHandler) {
-
-            return (err: any, req: Request, res: Response, next: NextFunction) => {
-
-                return Promise
-                    .resolve()
-                    .then(() => this.invokeMethod(req, res, next, err))
-                    .catch(err => next(err));
-            };
-
-        } else {
-
-            return (req: Request, res: Response, next: NextFunction) => {
-
-                return Promise
-                    .resolve()
-                    .then(() => this.invokeMethod(req, res, next))
-                    .catch(err => next(err));
-            };
+    public transformHandler(): (req, res, next) => any {
+        return (req, res, next) => {
+            return Promise
+                .resolve()
+                .then(() => this.invokeMethod(req, res, next))
+                .catch(err => next(err));
         }
+    }
 
+    public transformErrorHandler(): (err, req, res) => any {
+        return (err, req, res) => {
+            return Promise
+                .resolve()
+                .then(() => this.invokeMethod(req, res, noop, err))
+        };
     }
 
     private invokeMethod(request: Request,

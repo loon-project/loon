@@ -1,5 +1,6 @@
 import "../TestHelper";
 import * as Express from "express";
+import * as fastify from 'fastify'
 import {Middleware, ErrorMiddleware} from "../../src/mvc/decorator/Middleware";
 import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {Res, Next, Data, Err} from "../../src/mvc/decorator/Params";
@@ -63,7 +64,8 @@ describe("[Integration] Middleware", () => {
     }
 
 
-    const app: Express.Application = Express();
+    // const app: Express.Application = Express();
+    const app = fastify()
     let server;
 
     before(done => {
@@ -83,8 +85,12 @@ describe("[Integration] Middleware", () => {
         });
 
         const errorMiddlewareMetadata = MiddlewareRegistry.getMiddleware(GlobalErrorMiddleware);
-        const errorMiddlewareHandler = new HandlerTransformer(errorMiddlewareMetadata.handler).transform();
-        app.use(errorMiddlewareMetadata.baseUrl, errorMiddlewareHandler);
+        const errorMiddlewareHandler = new HandlerTransformer(errorMiddlewareMetadata.handler).transformErrorHandler();
+
+        app.register((ins, opts, next) => {
+            ins.setErrorHandler(errorMiddlewareHandler)
+        }, {prefix: errorMiddlewareMetadata.baseUrl})
+
 
         server = app.listen(4444, done);
     });

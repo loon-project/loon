@@ -51,3 +51,7 @@ dts
 **/*/.DS_Store
 .vscode
 
+
+examples/**/*.js
+examples/**/*.js.map
+

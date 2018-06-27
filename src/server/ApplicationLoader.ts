@@ -1,6 +1,10 @@
+import * as express from "express";
+import * as fastify from 'fastify'
+import * as fs from "fs";
+import * as http from 'http'
+import * as path from 'path'
+import * as findUp from 'find-up'
 import {ApplicationRegistry} from "./ApplicationRegistry";
-import * as Express from "express";
-import * as Fs from "fs";
 import {ControllerRegistry} from "../mvc/ControllerRegistry";
 import {HandlerTransformer} from "../mvc/HandlerTransformer";
 import {ControllerTransformer} from "../mvc/ControllerTransformer";
@@ -10,10 +14,11 @@ import {InitializerRegistry} from "../initializer/InitializerRegistry";
 import {Klass} from "../core/Klass";
 import {Request} from "../mvc/interface/Request";
 import {RouterLogger} from "../util/RouterLogger";
+const betas = require('../../beta')
 
 export class ApplicationLoader {
 
-    private _server: Express.Application;
+    private _server: fastify.FastifyInstance
 
     private _env: string;
 
@@ -29,7 +34,7 @@ export class ApplicationLoader {
 
     private _dbDir: string;
 
-    private _port: string | number;
+    private _port: string;
 
     // TODO: add routes group support
     private _routes: {[key: string]: string};
@@ -78,7 +83,7 @@ export class ApplicationLoader {
         return this._dbDir;
     }
 
-    get port(): string | number {
+    get port(): string {
         return this._port;
     }
 
@@ -86,27 +91,33 @@ export class ApplicationLoader {
      * Load user defined settings into ApplicationLoader
      * Initialize settings
      */
-    constructor() {
+    constructor(server?: fastify.FastifyInstance) {
 
-        this._server = Express();
         const settings = ApplicationRegistry.settings;
 
-        this._env = process.env.NODE_ENV || settings.env || 'development';
+        if (server) {
+            this._server = server
+        } else {
+            this._server = fastify()
+        }
 
+        this._env = process.env.NODE_ENV || settings.env || 'development';
         this._rootDir = settings.rootDir;
 
         // Assign user defined folder structure to ApplicationLoader
         // If no such folder, then create it
-        ['src', 'public', 'log', 'config', 'db'].map(item => {
+        // to simplify, only require src folder 
+        // ['src', 'public', 'log', 'config', 'db'].map(item => {
+        ['src'].map(item => {
             this[`_${item}Dir`] = settings[`${item}Dir`] || `${this._rootDir}/${item}`;
 
-            if (!Fs.existsSync(this[`_${item}Dir`]) && this._env !== 'test') {
-                Fs.mkdirSync(this[`_${item}Dir`]);
+            if (!fs.existsSync(this[`_${item}Dir`]) && this._env !== 'test') {
+                fs.mkdirSync(this[`_${item}Dir`]);
             }
         });
 
 
-        this._port = process.env.PORT || settings.port || 9000;
+        this._port = process.env.PORT || settings.port || '9000';
         this._components = settings.components || [];
         this._routes = settings.routes || {};
 
@@ -144,24 +155,16 @@ export class ApplicationLoader {
 
         '$beforeLoadMiddlewares' in this ? await (<any> this).$beforeLoadMiddlewares() : null;
 
-        this.server.use((req: Request, res, next) => {
-          req.id = require('cuid')();
-          next();
-        });
-
-        this.server.use(require('body-parser').json());
-        this.server.use(require('body-parser').urlencoded({ extended: true }));
-        this.server.use(require('cookie-parser')());
-        this.server.use(require('method-override')());
-        this.server.use(require('serve-static')(this.publicDir));
-
         MiddlewareRegistry
             .getMiddlewares({isErrorMiddleware: false})
             .forEach(middlewareMetadata => {
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.use(middlewareMetadata.baseUrl, transformer.transform());
-            });
+                this._server.register((ins, options, next) => {
+                    ins.use(transformer.transform())
+                    next()
+                }, {prefix: middlewareMetadata.baseUrl})
+           });
 
 
         '$afterLoadMiddlewares' in this ? await (<any> this).$afterLoadMiddlewares() : null;
@@ -193,7 +196,10 @@ export class ApplicationLoader {
             .forEach(middlewareMetadata => {
                 const handlerMetadata = middlewareMetadata.handler;
                 const transformer = new HandlerTransformer(handlerMetadata);
-                this._server.use(middlewareMetadata.baseUrl, transformer.transform());
+                this._server.register((ins, options, next) => {
+                    ins.setErrorHandler(transformer.transformErrorHandler())
+                    next()
+                }, {prefix: middlewareMetadata.baseUrl})
             });
 
         '$afterLoadErrorMiddlewares' in this ? await (<any> this).$afterLoadErrorMiddlewares() : null;
@@ -210,7 +216,7 @@ export class ApplicationLoader {
             await this.loadRoutes();
             await this.loadErrorMiddlewares();
         } catch (e) {
-          throw new Error('failed to run application');
+            throw new Error('failed to run application');
         }
 
         console.log(RouterLogger.toString());
@@ -220,3 +226,4 @@ export class ApplicationLoader {
         });
     }
 }
+
