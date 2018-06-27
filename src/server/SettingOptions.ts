@@ -49,7 +49,7 @@ export interface SettingOptions {
      * `process.env.PORT` overwrite everything
      * Default value: 9000
      */
-    port?: string|number;
+    port?: string;
 
     /**
      * API mount path, a Map<string, string> data structure

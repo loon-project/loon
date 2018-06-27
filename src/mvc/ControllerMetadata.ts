@@ -5,7 +5,7 @@ export class ControllerMetadata {
 
     private _type: Function;
 
-    private _baseUrl: string|RegExp;
+    private _baseUrl: string;
 
     private _isRest: boolean;
 
@@ -19,11 +19,11 @@ export class ControllerMetadata {
         return this._type;
     }
 
-    get baseUrl(): string|RegExp {
+    get baseUrl(): string {
         return this._baseUrl;
     }
 
-    set baseUrl(value: string|RegExp) {
+    set baseUrl(value: string) {
         this._baseUrl = value;
     }
 
