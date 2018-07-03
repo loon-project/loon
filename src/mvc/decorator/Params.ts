@@ -26,18 +26,6 @@ export function HeaderParam(expression: string, options?: HandlerParamOptions) {
     };
 }
 
-export function CookieParam(expression: string, options?: HandlerParamOptions) {
-    return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Cookie, actionName, index, expression, options);
-    };
-}
-
-export function SessionParam(expression: string, options?: HandlerParamOptions) {
-    return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Session, actionName, index, expression, options);
-    };
-}
-
 export function Req() {
     return (target: any, actionName: string, index: number) => {
         registerHelper(target.constructor, ParamType.Request, actionName, index, "");

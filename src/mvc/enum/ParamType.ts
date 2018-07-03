@@ -3,8 +3,6 @@ export enum ParamType {
     Query,
     Body,
     Header,
-    Cookie,
-    Session,
 
     Request,
     Response,

@@ -6,7 +6,7 @@
 [![Coverage Status][coveralls-image]][coveralls-url]
 
 
-<h1 align="center">Loon(气球)</h1>
+<h1 align="center">LOON(气球)</h1>
 
 > Enterprise ready spring like framework build on Typescript and Express
 
