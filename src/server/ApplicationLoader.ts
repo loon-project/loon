@@ -89,12 +89,15 @@ export class ApplicationLoader {
      * Load user defined settings into ApplicationLoader
      * Initialize settings
      */
-    constructor(typeOrServer?: string|fastify.FastifyInstance|express.Application) {
+    constructor(typeOrServer: string|fastify.FastifyInstance|express.Application) {
 
         const settings = ApplicationRegistry.settings;
 
         if (typeOrServer === 'express') {
-            this._server = express()
+            this._server = express() as express.Application
+            this._server.use(require('body-parser').json())
+            this._server.use(require('body-parser').urlencoded({ extended: true }))
+            this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
             this._server = fastify()
         } else {
