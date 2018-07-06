@@ -1,23 +1,22 @@
 import * as express from "express";
 import * as fastify from 'fastify'
 import * as fs from "fs";
-import * as http from 'http'
-import * as path from 'path'
-import * as findUp from 'find-up'
-import {ApplicationRegistry} from "./ApplicationRegistry";
-import {ControllerRegistry} from "../mvc/ControllerRegistry";
-import {HandlerTransformer} from "../mvc/HandlerTransformer";
-import {ControllerTransformer} from "../mvc/ControllerTransformer";
-import {MiddlewareRegistry} from "../mvc/MiddlewareRegistry";
-import {DependencyRegistry} from "../di/DependencyRegistry";
-import {InitializerRegistry} from "../initializer/InitializerRegistry";
-import {Klass} from "../core/Klass";
-import {Request} from "../mvc/interface/Request";
-import {RouterLogger} from "../util/RouterLogger";
+import { ApplicationRegistry } from "./ApplicationRegistry";
+import { DependencyRegistry } from "../di/DependencyRegistry";
+import { InitializerRegistry } from "../initializer/InitializerRegistry";
+import { Klass } from "../core/Klass";
+import { IHandlerAdapter, ILoaderAdapter } from "../server-adapters/IAdapter";
+import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/FastifyAdapter";
+import { ConverterService } from "../converter";
+import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
 
 export class ApplicationLoader {
 
-    private _server: fastify.FastifyInstance
+    private _server: fastify.FastifyInstance|express.Application
+
+    private _handlerAdapter: IHandlerAdapter
+
+    private _loaderAdapter: ILoaderAdapter
 
     private _env: string;
 
@@ -90,14 +89,24 @@ export class ApplicationLoader {
      * Load user defined settings into ApplicationLoader
      * Initialize settings
      */
-    constructor(server?: fastify.FastifyInstance) {
+    constructor(typeOrServer?: string|fastify.FastifyInstance|express.Application) {
 
         const settings = ApplicationRegistry.settings;
 
-        if (server) {
-            this._server = server
-        } else {
+        if (typeOrServer === 'express') {
+            this._server = express()
+        } else if (typeOrServer === 'fastify') {
             this._server = fastify()
+        } else {
+            this._server = <fastify.FastifyInstance|express.Application>typeOrServer
+        }
+
+        if ((this._server as fastify.FastifyInstance).setErrorHandler) {
+            this._handlerAdapter = new FastifyHandlerAdapter(new ConverterService())
+            this._loaderAdapter = new FastifyLoaderAdapter(this._server as fastify.FastifyInstance, this._handlerAdapter)
+        } else if ((this._server as express.Application)['m-search']) {
+            this._handlerAdapter = new ExpressHandlerAdapter(new ConverterService())
+            this._loaderAdapter = new ExpressLoaderAdapter(this._server as express.Application, this._handlerAdapter)
         }
 
         this._env = process.env.NODE_ENV || settings.env || 'development';
@@ -123,111 +132,60 @@ export class ApplicationLoader {
         DependencyRegistry.set(<Klass> ApplicationLoader, this);
     }
 
-    private async init() {
+    private async _loadComponents() {
+        require('require-all')({
+            dirname     :  this.srcDir,
+            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
+            recursive   : true
+        });
+        return this;
+    }
 
+    private async _init() {
         '$beforeInit' in this ? await (<any> this).$beforeInit() : null;
-
         InitializerRegistry
             .getInitializers()
             .forEach(async initializer => {
                 const instance = DependencyRegistry.get(<Klass>initializer.type);
                 await instance['init'].apply(instance);
             });
-
         '$afterInit' in this ? await (<any> this).$afterInit() : null;
-
         return this;
     }
 
-    private async loadComponents() {
-
-        require('require-all')({
-            dirname     :  this.srcDir,
-            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
-            recursive   : true
-        });
-
-        return this;
-    }
-
-    private async loadMiddlewares() {
-
+    private async _loadMiddlewares() {
         '$beforeLoadMiddlewares' in this ? await (<any> this).$beforeLoadMiddlewares() : null;
-
-        // MiddlewareRegistry
-        //     .getMiddlewares({isErrorMiddleware: false})
-        //     .forEach(middlewareMetadata => {
-        //         const handlerMetadata = middlewareMetadata.handler;
-        //         const transformer = new HandlerTransformer(handlerMetadata);
-        //         this._server.register((ins, options, next) => {
-        //             ins.use(transformer.transform())
-        //             next()
-        //         }, {prefix: middlewareMetadata.baseUrl})
-        //    });
-
-
+        this._loaderAdapter.loadMiddlewares()
         '$afterLoadMiddlewares' in this ? await (<any> this).$afterLoadMiddlewares() : null;
-
         return this;
     }
 
-    private async loadRoutes() {
-
+    private async _loadControllers() {
         '$beforeLoadRoutes' in this ? await (<any> this).$beforeLoadRoutes() : null;
-
-        ControllerRegistry.controllers.forEach(controllerMetadata => {
-            function controller(fasifyInstance, opts, next) {
-                const transformer = new ControllerTransformer(controllerMetadata, fasifyInstance)
-                transformer.transform()
-                next()
-            }
-            const opts = {prefix: controllerMetadata.baseUrl}
-            this._server
-                .register(controller, opts)
-        });
-
+        this._loaderAdapter.loadControllers()
         '$afterLoadRoutes' in this ? await (<any> this).$afterLoadRoutes() : null;
         return this;
     }
 
-    private async loadErrorMiddlewares() {
-
+    private async _loadErrorMiddlewares() {
         '$beforeLoadErrorMiddlewares' in this ? await (<any> this).$beforeLoadErrorMiddlewares() : null;
-
-        // MiddlewareRegistry
-        //     .getMiddlewares({isErrorMiddleware: true})
-        //     .forEach(middlewareMetadata => {
-        //         const handlerMetadata = middlewareMetadata.handler;
-        //         const transformer = new HandlerTransformer(handlerMetadata);
-        //         this._server.register((ins, options, next) => {
-        //             ins.setErrorHandler(transformer.transformErrorHandler())
-        //             next()
-        //         }, {prefix: middlewareMetadata.baseUrl})
-        //     });
-
+        this._loaderAdapter.loadErrorMiddlewares()
         '$afterLoadErrorMiddlewares' in this ? await (<any> this).$afterLoadErrorMiddlewares() : null;
-
         return this;
     }
 
-    public async start() {
-
+    public async init() {
         try {
-            await this.loadComponents();
-            await this.init();
-            await this.loadMiddlewares();
-            await this.loadRoutes();
-            await this.loadErrorMiddlewares();
+            await this._loadComponents()
+            await this._init()
+            await this._loadMiddlewares()
+            await this._loadControllers()
+            await this._loadErrorMiddlewares()
         } catch (e) {
-            throw new Error('failed to run application');
+            throw e
         }
 
-        this._server
-            .listen(this.port, err => {
-                if (err) console.log(err)
-                console.log(RouterLogger.toString());
-                console.log('server is start')
-            })
+        return this._server
     }
 }
 

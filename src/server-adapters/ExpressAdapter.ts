@@ -37,7 +37,7 @@ export class ExpressHandlerAdapter implements IHandlerAdapter {
   }  
 }
 
-export class FastifyLoaderAdapter implements ILoaderAdapter {
+export class ExpressLoaderAdapter implements ILoaderAdapter {
 
   private _server: express.Application
   private _adapter: IHandlerAdapter
