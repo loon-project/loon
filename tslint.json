@@ -18,7 +18,6 @@
       "check-open-brace",
       "check-whitespace"
     ],
-    "semicolon": true,
     "triple-equals": [
       true,
       "allow-null-check"

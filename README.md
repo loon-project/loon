@@ -8,6 +8,7 @@
 
 <h1 align="center">LOON(气球)</h1>
 
+> Now it's time to celebrate, LOON 2.0!
 > Enterprise ready spring like framework build on Typescript and Express
 
 <h2 align="center">Features</h2>
@@ -20,6 +21,8 @@
 * Model
 * Converter
 * Initializer
+
+<h2 align="center">Features</h2>
 
 Please refer to the [documentation](https://loon-project.github.io) for more details.
 [中文文档](https://loon-project.github.io/#/zh-cn/)

@@ -38,8 +38,10 @@
     "dev:tsc": "./node_modules/.bin/tsc -w -p ."
   },
   "dependencies": {
+    "@types/glob": "^5.0.35",
     "@types/lodash": "^4.14.66",
     "@types/node": "^10.5.1",
+    "glob": "^7.1.2",
     "lodash": "^4.17.10",
     "reflect-metadata": "^0.1.9",
     "require-all": "^2.1.0",

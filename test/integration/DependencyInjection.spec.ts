@@ -5,36 +5,36 @@ import {DependencyRegistry} from "../../src/di/DependencyRegistry";
 import {DIException} from "../../src/di/error/DIException";
 import {expect} from 'chai';
 
+@Component()
+class AComponent {
+
+    public name() {
+        return "name";
+    }
+}
+
+@Component()
+class AClass {
+
+    @Inject()
+    public aPropertyComponent: AComponent;
+
+    constructor(public aParamComponent: AComponent) {
+    }
+}
+
+@Component()
+class NoSuchParamInjectComponent {
+    constructor(public unInjectedNum: number) {
+    }
+}
+
+
+class NoSuchComponent {
+}
+
 
 describe('[Integration] Dependency Injection', () => {
-
-    @Component()
-    class AComponent {
-
-        public name() {
-            return "name";
-        }
-    }
-
-    @Component()
-    class AClass {
-
-        @Inject()
-        public aPropertyComponent: AComponent;
-
-        constructor(public aParamComponent: AComponent) {
-        }
-    }
-
-    @Component()
-    class NoSuchParamInjectComponent {
-        constructor(public unInjectedNum: number) {
-        }
-    }
-
-
-    class NoSuchComponent {
-    }
 
     it('should have injected params', () => {
         const aClass = DependencyRegistry.get(AClass);

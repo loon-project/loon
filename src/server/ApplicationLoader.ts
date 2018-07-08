@@ -1,6 +1,8 @@
 import * as express from "express";
 import * as fastify from 'fastify'
-import * as fs from "fs";
+import * as glob from 'glob'
+import * as http from 'http'
+import * as http2 from 'http2'
 import { ApplicationRegistry } from "./ApplicationRegistry";
 import { DependencyRegistry } from "../di/DependencyRegistry";
 import { InitializerRegistry } from "../initializer/InitializerRegistry";
@@ -9,6 +11,11 @@ import { IHandlerAdapter, ILoaderAdapter } from "../server-adapters/IAdapter";
 import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/FastifyAdapter";
 import { ConverterService } from "../converter";
 import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
+import { SettingOptions } from "./SettingOptions";
+
+type Server = http.Server
+type HttpRequest = http.IncomingMessage
+type HttpResponse = http.ServerResponse
 
 export class ApplicationLoader {
 
@@ -20,78 +27,19 @@ export class ApplicationLoader {
 
     private _env: string;
 
-    private _rootDir: string;
+    private _rootDir?: string
 
-    private _srcDir: string;
-
-    private _publicDir: string;
-
-    private _logDir: string;
-
-    private _configDir: string;
-
-    private _dbDir: string;
+    private _files?: string
 
     private _port: string;
-
-    // TODO: add routes group support
-    private _routes: {[key: string]: string};
-
-    // TODO: add external components support
-    private _components: string[];
-
-
-    get server() {
-        return this._server;
-    }
-
-    get env(): string {
-        return this._env;
-    }
-
-    get components(): string[] {
-        return this._components;
-    }
-
-    get routes(): any {
-        return this._routes;
-    }
-
-    get rootDir(): string {
-        return this._rootDir;
-    }
-
-    get srcDir(): string {
-        return this._srcDir;
-    }
-
-    get publicDir(): string {
-        return this._publicDir;
-    }
-
-    get logDir(): string {
-        return this._logDir;
-    }
-
-    get configDir(): string {
-        return this._configDir;
-    }
-
-    get dbDir(): string {
-        return this._dbDir;
-    }
-
-    get port(): string {
-        return this._port;
-    }
 
     /**
      * Load user defined settings into ApplicationLoader
      * Initialize settings
      */
-    constructor(typeOrServer: string|fastify.FastifyInstance|express.Application) {
+    constructor(typeOrServer: string|fastify.FastifyInstance|express.Application, settings?: SettingOptions) {
 
-        const settings = ApplicationRegistry.settings;
+        const _settings = Object.assign({}, ApplicationRegistry.settings, settings)
 
         if (typeOrServer === 'express') {
             this._server = express() as express.Application
@@ -99,49 +47,44 @@ export class ApplicationLoader {
             this._server.use(require('body-parser').urlencoded({ extended: true }))
             this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
-            this._server = fastify()
+            this._server = fastify() as fastify.FastifyInstance
         } else {
             this._server = <fastify.FastifyInstance|express.Application>typeOrServer
         }
 
-        if ((this._server as fastify.FastifyInstance).setErrorHandler) {
+        if (this._isFastify()) {
             this._handlerAdapter = new FastifyHandlerAdapter(new ConverterService())
             this._loaderAdapter = new FastifyLoaderAdapter(this._server as fastify.FastifyInstance, this._handlerAdapter)
-        } else if ((this._server as express.Application)['m-search']) {
+        } else if (this._isExpress()) {
             this._handlerAdapter = new ExpressHandlerAdapter(new ConverterService())
             this._loaderAdapter = new ExpressLoaderAdapter(this._server as express.Application, this._handlerAdapter)
+        } else {
+            throw 'server is not supported, use express and fastify'
         }
 
-        this._env = process.env.NODE_ENV || settings.env || 'development';
-        this._rootDir = settings.rootDir;
-
-        // Assign user defined folder structure to ApplicationLoader
-        // If no such folder, then create it
-        // to simplify, only require src folder 
-        // ['src', 'public', 'log', 'config', 'db'].map(item => {
-        ['src'].map(item => {
-            this[`_${item}Dir`] = settings[`${item}Dir`] || `${this._rootDir}/${item}`;
-
-            if (!fs.existsSync(this[`_${item}Dir`]) && this._env !== 'test') {
-                fs.mkdirSync(this[`_${item}Dir`]);
-            }
-        });
-
-
-        this._port = process.env.PORT || settings.port || '9000';
-        this._components = settings.components || [];
-        this._routes = settings.routes || {};
+        this._env = process.env.NODE_ENV || _settings.env || 'development';
+        this._port = process.env.PORT || _settings.port || '9000';
+        this._rootDir = _settings.rootDir;
+        this._files = _settings.files
 
         DependencyRegistry.set(<Klass> ApplicationLoader, this);
     }
 
     private async _loadComponents() {
-        require('require-all')({
-            dirname     :  this.srcDir,
-            excludeDirs :  new RegExp(`^\.(git|svn|node_modules|${this.configDir}|${this.logDir}})$`),
-            recursive   : true
-        });
-        return this;
+
+        if (this._files) {
+            glob.sync(this._files).forEach(file => require(file))
+        }
+
+        if (this._rootDir) {
+            require('require-all')({
+                dirname     : this._rootDir,
+                excludeDirs : new RegExp(`^\.(git|svn|node_modules})$`),
+                recursive   : true
+            });
+        }
+
+       return this;
     }
 
     private async _init() {
@@ -187,8 +130,16 @@ export class ApplicationLoader {
         } catch (e) {
             throw e
         }
-
         return this._server
     }
+
+    private _isExpress() {
+        return !!(this._server as express.Application)['m-search']
+    }
+
+    private _isFastify() {
+        return !!(this._server as fastify.FastifyInstance).setErrorHandler
+    }
+
 }
 

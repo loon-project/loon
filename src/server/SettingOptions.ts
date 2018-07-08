@@ -5,37 +5,9 @@ export interface SettingOptions {
      * Required
      * The root folder of project
      */
-    rootDir: string;
+    rootDir?: string;
 
-    /**
-     * The source code files folder of project
-     * Default value: `${rootDir}/src`
-     */
-    srcDir?: string;
-
-    /**
-     * The public files folder of project
-     * Default value: `${rootDir}/public`
-     */
-    publicDir?: string;
-
-    /**
-     * The logger files folder of project
-     * Default value: `${rootDir}/log`
-     */
-    logDir?: string;
-
-    /**
-     * The configuration files folder of project
-     * Default value: `${rootDir}/config`
-     */
-    configDir?: string;
-
-    /**
-     * The database seed and migration files folder of project
-     * Default value: `${rootDir}/db`
-     */
-    dbDir?: string;
+    files?: string
 
     /**
      * The application environment, development, test, production, staging

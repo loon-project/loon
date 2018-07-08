@@ -18,7 +18,6 @@
       "mocha"
     ]
   },
-
   "exclude": [
     "node_modules",
     "build"
