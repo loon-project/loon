@@ -6,5 +6,4 @@ export function ApplicationSettings(options: SettingOptions) {
     return (target: Function) => {
         ApplicationRegistry.registerWithOptions(target, options);
     };
-
 }

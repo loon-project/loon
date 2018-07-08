@@ -1,7 +1,6 @@
 import {ControllerMetadata} from "./ControllerMetadata";
 import {DependencyRegistry} from "../di/DependencyRegistry";
 import {Klass} from "../core/Klass";
-import {ControllerTransformer} from "./ControllerTransformer";
 import {HandlerRegistry} from "./HandlerRegistry";
 import {BeforeAfterFilterType} from "./enum/BeforeAfterFilterType";
 import {FilterOptions} from "./FilterOptions";
@@ -13,32 +12,6 @@ export class ControllerRegistry {
     private static _controllers: Map<Function, ControllerMetadata> = new Map();
 
     public static controllers = ControllerRegistry._controllers;
-
-    // public static getRoutes(type?: Function) {
-
-    //     const result = new Map();
-
-    //     if (type) {
-
-    //         const controllerMetadata = ControllerRegistry._controllers.get(type);
-
-    //         if (controllerMetadata) {
-    //             const transformer = new ControllerTransformer(controllerMetadata);
-    //             const router = transformer.transform();
-    //             result.set(controllerMetadata.baseUrl, router);
-    //         }
-
-    //     } else {
-
-    //         ControllerRegistry.controllers.forEach(controllerMetadata => {
-    //             const transformer = new ControllerTransformer(controllerMetadata);
-    //             const router = transformer.transform();
-    //             result.set(controllerMetadata.baseUrl, router);
-    //         });
-    //     }
-
-    //     return result;
-    // }
 
 
     /**

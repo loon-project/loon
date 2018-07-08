@@ -91,8 +91,8 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
 
         // register controller action
         handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
-          const handler = (req, res) => {
-            HandlerExecutor.run(this._adapter, handlerMetadata, {req, res})
+          const handler = (req, res, next) => {
+            HandlerExecutor.run(this._adapter, handlerMetadata, {req, res, next})
           }
           controller[httpMethodAndPath.method](httpMethodAndPath.path, ...beforeFilters, handler, ...afterFilters)
         })
@@ -111,7 +111,7 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
         const errorHandler = (err, req, res, next) => {
           HandlerExecutor.run(this._adapter, handlerMetadata, {req, res, err, next})
         }
-        this._server.use(errorHandler)
+        this._server.use(middlewareMetadata.baseUrl, errorHandler)
       })
   }
 } 

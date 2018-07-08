@@ -5,5 +5,4 @@ export interface ConvertOptions {
 
     baseType?: Function;
 
-
 }
