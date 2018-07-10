@@ -9,7 +9,7 @@ import { HandlerParamMetadata } from '../mvc/HandlerParamMetadata';
 import { MiddlewareRegistry } from "../mvc/MiddlewareRegistry";
 import { ControllerRegistry } from '../mvc/ControllerRegistry'
 
-type FastifyRequest = fastify.FastifyRequest<http.IncomingMessage | http2.Http2ServerRequest>
+export type FastifyRequest = fastify.FastifyRequest<http.IncomingMessage | http2.Http2ServerRequest>
 
 export class FastifyHandlerAdapter implements IHandlerAdapter {
 
