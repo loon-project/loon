@@ -13,6 +13,17 @@ export class ControllerRegistry {
 
     public static controllers = ControllerRegistry._controllers;
 
+    public static unregisterAll() {
+        ControllerRegistry.controllers.forEach((_, klass) => {
+            ControllerRegistry.unregister(klass as Klass)
+        })
+    }
+
+    public static unregister(klass: Klass) {
+        DependencyRegistry.unregisterComponent(klass)
+        ControllerRegistry.controllers.delete(klass)
+    }
+
 
     /**
      * used to register a class as a Controller or RestController

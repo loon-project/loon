@@ -10,149 +10,153 @@ import * as express from 'express'
 import { ApplicationLoader } from '../../src'
 import { testExpressServer } from "../TestHelper";
 
-const d1 = new Date();
-const d2 = new Date();
-
-class Filter {
-
-    @Property()
-    public name: string;
-
-    @Property({baseType: Number})
-    public ids: number[];
-
-    @Property("created_at")
-    public createdAt: Date;
-
-    @Property("is_draft")
-    public isDraft: boolean;
-
-    @Property({serialize: false})
-    public uuid1: string;
-
-    @Property({deserialize: false})
-    public uuid2: string;
-}
-
-@RestController()
-class UserController {
-
-    @Get("/users")
-    public indexAction(@QueryParam("filter") filter: Filter,
-                        @Res() res: Express.Response) {
-
-        if (!(filter instanceof Filter)) {
-            return res.send('1');
-        }
-
-        if (filter.name !== 'abc') {
-            return res.send('2');
-        }
-
-        if (!(filter.ids instanceof Array)) {
-            return res.send('3');
-        }
-
-        [1, 2, 3].forEach((i, index) => {
-            if (filter.ids[index] !== i) {
-                return res.send('4');
-            }
-        });
-
-        if (!(filter.createdAt instanceof Date)) {
-            return res.send('5');
-        }
-
-        if (filter.createdAt.getTime() !== d1.getTime()) {
-            return res.send('6');
-        }
-
-        if (filter.isDraft !== true) {
-            return res.send('7');
-        }
-
-        if (filter.uuid1 !== '111') {
-            return res.send('8');
-        }
-
-        if (typeof filter.uuid2 !== 'undefined') {
-            return res.send('9');
-        }
-
-        return res.send(true);
-    }
-
-    @Get("/users/:id")
-    public showAction(@PathParam("id") id: number,
-                      @Res() res: Express.Response) {
-
-        const flag = id === 1;
-        res.send(flag);
-    }
-
-    @Post("/users")
-    public createAction(@BodyParam('filter') filter: Filter,
-                        @Res() res: Express.Response) {
-
-        if (!(filter instanceof Filter)) {
-            return res.send('1');
-        }
-
-        if (filter.name !== 'abc') {
-            return res.send('2');
-        }
-
-        if (!(filter.ids instanceof Array)) {
-            return res.send('3');
-        }
-
-        [1, 2, 3].forEach((i, index) => {
-            if (filter.ids[index] !== i) {
-                return res.send('4');
-            }
-        });
-
-        if (!(filter.createdAt instanceof Date)) {
-            return res.send('5');
-        }
-
-        if (filter.createdAt.getTime() !== d1.getTime()) {
-            return res.send('6');
-        }
-
-        if (filter.isDraft !== true) {
-            return res.send('7');
-        }
-
-        if (filter.uuid1 !== '111') {
-            return res.send('8');
-        }
-
-        if (typeof filter.uuid2 !== 'undefined') {
-            return res.send('9');
-        }
-
-
-        return res.send(true);
-    }
-}
-
-const filter = {
-    name: "abc",
-    ids: [1, 2, 3],
-    created_at: d1,
-    is_draft: true,
-    uuid2: '222',
-    uuid1: '111'
-};
-
 
 describe('[Integration] ConverterService', () => {
+
+  const d1 = new Date();
+  const d2 = new Date();
+
+  class Filter {
+
+      @Property()
+      public name: string;
+
+      @Property({baseType: Number})
+      public ids: number[];
+
+      @Property("created_at")
+      public createdAt: Date;
+
+      @Property("is_draft")
+      public isDraft: boolean;
+
+      @Property({serialize: false})
+      public uuid1: string;
+
+      @Property({deserialize: false})
+      public uuid2: string;
+  }
+
+  @RestController('/ConverterServiceIntegration')
+  class UserController {
+
+      @Get("/users")
+      public indexAction(@QueryParam("filter") filter: Filter,
+                          @Res() res: Express.Response) {
+
+          if (!(filter instanceof Filter)) {
+              return res.send('1');
+          }
+
+          if (filter.name !== 'abc') {
+              return res.send('2');
+          }
+
+          if (!(filter.ids instanceof Array)) {
+              return res.send('3');
+          }
+
+          [1, 2, 3].forEach((i, index) => {
+              if (filter.ids[index] !== i) {
+                  return res.send('4');
+              }
+          });
+
+          if (!(filter.createdAt instanceof Date)) {
+              return res.send('5');
+          }
+
+          if (filter.createdAt.getTime() !== d1.getTime()) {
+              return res.send('6');
+          }
+
+          if (filter.isDraft !== true) {
+              return res.send('7');
+          }
+
+          if (filter.uuid1 !== '111') {
+              return res.send('8');
+          }
+
+          if (typeof filter.uuid2 !== 'undefined') {
+              return res.send('9');
+          }
+
+          return res.send(true);
+      }
+
+      @Get("/users/:id")
+      public showAction(@PathParam("id") id: number,
+                        @Res() res: Express.Response) {
+
+          const flag = id === 1;
+          res.send(flag);
+      }
+
+      @Post("/users")
+      public createAction(@BodyParam('filter') filter: Filter,
+                          @Res() res: Express.Response) {
+
+          if (!(filter instanceof Filter)) {
+              return res.send('1');
+          }
+
+          if (filter.name !== 'abc') {
+              return res.send('2');
+          }
+
+          if (!(filter.ids instanceof Array)) {
+              return res.send('3');
+          }
+
+          [1, 2, 3].forEach((i, index) => {
+              if (filter.ids[index] !== i) {
+                  return res.send('4');
+              }
+          });
+
+          if (!(filter.createdAt instanceof Date)) {
+              return res.send('5');
+          }
+
+          if (filter.createdAt.getTime() !== d1.getTime()) {
+              return res.send('6');
+          }
+
+          if (filter.isDraft !== true) {
+              return res.send('7');
+          }
+
+          if (filter.uuid1 !== '111') {
+              return res.send('8');
+          }
+
+          if (typeof filter.uuid2 !== 'undefined') {
+              return res.send('9');
+          }
+
+
+          return res.send(true);
+      }
+  }
+
+  const filter = {
+      name: "abc",
+      ids: [1, 2, 3],
+      created_at: d1,
+      is_draft: true,
+      uuid2: '222',
+      uuid1: '111'
+  };
+
 
     let nodeServer
     before(done => {
         (<Promise<express.Application>>new ApplicationLoader('express', {files: '.'}).init()).then((server) => {
-            nodeServer = server.listen(0, done)
+            nodeServer = server.listen(0, (err) => {
+                if (err) throw err
+                done()
+            })
         })
     })
     after(done => nodeServer.close(done))
@@ -163,13 +167,13 @@ describe('[Integration] ConverterService', () => {
                 filter
             }
         };
-        const response = await HttpHelper.request("get", `http://localhost:${nodeServer.address().port}/users`, options);
+        const response = await HttpHelper.request("get", `http://localhost:${nodeServer.address().port}/ConverterServiceIntegration/users`, options);
         expect(response.statusCode).to.be.equal(200);
         expect(response.body).to.be.true;
     });
 
     it('should convert a PathParam', async () => {
-        const response = await HttpHelper.request("get", `http://localhost:${nodeServer.address().port}/users/1`);
+        const response = await HttpHelper.request("get", `http://localhost:${nodeServer.address().port}/ConverterServiceIntegration/users/1`);
         expect(response.statusCode).to.be.equal(200);
         expect(response.body).to.be.true;
     });
@@ -180,7 +184,7 @@ describe('[Integration] ConverterService', () => {
                 filter
             }
         };
-        const response = await HttpHelper.request("post", `http://localhost:${nodeServer.address().port}/users`, options);
+        const response = await HttpHelper.request("post", `http://localhost:${nodeServer.address().port}/ConverterServiceIntegration/users`, options);
         expect(response.statusCode).to.be.equal(200);
         expect(response.body).to.be.equal(true);
     });

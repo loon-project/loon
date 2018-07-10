@@ -4,6 +4,7 @@ import * as sourceMapSupport from "source-map-support";
 import * as express from 'express'
 import * as fastify from 'fastify'
 import { ApplicationLoader } from '../src'
+import { ControllerRegistry } from "../src/mvc/ControllerRegistry";
 
 sourceMapSupport.install();
 

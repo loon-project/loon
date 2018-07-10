@@ -6,59 +6,62 @@ import {Res} from "../../src/mvc/decorator/Params";
 import {HttpHelper} from "../helper/HttpHelper";
 import {expect} from "chai";
 import { ApplicationLoader } from "../../src";
-
-@RestController("/1")
-class User1Controller {
-
-    @Get("/users")
-    public indexAction(@Res() response: express.Response) {
-        response.send("all users");
-    }
-
-    @Post("/users")
-    public createAction(@Res() response: express.Response) {
-        response.status(201).send("create user");
-    }
-
-    @Put("/users/1")
-    @Patch("/users/1")
-    public updateAction(@Res() response: express.Response) {
-        response.send("update user");
-    }
-
-    @Delete("/users/1")
-    public destroyAction(@Res() response: express.Response) {
-        response.send("delete user");
-    }
-
-    @Head("/users/info")
-    public headAction(@Res() response: express.Response) {
-        response.send('info');
-    }
-
-    @Options("/users/options")
-    public optionsAction(@Res() response: express.Response) {
-        response.send('options');
-    }
-
-    @All("/users/allRoutes")
-    public allAction(@Res() response: express.Response) {
-        response.send("all");
-    }
-}
-
-
+import { ControllerRegistry } from "../../src/mvc/ControllerRegistry";
 
 describe("[Integration] Controller", () => {
 
+    @RestController("/1")
+    class User1Controller {
+
+        @Get("/users")
+        public indexAction(@Res() response: express.Response) {
+            response.send("all users");
+        }
+
+        @Post("/users")
+        public createAction(@Res() response: express.Response) {
+            response.status(201).send("create user");
+        }
+
+        @Put("/users/1")
+        @Patch("/users/1")
+        public updateAction(@Res() response: express.Response) {
+            response.send("update user");
+        }
+
+        @Delete("/users/1")
+        public destroyAction(@Res() response: express.Response) {
+            response.send("delete user");
+        }
+
+        @Head("/users/info")
+        public headAction(@Res() response: express.Response) {
+            response.send('info');
+        }
+
+        @Options("/users/options")
+        public optionsAction(@Res() response: express.Response) {
+            response.send('options');
+        }
+
+        @All("/users/allRoutes")
+        public allAction(@Res() response: express.Response) {
+            response.send("all");
+        }
+    }
+
+
     let nodeServer
     before(done => {
-        (<Promise<express.Application>>new ApplicationLoader('express', {files: '.'}).init()).then((server) => {
+        const app = new ApplicationLoader('express', {files: '.'}).init()
+        app.then((server: express.Application) => {
             nodeServer = server.listen(0, done)
         })
     })
 
-    after(done => nodeServer.close(done))
+    after(done => {
+        nodeServer.close(done)
+    })
 
     it("should respond get request", async () => {
         const response = await HttpHelper.request("get", address('/1/users'));
@@ -116,7 +119,4 @@ describe("[Integration] Controller", () => {
         return `http://localhost:${(nodeServer.address() as any).port}${path}`
     }
 });
-
-
-
 

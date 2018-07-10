@@ -48,6 +48,7 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
   }
   
   loadMiddlewares() {
+
     MiddlewareRegistry
       .getMiddlewares({isErrorMiddleware: false})
       .forEach(middlewareMetadata => {
@@ -67,7 +68,7 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
 
       controllerMetadata.handlers.forEach(handlerMetadata => {
 
-        function registerFilter(filterName) {
+        const getRegisteredFilters = (filterName) => {
           const store: any[] = []
           const actionName = handlerMetadata.actionName
           controllerMetadata[filterName].forEach(controllerFilterMetadata => {
@@ -77,8 +78,7 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
               controllerFilterMetadata
             ) {
               const filter = (req, res, next) => {
-                HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res})
-                next()
+                HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res, next})
               }
               store.push(filter)
             }
@@ -86,8 +86,8 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
           return store
         }
 
-        const beforeFilters = registerFilter('beforeFilters')
-        const afterFilters = registerFilter('afterFilters')
+        const beforeFilters = getRegisteredFilters('beforeFilters')
+        const afterFilters = getRegisteredFilters('afterFilters')
 
         // register controller action
         handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
@@ -104,6 +104,7 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
   }
 
   loadErrorMiddlewares() {
+
     MiddlewareRegistry
       .getMiddlewares({isErrorMiddleware: true})
       .forEach(middlewareMetadata => {

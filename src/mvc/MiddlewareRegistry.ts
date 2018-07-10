@@ -11,7 +11,6 @@ export class MiddlewareRegistry {
     public static middlewares = MiddlewareRegistry._middlewares;
 
     public static registerMiddleware(type: Function, isErrorMiddleware: boolean, options?: MiddlewareOptions) {
-
         DependencyRegistry.registerComponent(<Klass>type);
         const middlewareMetadata = this.getMiddleware(type);
         middlewareMetadata.init(options);
@@ -19,6 +18,18 @@ export class MiddlewareRegistry {
 
         const handlerMetadata = HandlerRegistry.getHandler(type, 'use');
         middlewareMetadata.handler = handlerMetadata;
+    }
+
+    public static unregisterAll() {
+        MiddlewareRegistry.middlewares.forEach((_, type: Klass) => {
+            DependencyRegistry.unregisterComponent(type)
+            MiddlewareRegistry.middlewares.delete(type)
+        })
+    }
+
+    public static unregister(type: Function) {
+        DependencyRegistry.unregisterComponent(type as Klass)
+        MiddlewareRegistry.middlewares.delete(type)
     }
 
     public static getMiddlewares(options: {isErrorMiddleware: boolean}) {
