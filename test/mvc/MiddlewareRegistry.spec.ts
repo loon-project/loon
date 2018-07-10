@@ -4,64 +4,79 @@ import {IMiddleware} from "../../src/mvc/interface/IMiddleware";
 import {MiddlewareRegistry} from "../../src/mvc/MiddlewareRegistry";
 import {expect} from 'chai';
 import {MiddlewareMetadata} from "../../src/mvc/MiddlewareMetadata";
+import { Next } from "../../src";
 
 describe("MiddlewareRegistry", () => {
 
     @Middleware()
     class ATestMiddlewareRegistryMiddlewareClass implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @ErrorMiddleware()
     class ATestMiddlewareRegistryErrorMiddlewareClass implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @Middleware({order: 19})
     class ATestMiddlewareRegistryMiddlewareWithOrderClass1 implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
-    }
+   }
 
     @Middleware({order: 2})
     class ATestMiddlewareRegistryMiddlewareWithOrderClass2 implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @ErrorMiddleware({order: 19})
     class ATestMiddlewareRegistryErrorMiddlewareWithOrderClass1 implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @ErrorMiddleware({order: 2})
     class ATestMiddlewareRegistryErrorMiddlewareWithOrderClass2 implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @Middleware({baseUrl: "/test"})
     class ATestMiddlewareRegistryMiddlewareWithBaseUrlClass implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
 
     @ErrorMiddleware({baseUrl: "/test"})
     class ATestMiddlewareRegistryErrorMiddlewareWithBaseUrlClass implements IMiddleware {
-
-        public use() {
+        public use(@Next() next) {
+            next()
         }
     }
+
+    after(done => {
+        [
+            ATestMiddlewareRegistryMiddlewareClass, 
+            ATestMiddlewareRegistryErrorMiddlewareClass,
+            ATestMiddlewareRegistryMiddlewareWithOrderClass1,
+            ATestMiddlewareRegistryMiddlewareWithOrderClass2,
+            ATestMiddlewareRegistryErrorMiddlewareWithOrderClass1,
+            ATestMiddlewareRegistryErrorMiddlewareWithOrderClass2,
+            ATestMiddlewareRegistryMiddlewareWithBaseUrlClass,
+            ATestMiddlewareRegistryErrorMiddlewareWithBaseUrlClass
+        ].forEach(type => MiddlewareRegistry.unregister(type))
+        done()
+    })
 
     it('should successfully register a Middleware', () => {
         const middlewareMetadata: any = MiddlewareRegistry.middlewares.get(ATestMiddlewareRegistryMiddlewareClass);

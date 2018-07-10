@@ -1,8 +1,6 @@
 import * as express from "express";
 import * as fastify from 'fastify'
 import * as glob from 'glob'
-import * as http from 'http'
-import * as http2 from 'http2'
 import { ApplicationRegistry } from "./ApplicationRegistry";
 import { DependencyRegistry } from "../di/DependencyRegistry";
 import { InitializerRegistry } from "../initializer/InitializerRegistry";
@@ -12,10 +10,6 @@ import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/
 import { ConverterService } from "../converter";
 import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
 import { SettingOptions } from "./SettingOptions";
-
-type Server = http.Server
-type HttpRequest = http.IncomingMessage
-type HttpResponse = http.ServerResponse
 
 export class ApplicationLoader {
 
@@ -140,6 +134,5 @@ export class ApplicationLoader {
     private _isFastify() {
         return !!(this._server as fastify.FastifyInstance).setErrorHandler
     }
-
 }
 
