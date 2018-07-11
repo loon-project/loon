@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as fastify from 'fastify'
 import * as glob from 'glob'
+import * as http from 'http'
 import { ApplicationRegistry } from "./ApplicationRegistry";
 import { DependencyRegistry } from "../di/DependencyRegistry";
 import { InitializerRegistry } from "../initializer/InitializerRegistry";
