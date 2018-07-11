@@ -18,7 +18,8 @@
       "express",
       "reflect-metadata",
       "chai",
-      "mocha"
+      "mocha",
+      "ava"
     ]
   },
 

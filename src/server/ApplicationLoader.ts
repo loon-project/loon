@@ -44,6 +44,7 @@ export class ApplicationLoader {
             this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
             this._server = fastify() as fastify.FastifyInstance
+            this._server.register(require('fastify-formbody'))
         } else {
             this._server = <fastify.FastifyInstance|express.Application>typeOrServer
         }
