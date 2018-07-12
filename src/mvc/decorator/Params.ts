@@ -14,9 +14,9 @@ export function QueryParam(expression: string, options?: HandlerParamOptions) {
     };
 }
 
-export function BodyParam(expression: string, options?: HandlerParamOptions) {
+export function BodyParam(expression?: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
-        registerHelper(target.constructor, ParamType.Body, actionName, index, expression, options);
+        registerHelper(target.constructor, ParamType.Body, actionName, index, expression ? expression : "", options);
     };
 }
 
@@ -41,6 +41,12 @@ export function Res() {
 export function Next() {
     return (target: any, actionName: string, index: number) => {
         registerHelper(target.constructor, ParamType.Next, actionName, index, "");
+    };
+}
+
+export function Payload() {
+    return (target: any, actionName: string, index: number) => {
+        registerHelper(target.constructor, ParamType.Payload, actionName, index, "");
     };
 }
 

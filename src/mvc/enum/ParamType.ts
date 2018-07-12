@@ -9,5 +9,6 @@ export enum ParamType {
     Next,
     Error,
 
-    Data
+    Data,
+    Payload
 }

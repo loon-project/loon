@@ -25,7 +25,7 @@ export class FastifyHandlerAdapter implements IHandlerAdapter {
   }
 
   getBodyFromRequest(req: FastifyRequest, param: HandlerParamMetadata) {
-    const body = _.get(req.body, param.expression)
+    const body = param.expression === '' ? req.body : _.get(req.body, param.expression)
     return this._converter.convert(body, param.returnType)
   }
 
@@ -44,67 +44,89 @@ export class FastifyHandlerAdapter implements IHandlerAdapter {
 
 export class FastifyLoaderAdapter implements ILoaderAdapter {
 
-  private _server: fastify.FastifyInstance
-  private _adapter: IHandlerAdapter
+    private _server: fastify.FastifyInstance
+    private _adapter: IHandlerAdapter
 
-  constructor(server: fastify.FastifyInstance, adapter: IHandlerAdapter) {
-    this._server = server
-    this._adapter = adapter
-  }
-  
-  loadMiddlewares() {
-    MiddlewareRegistry
-      .getMiddlewares({isErrorMiddleware: false})
-      .forEach(middlewareMetadata => {
-        const handlerMetadata = middlewareMetadata.handler;
-        const middleware = (req, res, next) => {
-          HandlerExecutor.run(this._adapter, handlerMetadata, {req, res, next})
-        }
-        this._server.use(middleware)
-      })
-  }
+    constructor(server: fastify.FastifyInstance, adapter: IHandlerAdapter) {
+        this._server = server
+        this._adapter = adapter
+    }
+
+    loadMiddlewares() {
+        MiddlewareRegistry
+            .getMiddlewares({ isErrorMiddleware: false })
+            .forEach(middlewareMetadata => {
+                const handlerMetadata = middlewareMetadata.handler;
+                const middleware = (req, res, next) => {
+                    HandlerExecutor.run(this._adapter, handlerMetadata, { req, res, next })
+                }
+                this._server.use(middlewareMetadata.baseUrl, middleware)
+            })
+    }
 
   loadControllers() {
 
     ControllerRegistry.controllers.forEach(controllerMetadata => {
-      // register a controller as a fastify plugin
-      this._server.register((instance, opts, next) => {
-        controllerMetadata.handlers.forEach(handlerMetadata => {
 
-          function registerFilter(filterName, hookName) {
-            const actionName = handlerMetadata.actionName
-            controllerMetadata[filterName].forEach(controllerFilterMetadata => {
-              if (
-                (controllerFilterMetadata.only && controllerFilterMetadata.only.indexOf(actionName) === -1) || 
-                (controllerFilterMetadata.except && controllerFilterMetadata.except.indexOf(actionName) > -1) ||
-                controllerFilterMetadata
-              ) {
-                instance.addHook(hookName, (req, res, next) => {
-                  HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res})
-                  next()
-                })
-              }
+        const options = {prefix: controllerMetadata.baseUrl}
+
+        // register a controller as a fastify plugin
+        this._server.register((fastify, opts, next) => {
+            controllerMetadata.handlers.forEach(handlerMetadata => {
+
+                const getRegisteredFilters = (filterName) => {
+                    const store: any[] = []
+                    const actionName = handlerMetadata.actionName
+                    controllerMetadata[filterName].forEach(controllerFilterMetadata => {
+                        
+                        let push = false
+        
+                        if (controllerFilterMetadata.only && controllerFilterMetadata.only.indexOf(actionName) > -1) {
+                            push = true
+                        }
+                        if (controllerFilterMetadata.except && controllerFilterMetadata.except.indexOf(actionName) === -1) {
+                            push = true
+                        }
+                        if (!controllerFilterMetadata.only && !controllerFilterMetadata.except) {
+                            push = true
+                        }
+                        if (push) {
+                            if (filterName === 'beforeFilters') {
+                                store.push((req, res, next) => {
+                                    HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res, next})
+                                })
+                            } else if (filterName === 'afterFilters') {
+                                store.push((req, res, payload, next) => {
+                                    HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res, payload, next})
+                                })
+                            } else {
+                                throw '[fastify] framework error'
+                            }
+                        }
+                    })
+                    return store
+                }
+        
+                const beforeFilters = getRegisteredFilters('beforeFilters')
+                const afterFilters = getRegisteredFilters('afterFilters')
+
+                // register controller action
+                handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
+                    fastify.register((fastify, opts, next) => {
+                        beforeFilters.forEach(filter => fastify.addHook('preHandler', filter))
+                        afterFilters.forEach(filter => fastify.addHook('onSend', filter))
+
+                        fastify[httpMethodAndPath.method]('/', (req, res) => {
+                            HandlerExecutor.run(this._adapter, handlerMetadata, {req, res})
+                        })
+
+                        next()
+                    }, {prefix: httpMethodAndPath.path})
+               })
             })
-          }
 
-          // register before filter and after filter
-          registerFilter('beforeFilters', 'preHandler')
-          registerFilter('afterFilters', 'onSend')
-
-
-          // register controller action
-          handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
-            instance[httpMethodAndPath.method](httpMethodAndPath.path, (req, res) => {
-              HandlerExecutor.run(this._adapter, handlerMetadata, {req, res})
-            })
-          })
-
-        })
-
-        next()
-
-      }, {prefix: controllerMetadata.baseUrl})
-
+            next()
+        }, options)
     })
   }
 

@@ -8,7 +8,8 @@ export interface ServerHandlerOptions {
     req: any
     res: any
     next?: (err?: Error) => any
-    err?: Error
+    err?: Error,
+    payload?: any
 }
 
 /**
@@ -48,11 +49,13 @@ export class HandlerExecutor {
             case ParamType.Next:
                 args.push(opts.next);
                 break
+            case ParamType.Payload:
+                args.push(opts.payload);
+                break
             default:
                 args.push(undefined);
         }
     })
-
 
     const methodName = handlerMetadata.actionName;
     const handlerKlass = <Klass>handlerMetadata.type;
