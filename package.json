@@ -36,18 +36,10 @@
     "release:minor": "npm version minor && npm publish && git push --follow-tags",
     "release:patch": "npm version patch && npm publish && git push --follow-tags",
     "dev:tsc": "./node_modules/.bin/tsc -w -p .",
-    "test:express": "LOON_SERVER=express ava test/**/*.test.ts",
-    "test:fastify": "LOON_SERVER=fastify ava test/**/*.test.ts",
-    "ava": "npm run tsc && npm run test:express && npm run test:fastify"
-  },
-  "ava": {
-    "compileEnhancements": false,
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "test:express": "SERVER=express ava test/**/*.test.js",
+    "test:fastify": "SERVER=fastify ava test/**/*.test.js",
+    "ava": "npm run clean && npm run tsc && npm run test:express && npm run test:fastify",
+    "clean": "del 'src/**/*.js' 'src/**/*.js.map' 'test/**/*.js' 'test/**/*.js.map'"
   },
   "dependencies": {
     "@types/express": "^4.16.0",
@@ -73,6 +65,7 @@
     "chai": "^3.5.0",
     "chakram": "^1.5.0",
     "coveralls": "^3.0.1",
+    "del-cli": "^1.1.0",
     "mocha": "^5.2.0",
     "nyc": "^10.3.2",
     "sinon": "^1.17.7",

@@ -3,7 +3,8 @@ import axios from 'axios'
 import { ApplicationLoader } from '../src'
 
 export const bootstrapServer = (cb) => {
-    const serverType = process.env.LOON_SERVER
+
+   const serverType = process.env.SERVER
 
     const opts = {
         server: null,
@@ -11,7 +12,9 @@ export const bootstrapServer = (cb) => {
             return axios.create({
                 baseURL: `http://localhost:${(opts.server as any).address().port}`
             })
-        }
+        },
+        isExpress: () => serverType === 'express',
+        isFastify: () => serverType === 'fastify'
     }
 
     test.before.cb(t => {

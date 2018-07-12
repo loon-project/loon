@@ -39,12 +39,16 @@ export class ApplicationLoader {
 
         if (typeOrServer === 'express') {
             this._server = express() as express.Application
+            this._server.use(require('body-parser').text())
             this._server.use(require('body-parser').json())
             this._server.use(require('body-parser').urlencoded({ extended: true }))
             this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
             this._server = fastify() as fastify.FastifyInstance
             this._server.register(require('fastify-formbody'))
+            this._server.addContentTypeParser('text/plain', {parseAs: 'string'}, async (req, body) => {
+                return body
+            })
         } else {
             this._server = <fastify.FastifyInstance|express.Application>typeOrServer
         }

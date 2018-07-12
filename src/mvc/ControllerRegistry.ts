@@ -98,7 +98,7 @@ export class ControllerRegistry {
      * @param httpMethod
      * @param path
      */
-    public static registerAction(type: Function, actionName: string, httpMethod: string, path: string|RegExp) {
+    public static registerAction(type: Function, actionName: string, httpMethod: string, path: string) {
 
         const controllerMetadata = this.getController(type);
         const handlerMetadata = HandlerRegistry.getHandler(type, actionName);
