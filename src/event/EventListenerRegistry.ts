@@ -14,14 +14,10 @@ export class EventListenerRegistry {
         if (typeof listeners !== 'undefined') {
 
             listeners.forEach(listener => {
-
                 const emitter = DependencyRegistry.get(listener.emitterKlass);
                 const subscriber = DependencyRegistry.get(listener.klass);
-
                 emitter.on(listener.eventName, listener.handler.bind(subscriber));
-
             });
-
         }
     }
 

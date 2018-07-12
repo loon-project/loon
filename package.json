@@ -58,19 +58,11 @@
     "body-parser": "^1.18.3"
   },
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.37",
     "ava": "1.0.0-beta.6",
     "axios": "^0.18.0",
-    "chai": "^3.5.0",
-    "chakram": "^1.5.0",
     "coveralls": "^3.0.1",
     "del-cli": "^1.1.0",
-    "mocha": "^5.2.0",
     "nyc": "^10.3.2",
-    "sinon": "^1.17.7",
-    "sinon-chai": "^2.11.0",
-    "ts-node": "^3.1.0",
     "tslint": "^4.3.1",
     "typescript": "^2.4.1"
   }
