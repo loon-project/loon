@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "prepare": "npm run tsc:release",
-    "test": "npm run tsc && npm run lint && NODE_ENV=test nyc --reporter=html --reporter=text _mocha --recursive",
+    "test": "npm run clean && npm run tsc && npm run lint && npm run ava",
     "tsc": "tsc",
     "tsc:release": "tsc --project tsconfig.compile.json",
     "lint": "tslint ./src/*.ts ./test/*.ts",
@@ -38,7 +38,7 @@
     "dev:tsc": "./node_modules/.bin/tsc -w -p .",
     "test:express": "SERVER=express ava test/**/*.test.js",
     "test:fastify": "SERVER=fastify ava test/**/*.test.js",
-    "ava": "npm run clean && npm run tsc && npm run test:express && npm run test:fastify",
+    "ava": "npm run test:express && npm run test:fastify",
     "clean": "del 'src/**/*.js' 'src/**/*.js.map' 'test/**/*.js' 'test/**/*.js.map'"
   },
   "dependencies": {
