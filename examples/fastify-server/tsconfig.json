@@ -11,15 +11,11 @@
     "skipLibCheck": true,
     "types":[
       "node",
-      "express",
-      "reflect-metadata",
-      "chai",
-      "mocha"
+      "reflect-metadata"
     ]
   },
-
   "exclude": [
     "node_modules",
-    "build"
+    "lib"
   ]
 }
