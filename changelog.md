@@ -6,4 +6,5 @@
 * use `SettingOptions` in `ApplicationLoader` constructor
 * use `init()` return server inside LOON
 * remove `@Service()` decorator
+* remove `@Controller()` decorator
 

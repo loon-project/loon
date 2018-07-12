@@ -7,8 +7,6 @@ export class ControllerMetadata {
 
     private _baseUrl: string;
 
-    private _isRest: boolean;
-
     private _handlers: Map<string, HandlerMetadata>;
 
     private _beforeFilters: ControllerFilterMetadata[];
@@ -27,14 +25,6 @@ export class ControllerMetadata {
         this._baseUrl = value;
     }
 
-    get isRest(): boolean {
-        return this._isRest;
-    }
-
-    set isRest(value: boolean) {
-        this._isRest = value;
-    }
-
     get handlers(): Map<string, HandlerMetadata> {
         return this._handlers;
     }
@@ -47,16 +37,12 @@ export class ControllerMetadata {
         return this._afterFilters;
     }
 
-    constructor(type: Function, baseUrl?: string, isRest?: boolean) {
+    constructor(type: Function, baseUrl?: string) {
 
         this._type = type;
 
         if (typeof baseUrl !== 'undefined') {
             this._baseUrl = baseUrl;
-        }
-
-        if (typeof isRest !== 'undefined') {
-            this._isRest = isRest;
         }
 
         this._handlers = new Map();

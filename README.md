@@ -14,8 +14,7 @@
 <h2 align="center">Features</h2>
 
 * Dependency Injection
-* Service class
-* Rest route and controller, param data injection support
+* Controller
 * Middleware
 * Filter
 * Model
