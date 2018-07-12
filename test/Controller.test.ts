@@ -44,47 +44,47 @@ class UsersController {
 
 bootstrapServer(({getAxios}) => {
 
-    test('RestController get', async t => {
+    test('Controller get', async t => {
         const response = await getAxios().get('/rest/get')
         t.is(response.status, 200)
         t.is(response.data, 'rest get')
     })
 
-    test('RestController post', async t => {
+    test('Controller post', async t => {
         const response = await getAxios().post('/rest/post')
         t.is(response.status, 200)
         t.is(response.data, 'rest post')
     })
 
-    test('RestController put', async t => {
+    test('Controller put', async t => {
         const response = await getAxios().put('/rest/put')
         t.is(response.status, 200)
         t.is(response.data, 'rest update')
     })
 
-    test('RestController patch', async t => {
+    test('Controller patch', async t => {
         const response = await getAxios().patch('/rest/patch')
         t.is(response.status, 200)
         t.is(response.data, 'rest update')
     })
 
-    test('RestController delete', async t => {
+    test('Controller delete', async t => {
         const response = await getAxios().delete('/rest/delete')
         t.is(response.status, 200)
         t.is(response.data, 'rest delete')
     })
 
-    test('RestController head', async t => {
+    test('Controller head', async t => {
         const response = await getAxios().head('/rest/head')
         t.is(response.status, 200)
     })
 
-    test('RestController options', async t => {
+    test('Controller options', async t => {
         const response = await getAxios().options('/rest/options')
         t.is(response.status, 200)
     })
 
-    test('RestController all', async t => {
+    test('Controller all', async t => {
 
         const ret = ['get', 'post', 'put', 'patch', 'delete'].map(async method => {
             const response = await getAxios()[method]('/rest/all')

@@ -1,8 +1,6 @@
 import test from 'ava'
 import { bootstrapServer } from './util'
-import { 
-    RestController, Get, Req, Res, Post, Filter, 
-    IMiddleware, Next, BeforeFilter, AfterFilter } from '../src'
+import { Controller, Get, Req, Res, Post, Filter, IMiddleware, Next, BeforeFilter, AfterFilter } from '../src'
 
 @Filter()
 class UserFilter implements IMiddleware {
@@ -39,7 +37,7 @@ class ExceptChangeFilter implements IMiddleware {
     }
 }
 
-@RestController()
+@Controller()
 @BeforeFilter(UserFilter)
 @AfterFilter(RenderFilter)
 @BeforeFilter(OnlyChangeFilter, {only: ['onlyAction']})

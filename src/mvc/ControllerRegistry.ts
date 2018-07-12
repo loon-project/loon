@@ -26,13 +26,9 @@ export class ControllerRegistry {
 
 
     /**
-     * used to register a class as a Controller or RestController
+     * used to register a class as a Controller
      *
      * for example:
-     *
-     *   @RestController("/api/v1/")
-     *   class ATestController {
-     *   }
      *
      *   @Controller()
      *   class BTestController {
@@ -44,23 +40,16 @@ export class ControllerRegistry {
      *   baseUrl
      *      is the controller base url, in this example: "/api/v1/"
      *      if don't provide baseUrl in the decorator, then it would be blank string: ""
-     *
-     *   isRest
-     *      is the flag indicate whether is a RestController or not
-     *      RestController default render the result as JSON
-     *      Controller default render the data into the template
-     *
+     * 
      * @param type
      * @param baseUrl
-     * @param isRest
      */
-    public static registerController(type: Function, baseUrl: string, isRest: boolean) {
+    public static registerController(type: Function, baseUrl: string) {
 
         DependencyRegistry.registerComponent(<Klass>type);
 
         const controllerMetadata = this.getController(type);
         controllerMetadata.baseUrl = baseUrl;
-        controllerMetadata.isRest = isRest;
     }
 
 
@@ -69,7 +58,7 @@ export class ControllerRegistry {
      *
      * for example
      *
-     *   @RestController()
+     *   @Controller()
      *   class ATestController {
      *
      *      @Get("/")
