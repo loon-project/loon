@@ -1,4 +1,4 @@
-import {ApplicationLoader, ApplicationSettings, RestController, Get, Res, ErrorMiddleware, IMiddleware, Err} from "../../../src/index";
+import {ApplicationLoader, ApplicationSettings, Get, Res, ErrorMiddleware, IMiddleware, Err, Controller} from "../../../src/index";
 import * as http from 'http'
 import * as http2 from 'http2'
 import * as fastify from 'fastify'
@@ -18,7 +18,7 @@ class GlobalErrorHandler implements IMiddleware {
     }
 }
 
-@RestController()
+@Controller()
 class ApplicationController {
 
   @Get('/')

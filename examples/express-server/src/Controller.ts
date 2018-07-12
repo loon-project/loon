@@ -1,5 +1,5 @@
 import * as express from 'express'
-import {Controller, RestController, Get, Res, Next, Middleware, IMiddleware} from "../../../src/index"
+import {Controller, Get, Res, Next, Middleware, IMiddleware} from "../../../src/index"
 
 @Middleware()
 export class GlobalMiddleware implements IMiddleware {
@@ -10,7 +10,7 @@ export class GlobalMiddleware implements IMiddleware {
 }
 
 
-@RestController("/api/v2")
+@Controller("/api/v2")
 export default class ExampleController {
 
   @Get("/")
