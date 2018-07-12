@@ -6,7 +6,7 @@
     "node": ">=6.0.0"
   },
   "main": "lib/index.js",
-  "types": "dts/index.d.ts",
+  "types": "lib/index.d.ts",
   "keywords": [
     "express",
     "expressjs",
