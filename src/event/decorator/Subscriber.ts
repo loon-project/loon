@@ -7,5 +7,4 @@ export function Subscriber() {
         DependencyRegistry.registerComponent(target);
         EventListenerRegistry.registerListeners(target);
     };
-
 }

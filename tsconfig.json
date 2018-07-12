@@ -9,14 +9,9 @@
     "pretty": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
-    // "allowJs": true,
     "types":[
       "node",
-      "express",
-      "reflect-metadata",
-      "chai",
-      "mocha",
-      "ava"
+      "reflect-metadata"
     ]
   },
   "exclude": [

@@ -59,66 +59,63 @@ export class ExpressLoaderAdapter implements ILoaderAdapter {
             })
     }
 
-  loadControllers() {
+    loadControllers() {
+        ControllerRegistry.controllers.forEach(controllerMetadata => {
+            // register a controller as a fastify plugin
+            const controller = express.Router()
+            controllerMetadata.handlers.forEach(handlerMetadata => {
+                // register controller action
+                handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
+                    const beforeFilters = this.getRegisteredFilters(controllerMetadata, handlerMetadata, 'beforeFilters')
+                    const afterFilters = this.getRegisteredFilters(controllerMetadata, handlerMetadata, 'afterFilters')
 
-    ControllerRegistry.controllers.forEach(controllerMetadata => {
-      // register a controller as a fastify plugin
-      const controller = express.Router()
 
-      controllerMetadata.handlers.forEach(handlerMetadata => {
+                    const handler = (req, res, next) => {
+                        HandlerExecutor.run(this._adapter, handlerMetadata, { req, res, next })
+                    }
+                    controller[httpMethodAndPath.method](httpMethodAndPath.path, ...beforeFilters, handler, ...afterFilters)
+                })
 
-        const getRegisteredFilters = (filterName) => {
-            const store: any[] = []
-            const actionName = handlerMetadata.actionName
-            controllerMetadata[filterName].forEach(controllerFilterMetadata => {
-                
-                let push = false
-
-                if (controllerFilterMetadata.only && controllerFilterMetadata.only.indexOf(actionName) > -1) {
-                    push = true
-                }
-                if (controllerFilterMetadata.except && controllerFilterMetadata.except.indexOf(actionName) === -1) {
-                    push = true
-                }
-                if (!controllerFilterMetadata.only && !controllerFilterMetadata.except) {
-                    push = true
-                }
-                if (push) {
-                    store.push((req, res, next) => {
-                        HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, {req, res, next})
-                    })
-                }
             })
-            return store
-        }
 
-        const beforeFilters = getRegisteredFilters('beforeFilters')
-        const afterFilters = getRegisteredFilters('afterFilters')
-
-        // register controller action
-        handlerMetadata.httpMethodAndPaths.forEach(httpMethodAndPath => {
-          const handler = (req, res, next) => {
-            HandlerExecutor.run(this._adapter, handlerMetadata, {req, res, next})
-          }
-          controller[httpMethodAndPath.method](httpMethodAndPath.path, ...beforeFilters, handler, ...afterFilters)
+            this._server.use(controllerMetadata.baseUrl, controller)
         })
+    }
 
-      })
+    loadErrorMiddlewares() {
+        MiddlewareRegistry
+            .getMiddlewares({ isErrorMiddleware: true })
+            .forEach(middlewareMetadata => {
+                const handlerMetadata = middlewareMetadata.handler;
+                const errorHandler = (err, req, res, next) => {
+                    HandlerExecutor.run(this._adapter, handlerMetadata, { req, res, err, next })
+                }
+                this._server.use(middlewareMetadata.baseUrl, errorHandler)
+            })
+    }
 
-      this._server.use(controllerMetadata.baseUrl, controller)
-    })
-  }
+    private getRegisteredFilters(controllerMetadata, handlerMetadata, filterName) {
+        const store: any[] = []
+        const actionName = handlerMetadata.actionName
+        controllerMetadata[filterName].forEach(controllerFilterMetadata => {
 
-  loadErrorMiddlewares() {
+            let push = false
 
-    MiddlewareRegistry
-      .getMiddlewares({isErrorMiddleware: true})
-      .forEach(middlewareMetadata => {
-        const handlerMetadata = middlewareMetadata.handler;
-        const errorHandler = (err, req, res, next) => {
-          HandlerExecutor.run(this._adapter, handlerMetadata, {req, res, err, next})
-        }
-        this._server.use(middlewareMetadata.baseUrl, errorHandler)
-      })
-  }
+            if (controllerFilterMetadata.only && controllerFilterMetadata.only.indexOf(actionName) > -1) {
+                push = true
+            }
+            if (controllerFilterMetadata.except && controllerFilterMetadata.except.indexOf(actionName) === -1) {
+                push = true
+            }
+            if (!controllerFilterMetadata.only && !controllerFilterMetadata.except) {
+                push = true
+            }
+            if (push) {
+                store.push((req, res, next) => {
+                    HandlerExecutor.run(this._adapter, controllerFilterMetadata.filterMetadata.handler, { req, res, next })
+                })
+            }
+        })
+        return store
+    }
 } 

@@ -1,15 +1,15 @@
-import {Service} from "../mvc/decorator/Service";
 import {PropertyRegistry} from "./PropertyRegistry";
 import {PropertyMetadata} from "./PropertyMetadata";
 import * as _ from "lodash";
 import {TypeUtil} from "../util/TypeUtil";
 import {Klass} from "../core/Klass";
 import {ConvertOptions} from "./ConvertOptions";
+import { Component } from "../di";
 
 /**
  * ConverterService used to convert class to object and vice-versa.
  */
-@Service()
+@Component()
 export class ConverterService {
 
     public convert(data: any, returnType: Function, options?: ConvertOptions) {

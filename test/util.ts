@@ -12,9 +12,7 @@ export const bootstrapServer = (cb) => {
             return axios.create({
                 baseURL: `http://localhost:${(opts.server as any).address().port}`
             })
-        },
-        isExpress: () => serverType === 'express',
-        isFastify: () => serverType === 'fastify'
+        }
     }
 
     test.before.cb(t => {
@@ -37,3 +35,6 @@ export const bootstrapServer = (cb) => {
 
     cb(opts)
 }
+
+export const isExpress = () => process.env.SERVER === 'express'
+export const isFastify = () => process.env.SERVER === 'fastify'
