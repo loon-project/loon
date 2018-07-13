@@ -7,15 +7,18 @@
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "bin": {
+    "loon": "./bin/loon.js"
+  },
   "keywords": [
     "express",
     "expressjs",
+    "fastify",
     "typescript",
     "mvc",
     "mvc-framework",
     "enterprise",
-    "typed",
-    "typed-project"
+    "nodejs"
   ],
   "repository": {
     "url": "https://github.com/loon-project/loon",
@@ -39,7 +42,7 @@
     "test:express": "SERVER=express ava test/**/*.test.js",
     "test:fastify": "SERVER=fastify ava test/**/*.test.js",
     "ava": "npm run test:express && npm run test:fastify",
-    "clean": "del 'src/**/*.js' 'src/**/*.js.map' 'test/**/*.js' 'test/**/*.js.map'"
+    "clean": "del 'examples/**/*.js' 'examples/**/*.js.map' 'src/**/*.js' 'src/**/*.js.map' 'test/**/*.js' 'test/**/*.js.map'"
   },
   "dependencies": {
     "@types/express": "^4.16.0",
@@ -60,9 +63,12 @@
   "devDependencies": {
     "ava": "1.0.0-beta.6",
     "axios": "^0.18.0",
+    "commander": "^2.16.0",
     "coveralls": "^3.0.1",
     "del-cli": "^1.1.0",
+    "nodemon": "^1.18.2-alpha.1",
     "nyc": "^10.3.2",
+    "ts-node": "^7.0.0",
     "tslint": "^4.3.1",
     "typescript": "^2.9.2"
   }

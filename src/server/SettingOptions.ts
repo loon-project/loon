@@ -23,6 +23,10 @@ export interface SettingOptions {
      */
     port?: string;
 
+    host?: string
+
+    backlog?: number
+
     /**
      * API mount path, a Map<string, string> data structure
      * key is the url path of mount routers

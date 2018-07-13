@@ -1,16 +1,6 @@
-import {ApplicationLoader, ApplicationSettings} from "../../../src/index";
-import * as express from 'express'
+import {ApplicationLoader} from "../../../src";
 
-@ApplicationSettings({
-    rootDir: `${__dirname}/../`
+new ApplicationLoader('express', {rootDir: __dirname}).start().then((server: any) => {
+    console.log(`server is up on ${server.address().port}`)
 })
-class Application extends ApplicationLoader {
-}
-
-(async () => {
-    const server = await new Application('express').init() as express.Application
-    server.listen(8800, () => {
-        console.log('server is up')
-    })
-})()
 
