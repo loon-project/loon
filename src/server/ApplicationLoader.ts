@@ -12,6 +12,7 @@ import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/
 import { ConverterService } from "../converter";
 import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
 import { SettingOptions } from "./SettingOptions";
+import { resolve } from "path";
 
 export class ApplicationLoader {
 
@@ -28,6 +29,10 @@ export class ApplicationLoader {
     private _files?: string
 
     private _port: string;
+
+    private _host: string
+
+    private _backlog: number
 
     /**
      * Load user defined settings into ApplicationLoader
@@ -65,6 +70,8 @@ export class ApplicationLoader {
 
         this._env = process.env.NODE_ENV || _settings.env || 'development';
         this._port = process.env.PORT || _settings.port || '9000';
+        this._host = process.env.HOST || _settings.host || '0.0.0.0'
+        this._backlog = process.env.BACKLOG as any || _settings.backlog || 511
         this._rootDir = _settings.rootDir;
         this._files = _settings.files
 
@@ -78,11 +85,11 @@ export class ApplicationLoader {
         }
 
         if (this._rootDir) {
-            require('require-all')({
-                dirname     : this._rootDir,
-                excludeDirs : new RegExp(`^\.(git|svn|node_modules})$`),
-                recursive   : true
-            });
+            if (this._env === 'development') {
+                glob.sync(`${this._rootDir}/**/*.ts`).forEach(file => require(file))
+            } else {
+                glob.sync(`${this._rootDir}/**/*.js`).forEach(file => require(file))
+            }
         }
 
        return this;
@@ -121,7 +128,7 @@ export class ApplicationLoader {
         return this;
     }
 
-    public async init() {
+    public async start() {
         try {
             await this._loadComponents()
             await this._init()
@@ -131,8 +138,25 @@ export class ApplicationLoader {
         } catch (e) {
             throw e
         }
-        return this._server
+
+        return new Promise((resolve, reject) => {
+            if (this._isExpress()) {
+                const server = (this._server as any).listen(this._port, this._host, this._backlog, (err) => {
+                    if (err) reject(err)
+                    resolve(server)
+                })
+            } else if (this._isFastify()) {
+                (this._server as any).listen(this._port, this._host, this._backlog, (err) => {
+                    if (err) reject(err)
+                    resolve((this._server as fastify.FastifyInstance).server)
+                })
+            } else {
+                throw 'framework error'
+            }
+        })
     }
+
+    public 
 
     private _isExpress() {
         return !!(this._server as express.Application)['m-search']

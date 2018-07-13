@@ -16,7 +16,8 @@ export default class ExampleController {
   @Get("/")
   public indexAction(@Res() res) {
     res.send({
-      a: "B",
+      a: "A",
+      b: "B",
       var: res.locals.var
     })
   }

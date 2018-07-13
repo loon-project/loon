@@ -15,18 +15,9 @@ export const bootstrapServer = (cb) => {
         }
     }
 
-    test.before.cb(t => {
-        const app = new ApplicationLoader(serverType as string).init()
-        app.then((server: any) => {
-            if (serverType === 'fastify') {
-                server.listen(0, t.end)
-                opts.server = server.server
-            } else if (serverType === 'express') {
-                opts.server = server.listen(0, t.end)
-            } else {
-                throw `${serverType} not support, should be express or fastify`
-            }
-        })
+    test.before(async t => {
+        const server = await new ApplicationLoader(serverType as string, {port: '0'}).start()
+        opts.server = server as any
     })
     
     test.after.cb(t => {
