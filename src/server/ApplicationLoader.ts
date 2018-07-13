@@ -156,8 +156,6 @@ export class ApplicationLoader {
         })
     }
 
-    public 
-
     private _isExpress() {
         return !!(this._server as express.Application)['m-search']
     }
