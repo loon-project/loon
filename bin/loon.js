@@ -15,8 +15,13 @@ program
     nodemon({
       watch: cmd.watch,
       ignore: cmd.ignore,
+      verbose: true,
       ext: cmd.ext,
+      inspect: cmd.inspect,
       exec: 'ts-node',
+      env: {
+        "EXT": "ts"
+      },
       script
     })
   })

@@ -2,11 +2,13 @@
 export interface SettingOptions {
 
     /**
-     * Required
      * The root folder of project
      */
     rootDir?: string;
 
+    /**
+     * List project files, use glob pattern, see details in https://github.com/isaacs/node-glob
+     */
     files?: string
 
     /**
@@ -27,19 +29,9 @@ export interface SettingOptions {
 
     backlog?: number
 
-    /**
-     * API mount path, a Map<string, string> data structure
-     * key is the url path of mount routers
-     * value is the file path to the mount routers
-     * Default value: {}
-     */
-    routes?: {[key: string]: string};
+    serverOpts?: any
 
-    /**
-     * List all components need to initialization and add to DependencyInjectionRegistry
-     * Default value: []
-     */
-    components?: string[];
+    ext?: string
 
 }
 

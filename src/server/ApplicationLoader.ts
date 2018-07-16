@@ -34,6 +34,8 @@ export class ApplicationLoader {
 
     private _backlog: number
 
+    private _ext: string
+
     /**
      * Load user defined settings into ApplicationLoader
      * Initialize settings
@@ -49,7 +51,11 @@ export class ApplicationLoader {
             this._server.use(require('body-parser').urlencoded({ extended: true }))
             this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
-            this._server = fastify() as fastify.FastifyInstance
+            if (settings && settings.serverOpts) {
+                this._server = fastify(settings.serverOpts) as fastify.FastifyInstance
+            } else {
+                this._server = fastify() as fastify.FastifyInstance
+            }
             this._server.register(require('fastify-formbody'))
             this._server.addContentTypeParser('text/plain', {parseAs: 'string'}, async (req, body) => {
                 return body
@@ -72,6 +78,8 @@ export class ApplicationLoader {
         this._port = process.env.PORT || _settings.port || '9000';
         this._host = process.env.HOST || _settings.host || '0.0.0.0'
         this._backlog = process.env.BACKLOG as any || _settings.backlog || 511
+        this._ext = process.env.EXT || _settings.ext || 'js'
+
         this._rootDir = _settings.rootDir;
         this._files = _settings.files
 
@@ -85,11 +93,7 @@ export class ApplicationLoader {
         }
 
         if (this._rootDir) {
-            if (this._env === 'development') {
-                glob.sync(`${this._rootDir}/**/*.ts`).forEach(file => require(file))
-            } else {
-                glob.sync(`${this._rootDir}/**/*.js`).forEach(file => require(file))
-            }
+            glob.sync(`${this._rootDir}/**/*.${this._ext}`).forEach(file => require(file))
         }
 
        return this;

@@ -4,7 +4,7 @@ import {Controller, Get, Res, Next, Middleware, IMiddleware} from "../../../src/
 @Middleware()
 export class GlobalMiddleware implements IMiddleware {
   public use(@Res() res: express.Response, @Next() next: express.NextFunction) {
-    res.locals.var = "text"
+    res.locals.var = "text+1"
     next()
   }
 }
