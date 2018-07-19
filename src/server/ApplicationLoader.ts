@@ -48,11 +48,11 @@ export class ApplicationLoader {
     }
 
     get files() {
-        return this.files;
+        return this._files;
     }
 
     get port() {
-        return this.port;
+        return this._port;
     }
 
     get host() {
