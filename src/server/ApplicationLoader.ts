@@ -12,7 +12,6 @@ import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/
 import { ConverterService } from "../converter";
 import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
 import { SettingOptions } from "./SettingOptions";
-import { resolve } from "path";
 
 export class ApplicationLoader {
 
@@ -35,6 +34,34 @@ export class ApplicationLoader {
     private _backlog: number
 
     private _ext: string
+
+    get server() {
+        return this._server;
+    }
+
+    get env() {
+        return this._env;
+    }
+
+    get rootDir() {
+        return this._rootDir;
+    }
+
+    get files() {
+        return this.files;
+    }
+
+    get port() {
+        return this.port;
+    }
+
+    get host() {
+        return this._host;
+    }
+
+    get backlog() {
+        return this._backlog;
+    }
 
     /**
      * Load user defined settings into ApplicationLoader
