@@ -1,5 +1,5 @@
 import * as express from 'express'
-import {Controller, Get, Res, Next, Middleware, IMiddleware} from "../../../src/index"
+import {Controller, Get, Res, Next, Middleware, IMiddleware} from "../../../src"
 
 @Middleware()
 export class GlobalMiddleware implements IMiddleware {

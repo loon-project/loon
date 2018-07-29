@@ -12,6 +12,7 @@ import { FastifyHandlerAdapter, FastifyLoaderAdapter } from "../server-adapters/
 import { ConverterService } from "../converter";
 import { ExpressHandlerAdapter, ExpressLoaderAdapter } from "../server-adapters/ExpressAdapter";
 import { SettingOptions } from "./SettingOptions";
+const debug = require('debug')('loon:ApplicationLoader');
 
 export class ApplicationLoader {
 
@@ -63,6 +64,8 @@ export class ApplicationLoader {
         return this._backlog;
     }
 
+    private $onClose: (...args: any[]) => any;
+
     /**
      * Load user defined settings into ApplicationLoader
      * Initialize settings
@@ -72,12 +75,14 @@ export class ApplicationLoader {
         const _settings = Object.assign({}, ApplicationRegistry.settings, settings)
 
         if (typeOrServer === 'express') {
+            debug('built in express server');
             this._server = express() as express.Application
             this._server.use(require('body-parser').text())
             this._server.use(require('body-parser').json())
             this._server.use(require('body-parser').urlencoded({ extended: true }))
             this._server.use(require('method-override')())
         } else if (typeOrServer === 'fastify') {
+            debug('built in fastify server');
             if (settings && settings.serverOpts) {
                 this._server = fastify(settings.serverOpts) as fastify.FastifyInstance
             } else {
@@ -88,13 +93,16 @@ export class ApplicationLoader {
                 return body
             })
         } else {
+            debug('custom express or fastify server');
             this._server = <fastify.FastifyInstance|express.Application>typeOrServer
         }
 
         if (this._isFastify()) {
+            debug('is fastify server');
             this._handlerAdapter = new FastifyHandlerAdapter(new ConverterService())
             this._loaderAdapter = new FastifyLoaderAdapter(this._server as fastify.FastifyInstance, this._handlerAdapter)
         } else if (this._isExpress()) {
+            debug('is express server');
             this._handlerAdapter = new ExpressHandlerAdapter(new ConverterService())
             this._loaderAdapter = new ExpressLoaderAdapter(this._server as express.Application, this._handlerAdapter)
         } else {
@@ -102,9 +110,17 @@ export class ApplicationLoader {
         }
 
         this._env = process.env.NODE_ENV || _settings.env || 'development';
+        debug(`env: ${this._env}`);
+
         this._port = process.env.PORT || _settings.port || '9000';
+        debug(`port: ${this._port}`);
+
         this._host = process.env.HOST || _settings.host || '0.0.0.0'
+        debug(`host: ${this._host}`);
+
         this._backlog = process.env.BACKLOG as any || _settings.backlog || 511
+        debug(`backlog: ${this._backlog}`);
+
         this._ext = process.env.EXT || _settings.ext || 'js'
 
         this._rootDir = _settings.rootDir;
@@ -114,19 +130,30 @@ export class ApplicationLoader {
     }
 
     private async _loadComponents() {
+        debug('_loadComponents');
 
         if (this._files) {
-            glob.sync(this._files).forEach(file => require(file))
+            debug('files load mode');
+            glob.sync(this._files).forEach(file => {
+                debug(file);
+                require(file)
+            })
         }
 
         if (this._rootDir) {
-            glob.sync(`${this._rootDir}/**/*.${this._ext}`).forEach(file => require(file))
+            debug('rootDir load mode');
+            glob.sync(`${this._rootDir}/**/*.${this._ext}`).forEach(file => {
+                debug(file);
+                require(file)
+            })
         }
 
        return this;
     }
 
     private async _init() {
+        debug('_init');
+
         '$beforeInit' in this ? await (<any> this).$beforeInit() : null;
         InitializerRegistry
             .getInitializers()
@@ -139,6 +166,8 @@ export class ApplicationLoader {
     }
 
     private async _loadMiddlewares() {
+        debug('_loadMiddlewares');
+
         '$beforeLoadMiddlewares' in this ? await (<any> this).$beforeLoadMiddlewares() : null;
         this._loaderAdapter.loadMiddlewares()
         '$afterLoadMiddlewares' in this ? await (<any> this).$afterLoadMiddlewares() : null;
@@ -146,13 +175,17 @@ export class ApplicationLoader {
     }
 
     private async _loadControllers() {
-        '$beforeLoadRoutes' in this ? await (<any> this).$beforeLoadRoutes() : null;
+        debug('_loadControllers');
+
+        '$beforeLoadControllers' in this ? await (<any> this).$beforeLoadControllers() : null;
         this._loaderAdapter.loadControllers()
-        '$afterLoadRoutes' in this ? await (<any> this).$afterLoadRoutes() : null;
+        '$afterLoadControllers' in this ? await (<any> this).$afterLoadControllers() : null;
         return this;
     }
 
     private async _loadErrorMiddlewares() {
+        debug('_loadErrorMiddlewares');
+
         '$beforeLoadErrorMiddlewares' in this ? await (<any> this).$beforeLoadErrorMiddlewares() : null;
         this._loaderAdapter.loadErrorMiddlewares()
         '$afterLoadErrorMiddlewares' in this ? await (<any> this).$afterLoadErrorMiddlewares() : null;
@@ -160,6 +193,8 @@ export class ApplicationLoader {
     }
 
     public async start() {
+        debug('start');
+
         try {
             await this._loadComponents()
             await this._init()
@@ -182,9 +217,48 @@ export class ApplicationLoader {
                     resolve((this._server as fastify.FastifyInstance).server)
                 })
             } else {
-                throw 'framework error'
+                throw 'server type unsupported error';
             }
-        })
+        }).then((server: http.Server) => {
+            const SIG = ['SIGINT', 'SIGTERM'];
+
+            SIG.forEach(signal => {
+                process.on(signal as any, () => {
+                    console.log(`receiving signal: ${signal}`);
+
+                    server.close(err => {
+                        if (err) {
+                            console.error(err.message);
+                            process.exit(1);
+                        }
+
+                        const closeServer = () => {
+                            if ('$onClose' in this) {
+                                const onClose = this.$onClose();
+                                if (onClose.then && typeof onClose.then === 'function') {
+                                    onClose.then(() => {
+                                        process.exit(0);
+                                    })
+                                } else {
+                                    process.exit(0);
+                                }
+                            } else {
+                                process.exit(0);
+                            }
+                       };
+
+                       closeServer();
+
+                       setTimeout(() => {
+                            console.error('could not close http/resource connection in time, force shuting down');
+                            closeServer();
+                        }, 10 * 1000);
+                    });
+                });
+            });
+
+            return server;
+        });
     }
 
     private _isExpress() {

@@ -1,7 +1,7 @@
 import {HandlerMetadata} from "./HandlerMetadata";
 import {Reflection} from "../core/Reflection";
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
-import {ConvertUtil} from "../util/ConvertUtil";
+import { convertArrayToMap } from '../lib/util';
 import {ParamType} from "./enum/ParamType";
 import {HandlerParamOptions} from "./HandlerParamOptions";
 
@@ -55,7 +55,7 @@ export class HandlerRegistry {
 
             if (params) {
                 const handlerParams = params.map((returnType, index) => new HandlerParamMetadata(type, actionName, index, returnType));
-                const handlerParamsMap: Map<number, HandlerParamMetadata> = ConvertUtil.convertArrayToMap(handlerParams);
+                const handlerParamsMap: Map<number, HandlerParamMetadata> = convertArrayToMap(handlerParams);
                 handlerMetadata.params = handlerParamsMap;
             }
 
