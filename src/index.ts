@@ -8,5 +8,5 @@ export * from './server';
 export * from './core';
 export * from './converter';
 export * from './initializer';
-export * from './lib';
+export * from './util';
 

@@ -1,7 +1,7 @@
 import {PropertyRegistry} from "./PropertyRegistry";
 import {PropertyMetadata} from "./PropertyMetadata";
 import * as _ from "lodash";
-import { isSimpleType } from '../lib/util';
+import { isSimpleType } from '../util';
 import {Klass} from "../core/Klass";
 import {ConvertOptions} from "./ConvertOptions";
 import { Component } from "../di";

@@ -1,7 +1,7 @@
 import {HandlerMetadata} from "./HandlerMetadata";
 import {Reflection} from "../core/Reflection";
 import {HandlerParamMetadata} from "./HandlerParamMetadata";
-import { convertArrayToMap } from '../lib/util';
+import { convertArrayToMap } from '../util';
 import {ParamType} from "./enum/ParamType";
 import {HandlerParamOptions} from "./HandlerParamOptions";
 
