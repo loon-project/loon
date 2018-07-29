@@ -1,7 +1,6 @@
+import { helper } from './helper'
 import test from 'ava'
-import { bootstrapServer } from './util'
 import { Property, Controller, Get, Post, BodyParam, Res, Req, PathParam, HeaderParam, QueryParam, Middleware, IMiddleware, Next, ErrorMiddleware, Err, Component, Inject, Initialize, IInitializer, ApplicationLoader } from '../src'
-
 
 @Initialize()
 class InitializeClass implements IInitializer {
@@ -26,12 +25,10 @@ class UsersController {
     }
 }
 
-bootstrapServer(({getAxios}) => {
 
-    test('should run initializer', async t => {
-        const response = await getAxios().get('/')
-        t.is(response.status, 200)
-        t.is(response.data, 'init')
-    })
-})
+test('should run initializer', async t => {
+    const response = await helper.getAxios().get('/')
+    t.is(response.status, 200)
+    t.is(response.data, 'init')
+});
 
