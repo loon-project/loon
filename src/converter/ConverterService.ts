@@ -1,7 +1,7 @@
 import {PropertyRegistry} from "./PropertyRegistry";
 import {PropertyMetadata} from "./PropertyMetadata";
 import * as _ from "lodash";
-import {TypeUtil} from "../util/TypeUtil";
+import { isSimpleType } from '../util';
 import {Klass} from "../core/Klass";
 import {ConvertOptions} from "./ConvertOptions";
 import { Component } from "../di";
@@ -69,7 +69,7 @@ export class ConverterService {
          *
          */
         properties = PropertyRegistry.properties.get(type);
-        if (returnType === Object && !TypeUtil.isSimpleType(type) && properties) {
+        if (returnType === Object && !isSimpleType(type) && properties) {
 
             const result = {};
 
@@ -93,7 +93,7 @@ export class ConverterService {
 
                     value = data[metadata.klassProperty];
 
-                    if (TypeUtil.isSimpleType(metadata.baseType)) {
+                    if (isSimpleType(metadata.baseType)) {
                         value = this.convert(value, metadata.propertyType, {baseType: metadata.baseType});
                     } else {
                         value = this.convert(value, metadata.propertyType, {baseType: Object});
@@ -102,7 +102,7 @@ export class ConverterService {
                 } else {
                     value = data[metadata.klassProperty];
 
-                    if (TypeUtil.isSimpleType(metadata.propertyType)) {
+                    if (isSimpleType(metadata.propertyType)) {
                         value = this.convert(value, metadata.propertyType);
                     } else {
                         value = this.convert(value, Object);
@@ -123,7 +123,7 @@ export class ConverterService {
          *
          */
         properties = PropertyRegistry.properties.get(returnType);
-        if (type === Object && !TypeUtil.isSimpleType(returnType) && properties) {
+        if (type === Object && !isSimpleType(returnType) && properties) {
 
             const klass = <Klass> returnType;
             const ins = new klass();
@@ -165,7 +165,7 @@ export class ConverterService {
          */
         const returnProperties = PropertyRegistry.properties.get(returnType);
         properties = PropertyRegistry.properties.get(type);
-        if (!TypeUtil.isSimpleType(type) && !TypeUtil.isSimpleType(returnType) && properties && returnProperties) {
+        if (!isSimpleType(type) && !isSimpleType(returnType) && properties && returnProperties) {
 
             const klass = <Klass> returnType;
 

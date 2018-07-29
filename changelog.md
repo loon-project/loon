@@ -9,4 +9,7 @@
 * remove `@Controller()` decorator
 * remove `@On() @Subscriber` decorator
 * add `loon` bin script
+* `$beforeLoadRoutes` rename to `$beforeLoadControllers`, `$afterLoadRoutes` rename to `$afterLoadControllers`
+* add `$onClose` lifecycle hook
+* add debug support
 
