@@ -11,8 +11,9 @@
 > Now it's time to celebrate, LOON 2.0! <br />
 > Enterprise ready spring like framework build on Typescript and Express
 
-### 2.0
+<h2 align="center">Changelog</h2>
 
+### 2.0
 * `fastify` adapter
 * add `files` to ApplicationSettings, remove `srcDir, publicDir, logDir, configDir, dbDir`, `rootDir` is not required
 * use `SettingOptions` in `ApplicationLoader` constructor
@@ -25,7 +26,6 @@
 * add `$onClose` lifecycle hook
 * add graceful shutdown by default
 * add debug support
-
 
 <h2 align="center">Quick Start</h2>
 
