@@ -1,5 +1,5 @@
+import { helper } from './helper'
 import test from 'ava'
-import { bootstrapServer } from './util'
 import { Property, Controller, Get, Post, BodyParam, Res, PathParam } from '../src'
 
 const d = new Date()
@@ -54,22 +54,20 @@ class ArticlesController {
     }
 }
 
-bootstrapServer(({getAxios}) => {
 
-    test('should convert object to class', async t => {
-        const response = await getAxios().post('/bodyclass', articleObj)
-        t.is(response.status, 200)
-        t.is(response.data, true)
-    })
+test('should convert object to class', async t => {
+    const response = await helper.getAxios().post('/bodyclass', articleObj)
+    t.is(response.status, 200)
+    t.is(response.data, true)
+})
 
-    test('should convert basic type to another basic type', async t => {
-        const response = await getAxios().post('/bodybasic', "1", {
-            headers: {
-                'content-type': 'text/plain'
-            }
-        })
-        t.is(response.status, 200)
-        t.is(response.data, true)
+test('should convert basic type to another basic type', async t => {
+    const response = await helper.getAxios().post('/bodybasic', "1", {
+        headers: {
+            'content-type': 'text/plain'
+        }
     })
+    t.is(response.status, 200)
+    t.is(response.data, true)
 })
 
