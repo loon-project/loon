@@ -9,7 +9,7 @@
 <h1 align="center">LOON(气球)</h1>
 
 > Now it's time to celebrate, LOON 2.0! <br />
-> Enterprise ready spring like framework build on Typescript and Express
+> Enterprise ready spring like framework build with Typescript on top of fastest node http framework fastify or express
 
 <h2 align="center">Changelog</h2>
 
