@@ -5,8 +5,8 @@ import {Reflection} from "../core/Reflection";
 
 export class DependencyRegistry {
 
-    private static components: Map<Klass, Component> = new Map();
-    private static instances: Map<Klass, any> = new Map();
+    public static components: Map<Klass, Component> = new Map();
+    public static instances: Map<Klass, any> = new Map();
 
     public static set(klass: Klass, instance: any) {
         this.instances.set(klass, instance);
@@ -20,14 +20,8 @@ export class DependencyRegistry {
         return !!this.instances.get(klass);
     }
 
-    public static get(klass: Klass) {
-        let instance = this.instances.get(klass);
+    public static init(klass: Klass) {
         let params;
-
-        if (instance) {
-            return instance;
-        }
-
         const component = this.components.get(klass);
 
         if (!component) {
@@ -37,17 +31,12 @@ export class DependencyRegistry {
         if (component.params && component.params.length > 0) {
             params = component.params.map((param, index) => {
                 const handler = component.paramHandlers.get(index);
-
                 if (handler) {
                     return handler();
                 }
-
                 return DependencyRegistry.get(param);
-
             });
-
             params.unshift(null);
-
         }
 
         component.propertyHandlers.forEach((handler, key) => {
@@ -59,14 +48,22 @@ export class DependencyRegistry {
             });
         });
 
-        instance = new (klass.bind.apply(klass, params))();
-
+        const instance = new (klass.bind.apply(klass, params))();
         DependencyRegistry.set(klass, instance);
-
         return instance;
     }
 
-    public static registerComponent(klass: Klass) {
+    public static get(klass: Klass) {
+        const instance = this.instances.get(klass);
+
+        if (instance) {
+            return instance;
+        } else {
+            return this.init(klass);
+        }
+    }
+
+    public static registerComponent(klass: Klass, lazyInit?: boolean) {
 
         let component = this.components.get(klass);
 

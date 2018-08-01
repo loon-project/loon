@@ -1,5 +1,5 @@
-import {MiddlewareRegistry} from "../MiddlewareRegistry";
-import {MiddlewareOptions} from "../MiddlewareOptions";
+import { MiddlewareRegistry } from "../MiddlewareRegistry";
+import { MiddlewareOptions } from "../MiddlewareOptions";
 
 
 export function Middleware(options?: MiddlewareOptions) {

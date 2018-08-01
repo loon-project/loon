@@ -31,8 +31,9 @@ export interface SettingOptions {
 
     serverOpts?: any
 
-    ext?: string
+    ext?: string;
 
+    lazyInit?: boolean;
 }
 
 
