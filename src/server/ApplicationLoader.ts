@@ -36,6 +36,8 @@ export class ApplicationLoader {
 
     private _ext: string
 
+    private _lazyInit: boolean;
+
     get server() {
         return this._server;
     }
@@ -122,6 +124,7 @@ export class ApplicationLoader {
         debug(`backlog: ${this._backlog}`);
 
         this._ext = process.env.EXT || _settings.ext || 'js'
+        this._lazyInit = _settings.lazyInit === true ? true : false;
 
         this._rootDir = _settings.rootDir;
         this._files = _settings.files
@@ -148,7 +151,20 @@ export class ApplicationLoader {
             })
         }
 
-       return this;
+        return this;
+    }
+
+    private async _initializeComponents() {
+        // by default, after load all components, do initialization
+        // if set as lazyInit, initialize component when being used
+        if (!this._lazyInit) {
+            debug('_initializeComponents');
+            DependencyRegistry.components.forEach(component => {
+                debug(`initialize component: ${component.klass.name}`);
+                DependencyRegistry.init(component.klass)
+            });
+        }
+        return this;
     }
 
     private async _init() {
@@ -197,6 +213,7 @@ export class ApplicationLoader {
 
         try {
             await this._loadComponents()
+            await this._initializeComponents()
             await this._init()
             await this._loadMiddlewares()
             await this._loadControllers()

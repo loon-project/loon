@@ -1,6 +1,6 @@
 import test from 'ava'
 import axios, { AxiosInstance } from 'axios';
-import { ApplicationLoader } from '../src'
+import { ApplicationLoader, SettingOptions } from '../src'
 
 declare module 'axios' {
     interface AxiosInstance {
@@ -8,24 +8,22 @@ declare module 'axios' {
     }
 }
 
+const settings: SettingOptions = {port: '0'};
 
-type HelperFields = {
-    getAxios: () => AxiosInstance;
-    isExpress: () => boolean;
-    isFastify: () => boolean;
-};
-
-export const helper: HelperFields = {
-    getAxios: () => axios,
+export const helper = {
+    getAxios: () => axios as AxiosInstance,
     isExpress: () => process.env.SERVER === 'express',
-    isFastify: () => process.env.SERVER === 'fastify'
+    isFastify: () => process.env.SERVER === 'fastify',
+    setBootOptions: (opts: {lazyInit: boolean}) => {
+        settings.lazyInit = opts.lazyInit
+    }
 };
 
 
 let nodeServer;
 
 test.before(async t => {
-    nodeServer = await new ApplicationLoader(process.env.SERVER || '', {port: '0'}).start();
+    nodeServer = await new ApplicationLoader(process.env.SERVER || '', settings).start();
 
     helper.getAxios = () => {
         return axios.create({

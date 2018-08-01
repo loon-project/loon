@@ -1,4 +1,4 @@
-import {Klass} from "./Klass";
+import { Klass } from "./Klass";
 
 export class Component {
 
