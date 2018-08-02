@@ -34,6 +34,8 @@ export interface SettingOptions {
     ext?: string;
 
     lazyInit?: boolean;
+
+    closeTimeout?: number;
 }
 
 

@@ -10,10 +10,10 @@ export class PropertyRegistry {
     public static properties: Map<Function, PropertyMetadata[]> = new Map();
 
 
-    public static registerObjectProperty(type: Function, klassProperty: string, nameOrOptions?: string|PropertyOptions) {
+    public static registerObjectProperty(type: Klass, klassProperty: string, nameOrOptions?: string|PropertyOptions) {
         const properties = this.findProperties(type);
 
-        const propertyType = Reflection.getType(type.prototype, klassProperty);
+        const propertyType = <Klass>Reflection.getType(type.prototype, klassProperty);
 
         let objectProperty = klassProperty;
         let converter;
@@ -67,7 +67,7 @@ export class PropertyRegistry {
         properties.push(propertyMetadata);
     }
 
-    public static registerInherited(type: Function, inherited: Function) {
+    public static registerInherited(type: Klass, inherited: Klass) {
         const inheritedProperties = this.findProperties(inherited);
         const properties = this.findProperties(type);
 
@@ -80,7 +80,7 @@ export class PropertyRegistry {
         });
     }
 
-    public static findProperties(type: Function) {
+    public static findProperties(type: Klass) {
         let properties = this.properties.get(type);
 
         if (typeof properties === 'undefined') {

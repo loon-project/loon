@@ -1,6 +1,6 @@
 import test from 'ava'
 import axios, { AxiosInstance } from 'axios';
-import { ApplicationLoader, SettingOptions } from '../src'
+import { ApplicationLoader, SettingOptions, Klass } from '../src'
 
 declare module 'axios' {
     interface AxiosInstance {
@@ -9,6 +9,7 @@ declare module 'axios' {
 }
 
 const settings: SettingOptions = {port: '0'};
+let KlassApplication: Klass<ApplicationLoader>;
 
 export const helper = {
     getAxios: () => axios as AxiosInstance,
@@ -16,6 +17,9 @@ export const helper = {
     isFastify: () => process.env.SERVER === 'fastify',
     setBootOptions: (opts: {lazyInit: boolean}) => {
         settings.lazyInit = opts.lazyInit
+    },
+    setCustomApplication: (customApplication: Klass<ApplicationLoader>) => {
+        KlassApplication = customApplication;
     }
 };
 
@@ -23,8 +27,11 @@ export const helper = {
 let nodeServer;
 
 test.before(async t => {
-    nodeServer = await new ApplicationLoader(process.env.SERVER || '', settings).start();
 
+    const app = KlassApplication ? new KlassApplication(process.env.SERVER || '', settings) : new ApplicationLoader(process.env.SERVER || '', settings);
+    (t.context as any).app = app;
+
+    nodeServer = await app.start();
     helper.getAxios = () => {
         return axios.create({
             baseURL: `http://localhost:${nodeServer.address().port}`

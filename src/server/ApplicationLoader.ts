@@ -38,6 +38,8 @@ export class ApplicationLoader {
 
     private _lazyInit: boolean;
 
+    private _closeTimeout: number;
+
     get server() {
         return this._server;
     }
@@ -66,7 +68,13 @@ export class ApplicationLoader {
         return this._backlog;
     }
 
-    private $onClose: (...args: any[]) => any;
+    get lazyInit() {
+        return this._lazyInit;
+    }
+
+    get closeTimeout() {
+        return this._closeTimeout;
+    }
 
     /**
      * Load user defined settings into ApplicationLoader
@@ -125,6 +133,7 @@ export class ApplicationLoader {
 
         this._ext = process.env.EXT || _settings.ext || 'js'
         this._lazyInit = _settings.lazyInit === true ? true : false;
+        this._closeTimeout = _settings.closeTimeout || 10 * 1000;
 
         this._rootDir = _settings.rootDir;
         this._files = _settings.files
@@ -251,7 +260,7 @@ export class ApplicationLoader {
 
                         const closeServer = () => {
                             if ('$onClose' in this) {
-                                const onClose = this.$onClose();
+                                const onClose = (<any> this).$onClose();
                                 if (onClose.then && typeof onClose.then === 'function') {
                                     onClose.then(() => {
                                         process.exit(0);
@@ -269,7 +278,7 @@ export class ApplicationLoader {
                        setTimeout(() => {
                             console.error('could not close http/resource connection in time, force shuting down');
                             closeServer();
-                        }, 10 * 1000);
+                        }, this._closeTimeout);
                     });
                 });
             });
@@ -286,4 +295,3 @@ export class ApplicationLoader {
         return !!(this._server as fastify.FastifyInstance).setErrorHandler
     }
 }
-

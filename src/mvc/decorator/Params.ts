@@ -1,6 +1,7 @@
 import {ParamType} from "../enum/ParamType";
 import {HandlerRegistry} from "../HandlerRegistry";
 import {HandlerParamOptions} from "../HandlerParamOptions";
+import { Klass } from "../../core";
 
 export function PathParam(expression: string, options?: HandlerParamOptions) {
     return (target: any, actionName: string, index: number) => {
@@ -62,7 +63,7 @@ export function Data() {
     };
 }
 
-function registerHelper(type: Function,
+function registerHelper(type: Klass,
                         paramType: ParamType,
                         actionName: string,
                         index: number,
