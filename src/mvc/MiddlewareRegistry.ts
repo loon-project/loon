@@ -6,11 +6,11 @@ import {MiddlewareOptions} from "./MiddlewareOptions";
 
 export class MiddlewareRegistry {
 
-    private static _middlewares: Map<Function, MiddlewareMetadata> = new Map<Function, MiddlewareMetadata>();
+    private static _middlewares: Map<Klass, MiddlewareMetadata> = new Map();
 
     public static middlewares = MiddlewareRegistry._middlewares;
 
-    public static registerMiddleware(type: Function, isErrorMiddleware: boolean, options?: MiddlewareOptions) {
+    public static registerMiddleware(type: Klass, isErrorMiddleware: boolean, options?: MiddlewareOptions) {
         DependencyRegistry.registerComponent(<Klass>type);
         const middlewareMetadata = this.getMiddleware(type);
         middlewareMetadata.init(options);
@@ -27,7 +27,7 @@ export class MiddlewareRegistry {
         })
     }
 
-    public static unregister(type: Function) {
+    public static unregister(type: Klass) {
         DependencyRegistry.unregisterComponent(type as Klass)
         MiddlewareRegistry.middlewares.delete(type)
     }
@@ -55,7 +55,7 @@ export class MiddlewareRegistry {
      * @param type
      * @returns {MiddlewareMetadata}
      */
-    public static getMiddleware(type: Function) {
+    public static getMiddleware(type: Klass) {
 
         let middlewareMetadata = this._middlewares.get(type);
 

@@ -1,40 +1,41 @@
-import {IConverter} from "./interface/IConverter";
+import { IConverter } from "./interface/IConverter";
+import { Klass } from "../core";
 
 export class PropertyMetadata {
 
-    private _type: Function;
+    private _type: Klass;
 
     private _klassProperty: string;
 
     private _objectProperty: string;
 
-    private _propertyType: Function;
+    private _propertyType: Klass;
 
     private _converter: IConverter;
 
-    private _baseType: Function;
+    private _baseType: Klass;
 
     private _serialize: boolean;
 
     private _deserialize: boolean;
 
-    get type(): Function {
+    get type() {
         return this._type;
     }
 
-    get objectProperty(): string {
+    get objectProperty() {
         return this._objectProperty;
     }
 
-    get klassProperty(): string {
+    get klassProperty() {
         return this._klassProperty;
     }
 
-    get propertyType(): Function {
+    get propertyType() {
         return this._propertyType;
     }
 
-    get converter(): IConverter {
+    get converter() {
         return this._converter;
     }
 
@@ -42,23 +43,23 @@ export class PropertyMetadata {
         this._converter = value;
     }
 
-    get serialize(): boolean {
+    get serialize() {
         return this._serialize;
     }
 
-    get deserialize(): boolean {
+    get deserialize() {
         return this._deserialize;
     }
 
-    get baseType(): Function {
+    get baseType() {
         return this._baseType;
     }
 
-    set baseType(value: Function) {
+    set baseType(value: Klass) {
         this._baseType = value;
     }
 
-    constructor(type: Function, klassProperty: string, objectProperty: string, propertyType: Function, serialize: boolean, deserialize: boolean) {
+    constructor(type: Klass, klassProperty: string, objectProperty: string, propertyType: Klass, serialize: boolean, deserialize: boolean) {
         this._type = type;
         this._objectProperty = objectProperty;
         this._klassProperty = klassProperty;

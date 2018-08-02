@@ -1,6 +1,6 @@
-import { helper } from './helper'
-import test from 'ava'
-import { isSimpleType, convertArrayToMap } from '../src'
+import './helper';
+import test from 'ava';
+import { isSimpleType, convertArrayToMap } from '../src';
 
 test('isSimpleType', async t => {
     class CustomClass {

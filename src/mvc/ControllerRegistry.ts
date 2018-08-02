@@ -87,7 +87,7 @@ export class ControllerRegistry {
      * @param httpMethod
      * @param path
      */
-    public static registerAction(type: Function, actionName: string, httpMethod: string, path: string) {
+    public static registerAction(type: Klass, actionName: string, httpMethod: string, path: string) {
 
         const controllerMetadata = this.getController(type);
         const handlerMetadata = HandlerRegistry.getHandler(type, actionName);
@@ -101,8 +101,8 @@ export class ControllerRegistry {
     }
 
 
-    public static registerFilter(controllerType: Function,
-                                 filterType: Function,
+    public static registerFilter(controllerType: Klass,
+                                 filterType: Klass,
                                  beforeOrAfterFilter: BeforeAfterFilterType,
                                  options?: FilterOptions) {
 

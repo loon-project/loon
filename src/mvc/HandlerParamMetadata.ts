@@ -1,15 +1,16 @@
 import {ParamType} from "./enum/ParamType";
 import {HandlerParamOptions} from "./HandlerParamOptions";
+import { Klass } from "../core";
 
 export class HandlerParamMetadata {
 
-    private _type: Function;
+    private _type: Klass;
 
     private _actionName: string;
 
     private _index: number;
 
-    private _returnType: Function;
+    private _returnType: Klass;
 
     private _paramType: ParamType;
 
@@ -19,27 +20,27 @@ export class HandlerParamMetadata {
 
     private _required: boolean;
 
-    get required(): boolean {
+    get required() {
         return this._required;
     }
 
-    get type(): Function {
+    get type() {
         return this._type;
     }
 
-    get paramType(): ParamType {
+    get paramType() {
         return this._paramType;
     }
 
-    get index(): number {
+    get index() {
         return this._index;
     }
 
-    get expression(): string {
+    get expression() {
         return this._expression;
     }
 
-    get actionName(): string {
+    get actionName() {
         return this._actionName;
     }
 
@@ -47,10 +48,10 @@ export class HandlerParamMetadata {
         return this._returnType;
     }
 
-    constructor(type: Function,
+    constructor(type: Klass,
                 actionName: string,
                 index: number,
-                returnType: Function,
+                returnType: Klass,
                 paramType?: ParamType,
                 expression?: string) {
 

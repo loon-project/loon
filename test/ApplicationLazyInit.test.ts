@@ -2,7 +2,7 @@ import { helper } from './helper';
 import test from 'ava';
 import { Component, DependencyRegistry } from '../src';
 
-helper.setBootOptions({lazyInit: true})
+helper.setBootOptions({lazyInit: true});
 
 @Component()
 class TestService {

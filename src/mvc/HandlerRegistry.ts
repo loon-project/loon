@@ -1,17 +1,18 @@
-import {HandlerMetadata} from "./HandlerMetadata";
-import {Reflection} from "../core/Reflection";
-import {HandlerParamMetadata} from "./HandlerParamMetadata";
+import { HandlerMetadata } from "./HandlerMetadata";
+import { Reflection } from "../core/Reflection";
+import { HandlerParamMetadata } from "./HandlerParamMetadata";
 import { convertArrayToMap } from '../util';
-import {ParamType} from "./enum/ParamType";
-import {HandlerParamOptions} from "./HandlerParamOptions";
+import { ParamType } from "./enum/ParamType";
+import { HandlerParamOptions } from "./HandlerParamOptions";
+import { Klass } from "../core";
 
 export class HandlerRegistry {
 
-    private static _handlers: Map<Function, Map<string, HandlerMetadata>> = new Map();
+    private static _handlers: Map<Klass, Map<string, HandlerMetadata>> = new Map();
 
     public static handlers = HandlerRegistry._handlers;
 
-    public static registerParam(type: Function,
+    public static registerParam(type: Klass,
                                 actionName: string,
                                 index: number,
                                 paramType: ParamType,
@@ -37,7 +38,7 @@ export class HandlerRegistry {
      * @param actionName
      * @returns {HandlerMetadata}
      */
-    public static getHandler(type: Function, actionName: string) {
+    public static getHandler(type: Klass, actionName: string) {
 
         let handlerStore = this._handlers.get(type);
 

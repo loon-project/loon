@@ -1,7 +1,6 @@
-import {Klass} from "../core/Klass";
-import {DIException} from "./error/DIException";
-import {Component} from "../core/Component";
-import {Reflection} from "../core/Reflection";
+import { Klass } from "../core/Klass";
+import { Component } from "../core/Component";
+import { Reflection } from "../core/Reflection";
 
 export class DependencyRegistry {
 
@@ -25,7 +24,7 @@ export class DependencyRegistry {
         const component = this.components.get(klass);
 
         if (!component) {
-            throw new DIException(`[TYPED] can not find component: ${klass.name}`);
+            throw `can not find component: ${klass.name}`;
         }
 
         if (component.params && component.params.length > 0) {

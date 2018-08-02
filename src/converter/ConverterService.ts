@@ -2,8 +2,8 @@ import {PropertyRegistry} from "./PropertyRegistry";
 import {PropertyMetadata} from "./PropertyMetadata";
 import * as _ from "lodash";
 import { isSimpleType } from '../util';
-import {Klass} from "../core/Klass";
-import {ConvertOptions} from "./ConvertOptions";
+import { Klass } from "../core/Klass";
+import { ConvertOptions } from "./ConvertOptions";
 import { Component } from "../di";
 
 /**
@@ -12,7 +12,7 @@ import { Component } from "../di";
 @Component()
 export class ConverterService {
 
-    public convert(data: any, returnType: Function, options?: ConvertOptions) {
+    public convert(data: any, returnType: Klass, options?: ConvertOptions) {
 
         if (_.isUndefined(data) || _.isNull(data)) {
             return data;
@@ -48,16 +48,14 @@ export class ConverterService {
         }
 
         if (returnType === Array && type === Array && options && options.baseType) {
-            return data.map(item => this.convert(item, <Function> options.baseType));
+            return data.map(item => this.convert(item, <Klass>options.baseType));
         }
 
         if (returnType === Map && type === Map && options && options.baseType) {
             const result = new Map();
-
             data.forEach((value, key) => {
-                result.set(key, this.convert(value, <Function> options.baseType));
+                result.set(key, this.convert(value, <Klass>options.baseType));
             });
-
             return result;
         }
 
@@ -123,6 +121,7 @@ export class ConverterService {
          *
          */
         properties = PropertyRegistry.properties.get(returnType);
+
         if (type === Object && !isSimpleType(returnType) && properties) {
 
             const klass = <Klass> returnType;
@@ -133,22 +132,16 @@ export class ConverterService {
                 if (metadata.deserialize === false) return;
 
                 let objectProperty = metadata.objectProperty;
-
                 if (options && options.prefix) {
                     objectProperty = <string> options.prefix + objectProperty;
                 }
 
                 let value;
-
                 if (metadata.converter && metadata.converter.deserialize) {
-
                     value = metadata.converter.deserialize(data, metadata.klassProperty, objectProperty);
-
                 } else {
-
                     value = data[objectProperty];
                     value = this.convert(value, metadata.propertyType, {baseType: metadata.baseType});
-
                 }
 
                 ins[metadata.klassProperty] = value;
@@ -179,6 +172,6 @@ export class ConverterService {
             return ins;
         }
 
-        throw new Error(`not support convert data`);
+        throw `not support convert data`;
     }
 }

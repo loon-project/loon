@@ -5,11 +5,11 @@ import {HandlerRegistry} from "./HandlerRegistry";
 
 export class FilterRegistry {
 
-    private static _filters: Map<Function, FilterMetadata> = new Map();
+    private static _filters: Map<Klass, FilterMetadata> = new Map();
 
     public static filters = FilterRegistry._filters;
 
-    public static registerFilter(type: Function) {
+    public static registerFilter(type: Klass) {
 
         DependencyRegistry.registerComponent(<Klass>type);
         const filterMetadata = this.getFilter(type);
@@ -18,7 +18,7 @@ export class FilterRegistry {
         filterMetadata.handler = handlerMetadata;
     }
 
-    public static getFilter(type: Function) {
+    public static getFilter(type: Klass) {
 
         let filterMetadata = this._filters.get(type);
 
@@ -29,5 +29,4 @@ export class FilterRegistry {
 
         return filterMetadata;
     }
-
 }
