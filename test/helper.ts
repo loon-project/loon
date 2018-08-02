@@ -1,6 +1,6 @@
-import test from 'ava'
+import test from 'ava';
 import axios, { AxiosInstance } from 'axios';
-import { ApplicationLoader, SettingOptions, Klass } from '../src'
+import { ApplicationLoader, SettingOptions, Klass } from '../src';
 
 declare module 'axios' {
     interface AxiosInstance {
@@ -16,13 +16,12 @@ export const helper = {
     isExpress: () => process.env.SERVER === 'express',
     isFastify: () => process.env.SERVER === 'fastify',
     setBootOptions: (opts: {lazyInit: boolean}) => {
-        settings.lazyInit = opts.lazyInit
+        settings.lazyInit = opts.lazyInit;
     },
     setCustomApplication: (customApplication: Klass<ApplicationLoader>) => {
         KlassApplication = customApplication;
     }
 };
-
 
 let nodeServer;
 
@@ -51,5 +50,3 @@ test.after.always(t => {
         });
     });
 });
-
-

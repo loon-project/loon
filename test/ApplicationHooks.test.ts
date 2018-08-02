@@ -16,13 +16,13 @@ Hooks.forEach(hook => {
         value: function () {
             this[hookCalled(hook)] = true;
         }
-    })
-})
+    });
+});
 
 helper.setCustomApplication(Application);
 
 test('should invoke $beforeInit', t => {
     Hooks.forEach(hook => {
         t.truthy((t.context as any).app[hookCalled(hook)]);
-    })
+    });
 });
